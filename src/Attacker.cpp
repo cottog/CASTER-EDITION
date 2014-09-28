@@ -145,5 +145,8 @@ void Attacker::attack(Actor *owner, Actor *target) {
 			engine.gui->message(TCODColor::lightGrey,"The %s attacks the %s in vain.", owner->getName(),target->getName());
 		}
 	}
+	if (target->destructible->isDead()) {
+		engine.gui->message(TCODColor::white,"%s is now dead!",target->getName(true));
+	}
 }
 

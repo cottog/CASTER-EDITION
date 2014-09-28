@@ -45,8 +45,10 @@ Concerning the libTCOD library:
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+Please note: there may be some instances of debug messages being output to the screen, such as "heavy hit!" when you hit someone with a two-handed weapon. This will continue to be the case while the game is in development. I apolgize for the inconvenience, but its a necessary evil in my opinion.
 
-TODO:
+IMMEDIATE TODO (WILL UPDATE AS TASKS GET COMPLETED):
+	
 	FINISH SPELLCASTING SYSTEM (THESE FILES ARE NOT IN THE SOURCE YET, AS THE GAME WILL NOT COMPILE WITH THEM AS THEY STAND NOW)
 		-Finish procedural spell generation
 			-Add cost modifiers to different spell effects and target selectors
@@ -57,5 +59,5 @@ TODO:
 
 	NEXT FIX THE WAY DEATH MESSAGES ARE PRESENTED
 		-currently, embarassingly, the text for a monster dying is displayed before the text saying you've hit the monster for X damage (for the killing blow)
-		-also, this text currently displays as "The dead orc is now dead!" signifying that his name is changed to his corpseName before the message is read out
+		-*FIXED* also, this text currently displays as "The dead orc is now dead!" signifying that his name is changed to his corpseName before the message is read out
 		

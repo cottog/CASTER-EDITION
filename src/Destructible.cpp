@@ -90,8 +90,7 @@ void MonsterDestructible::save(TCODZip &zip) {
 }
 
 void MonsterDestructible::die(Actor *owner){
-	//transform it into a nasty corpse. doesn't block, can't be hit, doesn't move
-	engine.gui->message(TCODColor::white,"%s is dead!",owner->getName());
+	//transform it into a corpse. doesn't block, can't be hit, doesn't move
 	engine.player->destructible->xp += xp;
 	Destructible::die(owner);
 }

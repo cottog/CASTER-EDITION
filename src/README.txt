@@ -57,7 +57,11 @@ IMMEDIATE TODO (WILL UPDATE AS TASKS GET COMPLETED):
 			-need a means to select the appropriate targets for a spell
 			-need a means to resolve the effects of casting a spell
 
-	NEXT FIX THE WAY DEATH MESSAGES ARE PRESENTED
-		-currently, embarassingly, the text for a monster dying is displayed before the text saying you've hit the monster for X damage (for the killing blow)
+
+
+
+DONE (TASKS THAT HAVE BEEN COMPLETED SINCE THE ABOVE SECTION WAS ADDED):
+	*FIXED* FIX THE WAY DEATH MESSAGES ARE PRESENTED
+		-*FIXED*currently, embarassingly, the text for a monster dying is displayed before the text saying you've hit the monster for X damage (for the killing blow)
 		-*FIXED* also, this text currently displays as "The dead orc is now dead!" signifying that his name is changed to his corpseName before the message is read out
 		

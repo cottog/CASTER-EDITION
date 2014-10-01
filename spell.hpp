@@ -114,6 +114,7 @@ public:
 	SpellEffect effect; //the effect of a spell (healing, damage, teleporting, etc). This can (and eventually will) form a useless combination with effect and targettype
 	ExpectedTarget expected; //the type of 'thing' the spell will target (items, creatures, floor tiles)
 	PreferredType preferred; //whether or not the particular spellEffect is supposed to help or harm the player
+	float cost; //a value used to determine the total cost for casting a spell; this is raised or lowered based on the attributes of the spell (targetType, spellEffect)
 	
 	Spell(int level);
 	//TODO: make a means to create a specific spell, rather than a procedurally generated one

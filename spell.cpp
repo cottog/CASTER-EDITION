@@ -15,29 +15,37 @@ Spell::Spell(float level){
 	//determine the possible intensities based on 
 	if (level <= 11) {
 		intensity = MINOR;
+		cost = 1;
 	} else if (level <= 25) {
 		int dingle = rng->getInt(1,100);
 		if (dingle <= 55) {
 			intensity = NORMAL;
+			cost = 3;
 		} else {
 			intensity = MINOR;
+			cost = 1;
 		}
 	} else if (level <= 35) {
 		int dingle = rng->getInt(1,100);
 		if (dingle <= 30) {
 			intensity = MAJOR;
+			cost = 9;
 		} else {
 			intensity = NORMAL;
+			cost = 3;
 		}
 	} else if (level <= 45) {
 		int dingle = rng->getInt(1,100);
 		if (dingle <= 60) {
 			intensity = MAJOR;
+			cost = 9;
 		} else {
 			intensity = NORMAL;
+			cost = 3;
 		}
 	} else {
 		intensity = EPIC;
+		cost = 15;
 	}
 	
 	
@@ -70,9 +78,11 @@ Spell::Spell(float level){
 	for (int i = 0; i<3; i++) {
 		int opp = rng->getInt(1,1);
 		
+		//this will only result in operators[] being filled with plus signs. I have yet to find a good way to mix in '*'
+		//multiplication results in too much of a range for the target number, and gives much greater weight to only a few variables
 		switch(opp){
 			case 1: operators[i] = '+'; break;
-			case 2: operators[i] = '*'; break;
+			case 2: operators[i] = '*'; break; 
 			default: break;
 		}
 		std::cout << operators[i] << std::endl;	
@@ -82,18 +92,23 @@ Spell::Spell(float level){
 	switch (targetswitch) {
 		case 1:
 			targeting = SELF;
+			cost *= 1;
 			break;
 		case 2:
 			targeting = ADJACENT_TILE;
+			cost *= 1;
 			break;
 		case 3: 
 			targeting = BOLT_SPELL;
+			cost *= 1.1;
 			break;
 		case 4:
 			targeting = VISUAL_HOLOCAUST;
+			cost *= 1.5;
 			break;
 		case 5:
 			targeting = LEVEL_WIDE_HOLOCAUST;
+			cost *= 2;
 			break;
 		case 6: 
 			targeting = RANDOM_IN_LOS;

@@ -1,32 +1,32 @@
 #include "libtcod.hpp"
 class Spell{
 public:
-	enum SpellIntensity {
+	enum SpellIntensity { //the "intensity" of the spell is a means to scale the spell with caster level; higher-intensity spells cost more and have greater or longer-lasting effects
 		MINOR,MAJOR,NORMAL,EPIC
 	};
 	enum ExpectedTarget {    //whether this particular spell is targeting items, creatures, or people
 		ITEM, CREATURE, TILE
 	};
 	enum PreferredType {   //who the spell would prefer to target
-		ANYONE, ENEMY, FRIENDLY
+		NEUTRAL, ENEMY, FRIENDLY
 	};
 	enum TargetType {   //this determines how the spell will select a target
 		NONE
-		SELF,
-		ADJACENT_TILE,
-		BOLT_SPELL,
-		VISUAL_HOLOCAUST,
-		LEVEL_WIDE_HOLOCAUST,
-		RANDOM_IN_LOS,
-		RANDOM_IN_LEVEL,
-		ADJACENT_FRIENDLIES, ADJACENT_ENEMIES, ALL_ADJACENT_TILES,
-		FRIENDLY_CHAINING, HOSTILE_CHAINING, ALL_CREATURES_CHAINING,
-		ALL_FRIENDS_IN_LEVEL, ALL_ENEMIES_IN_LEVEL, ALL_CREATURES_IN_LEVEL,
-		ALL_FRIENDLIES_IN_LINE, ALL_ENEMIES_IN_LINE, ALL_CREATURES_IN_LINE,
-		SINGLE_FRIENDLY_IN_SIGHT, SINGLE_ENEMY_IN_SIGHT, SINGLE_CREATURE_IN_SIGHT,
-		ALL_FRIENDLIES_IN_RADIUS, ALL_ENEMIES_IN_RADIUS, ALL_CREATURES_IN_RADIUS,
-		X_FRIENDLIES_IN_SIGHT, X_ENEMIES_IN_SIGHT, X_CREATURES_IN_SIGHT,
-		ALL_FRIENDLIES_IN_LOS, ALL_ENEMIES_IN_LOS, ALL_CREATURES_IN_LOS
+		SELF, //target the caster
+		ADJACENT_TILE, //one random tile next to the caster
+		BOLT_SPELL, //travels in a line from caster to enemy and hits the first one in the line
+		VISUAL_HOLOCAUST, //choose an enemy, all enemies of that type (in sight) take damage; so, if you pick an orc, all orcs in sight take damage
+		LEVEL_WIDE_HOLOCAUST, //exactly as the above, but level-wide instead of restricted to sight
+		RANDOM_IN_LOS,  //single random target in LOS
+		RANDOM_IN_LEVEL, //single random target in level
+		ADJACENT_FRIENDLIES, ADJACENT_ENEMIES, ALL_ADJACENT_TILES, //chooses creatures from the 8 tiles immediately adjacent to the caster
+		FRIENDLY_CHAINING, HOSTILE_CHAINING, ALL_CREATURES_CHAINING,  //like chain lightning
+		ALL_FRIENDS_IN_LEVEL, ALL_ENEMIES_IN_LEVEL, ALL_CREATURES_IN_LEVEL, //chooses all creatures in the level
+		ALL_FRIENDLIES_IN_LINE, ALL_ENEMIES_IN_LINE, ALL_CREATURES_IN_LINE, //penetrating spell; passes through enemies and hits each in a line
+		ALL_FRIENDLIES_IN_RADIUS, ALL_ENEMIES_IN_RADIUS, ALL_CREATURES_IN_RADIUS, //ball spell
+		SINGLE_FRIENDLY_IN_SIGHT, SINGLE_ENEMY_IN_SIGHT, SINGLE_CREATURE_IN_SIGHT, //single chosen target in sight. not random like the above one
+		X_FRIENDLIES_IN_SIGHT, X_ENEMIES_IN_SIGHT, X_CREATURES_IN_SIGHT, //chooses X random creatures in LoS of the caster
+		ALL_FRIENDLIES_IN_LOS, ALL_ENEMIES_IN_LOS, ALL_CREATURES_IN_LOS //chooses all creatures in 
 	};
 	enum SpellEffect {  //this is the effect of the spell (pretty straight-forward)
 		NONE,
@@ -98,7 +98,7 @@ public:
 	};
 	
 	//TODO: create the LastCast object for casting spell's more quickly
-	//TODO: consider creating a tiny description of each spell that indicates what its purpose may be
+	//TODO: consider creating a tiny description of each spell that indicates what its purpose may be; this would be achieved by having each spell contain a string or TCODText object and you appending characters to it that would be defined in a wiki for players to read
 	//TODO: (not so much for caster module, but for the whole engine) add a function for an actor to determine whether or not it is seen by the player, to keep messages from being displayed in error
 	//TODO: implement a 'mana-scent' system, in which some spells whose elemental subtype otherwise wouldn't matter (teleport) can now have an effect. A spell will emit a surge of mana of the elemental subtype it corresponds to, attracting certain creatures
 		//maybe a caster with a significantly greater amount of a certain mana will 'smell' strongly of the mana
@@ -120,7 +120,7 @@ public:
 	//TODO: make a means to create a specific spell, rather than a procedurally generated one
 		//will be useful to give bosses or uniques specific spells
 	//TODO: think of what would be best way to handle wands (procedural, not procedural, some of either)
-	float setTarget();
-	float cast();
-	bool input();	
+	float setTarget(); //this function sets the targetNumber for a spell; this is the value to which the results of the spell's formula are compared in order to see if a spell is successfully cast
+	float cast(); //this function resolves the effect of the spell;
+	bool input(); //this function is called when a player elects to cast a spell; this takes the amounts of each resource to be spent for the spellcasting and inputs it into the values[] array
 };

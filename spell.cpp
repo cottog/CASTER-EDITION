@@ -108,37 +108,47 @@ Spell::Spell(float level){
 			break;
 		case 5:
 			targeting = LEVEL_WIDE_HOLOCAUST;
-			cost *= 2;
+			cost *= 1.8;
 			break;
 		case 6: 
-			targeting = RANDOM_IN_LOS;
+			targeting = RANDOM_IN_LOS;  
+			cost *= 1;
 			break;
 		case 7:
-			targeting = RANDOM_IN_LEVEL;
+			targeting = RANDOM_IN_LEVEL; 
+			cost *= 1.2;
 			break;
 		case 8:
 			targeting = ALL_ADJACENT_TILES;
+			cost *= 1.3;
 			break;
 		case 9:
 			targeting = ALL_CREATURES_CHAINING;
+			cost *= 1.3;
 			break;
 		case 10:
 			targeting = ALL_CREATURES_IN_LEVEL;
+			cost *= 2.0
 			break;
 		case 11:
 			targeting = ALL_CREATURES_IN_LINE;
+			cost *= 1.4;
 			break;
 		case 12:
-			targeting = SINGLE_CREATURES_IN_SIGHT;
+			targeting = SINGLE_CREATURE_IN_SIGHT;
+			cost *= 1;
 			break;
 		case 13:
 			targeting = ALL_CREATURES_IN_RADIUS;
+			cost *= 1.3;
 			break;
 		case 14: 
 			targeting = X_CREATURES_IN_SIGHT;
+			cost *= 1.2;
 			break;
 		case 15:
 			targeting = ALL_CREATURES_IN_LOS;
+			cost *= 1.4;
 			break;
 		default: targeting = NONE; break;
 	}

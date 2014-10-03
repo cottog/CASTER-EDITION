@@ -47,7 +47,7 @@ Concerning the libTCOD library:
 
 Please note: there may be some instances of debug messages being output to the screen, such as "heavy hit!" when you hit someone with a two-handed weapon. This will continue to be the case while the game is in development. I apolgize for the inconvenience, but its a necessary evil in my opinion.
 
-IMMEDIATE TODO (WILL UPDATE AS TASKS GET COMPLETED):
+IMMEDIATE TODO (WILL UPDATE AS TASKS GET COMPLETED)(MANY OTHER LONGER-TERM TODOs IN SRC FILES):
 	
 	FINISH SPELLCASTING SYSTEM (THESE FILES ARE NOT IN THE SOURCE YET, AS THE GAME WILL NOT COMPILE WITH THEM AS THEY STAND NOW)
 		-Finish procedural spell generation
@@ -56,8 +56,17 @@ IMMEDIATE TODO (WILL UPDATE AS TASKS GET COMPLETED):
 			-need a means to determine the elemental subtype of a spell
 			-need a means to select the appropriate targets for a spell
 			-need a means to resolve the effects of casting a spell
-
-
+	
+	THINK ABOUT ADDING A SCENT SYSTEM THAT AN AI COULD USE TO DETECT OTHER ACTORS
+		-add scent fields (Source and Strength) to the Tile struct
+		-add a means for scent to diminish over time (perhaps when render function goes through every tile on the map, to diminish how often every tile gets iterated over each turn) 
+		-actors generate scent clouds of a certain radius, with drop-off of intensity near the edge
+			-add an aura that can increase or diminish scent cloud size/intensity
+			-provide for the possibility that someone of stronger scent may override the scent of someone else
+		-certain (or all) AI modules can sniff for scent clouds
+		-once they find a scent, look for tiles with a higher scent in search of the player
+		-this ties in with the mana-scent idea I proposed in spell.hpp, so perhaps three fields will be needed for scent, if I wanted to distinguish scents by elemental subtype
+		-might need to add a module called "smelly" to Actor to accomodate these changes
 
 
 DONE (TASKS THAT HAVE BEEN COMPLETED SINCE THE ABOVE SECTION WAS ADDED):

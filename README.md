@@ -13,3 +13,5 @@ I will warn the reader now, that the way I intend to make spellcasting in this g
 
 Once the spellcasting system is complete, the game engine would be mostly finished as well, and the groundwork that is layed out for the procedural spell generation system might benefit someone else who wants a unique magic system in their game.
 
+
+**The linecount in my commits is inflated by somewhere around 11,443 lines as a result of including the files involved with the libraries used by this game.**

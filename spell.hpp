@@ -11,7 +11,7 @@ public:
 		NEUTRAL, ENEMY, FRIENDLY
 	};
 	enum TargetType {   //this determines how the spell will select a target
-		NONE
+		NO_TARGET,
 		SELF, //target the caster
 		ADJACENT_TILE, //one random tile next to the caster
 		BOLT_SPELL, //travels in a line from caster to enemy and hits the first one in the line
@@ -26,17 +26,17 @@ public:
 		ALL_FRIENDLIES_IN_RADIUS, ALL_ENEMIES_IN_RADIUS, ALL_CREATURES_IN_RADIUS, //ball spell
 		SINGLE_FRIENDLY_IN_SIGHT, SINGLE_ENEMY_IN_SIGHT, SINGLE_CREATURE_IN_SIGHT, //single chosen target in sight. not random like the above one
 		X_FRIENDLIES_IN_SIGHT, X_ENEMIES_IN_SIGHT, X_CREATURES_IN_SIGHT, //chooses X random creatures in LoS of the caster
-		ALL_FRIENDLIES_IN_LOS, ALL_ENEMIES_IN_LOS, ALL_CREATURES_IN_LOS //chooses all creatures in 
+		ALL_FRIENDLIES_IN_LOS, ALL_ENEMIES_IN_LOS, ALL_CREATURES_IN_LOS //chooses all creatures in line of sight
 	};
 	enum SpellEffect {  //this is the effect of the spell (pretty straight-forward)
-		NONE,
+		NO_EFFECT,
 		STRAIGHT_HEAL,
 		HEAL_OVER_TIME,
 		STAT_BOOST,
 		CURE_DEBUFFS,
 		DETECTION,
-		POLYMORPH,
-		SHAPE_SHIFTING,
+		POLYMORPH,      //permanent
+		SHAPE_SHIFTING, //temporary
 		LIGHT,          // not sure how an elemental subtype of a light or darkness spell would work
 		ILLUSION,
 		SIMULACRUM,
@@ -70,7 +70,7 @@ public:
 
 		//these ones aren't so compatible with all targeting types
 		TELEPORTAL,
-		ALTER TERRAIN,
+		ALTER_TERRAIN,
 		ITEM_CREATION,
 		LINK,
 		LIFE_TAP,
@@ -79,7 +79,7 @@ public:
 		
 	};
 	enum ElementalSubtypes {  //these are the possible subtypes of a spell, determined by how much of each resource is spent on it
-		NONE,
+		NO_SUBTYPE,
 		FORCE,
 		FIRE,
 		WATER,
@@ -100,7 +100,7 @@ public:
 	//TODO: create the LastCast object for casting spell's more quickly
 	//TODO: consider creating a tiny description of each spell that indicates what its purpose may be; this would be achieved by having each spell contain a string or TCODText object and you appending characters to it that would be defined in a wiki for players to read
 	//TODO: (not so much for caster module, but for the whole engine) add a function for an actor to determine whether or not it is seen by the player, to keep messages from being displayed in error
-	//TODO: implement a 'mana-scent' system, in which some spells whose elemental subtype otherwise wouldn't matter (teleport) can now have an effect. A spell will emit a surge of mana of the elemental subtype it corresponds to, attracting certain creatures
+	//TODO: implement a 'mana-scent' system, in which some spells whose elemental subtype otherwise wouldn't matter (regular teleport) can now have an effect. A spell will emit a surge of mana-scent of the elemental subtype it corresponds to, possibly attracting certain creatures based on the subtype
 		//maybe a caster with a significantly greater amount of a certain mana will 'smell' strongly of the mana
 	
 	int ID; //spellID, unique reference INT to identify a spell based on its attributes, not its name

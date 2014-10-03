@@ -245,7 +245,7 @@ Actor *PlayerAi::choseFromInventory(Actor *owner){
 		it != owner->container->inventory.end(); it++) {
 		Actor *actor = *it;
 		if (actor->pickable->stackSize == 1) {
-			if (actor->pickable->type == Pickable::EQUIPMENT && ((Equipment*)(actor->pickable))->equipped == true) {
+			if ((actor->pickable->type == Pickable::EQUIPMENT || actor->pickable->type == Pickable::WEAPON)  && ((Equipment*)(actor->pickable))->equipped == true) {
 				con.print(2,y,"(%c) %s [E]",shortcut,actor->getName());
 			} else {
 				con.print(2,y,"(%c) %s",shortcut,actor->getName());	

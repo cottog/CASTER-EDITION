@@ -98,63 +98,48 @@ Spell::Spell(int level){
 	switch (targetswitch) {
 		case 1:
 			targeting = SELF;
-			cost *= 1;
 			break;
 		case 2:
 			targeting = ADJACENT_TILE;
-			cost *= 1;
 			break;
 		case 3: 
 			targeting = BOLT_SPELL;
-			cost *= 1.1;
 			break;
 		case 4:
 			targeting = VISUAL_HOLOCAUST;
-			cost *= 1.5;
 			break;
 		case 5:
 			targeting = LEVEL_WIDE_HOLOCAUST;
-			cost *= 1.8;
 			break;
 		case 6: 
 			targeting = RANDOM_IN_LOS;  
-			cost *= .8;
 			break;
 		case 7:
 			targeting = RANDOM_IN_LEVEL; 
-			cost *= 1.2;
 			break;
 		case 8:
 			targeting = ALL_ADJACENT_TILES;
-			cost *= 1.3;
 			break;
 		case 9:
 			targeting = ALL_CREATURES_CHAINING;
-			cost *= 1.3;
 			break;
 		case 10:
 			targeting = ALL_CREATURES_IN_LEVEL;
-			cost *= 2.0;
 			break;
 		case 11:
 			targeting = ALL_CREATURES_IN_LINE;
-			cost *= 1.4;
 			break;
 		case 12:
 			targeting = SINGLE_CREATURE_IN_SIGHT;
-			cost *= 1;
 			break;
 		case 13:
 			targeting = ALL_CREATURES_IN_RADIUS;
-			cost *= 1.3;
 			break;
 		case 14: 
 			targeting = X_CREATURES_IN_SIGHT;
-			cost *= 1.2;
 			break;
 		case 15:
 			targeting = ALL_CREATURES_IN_LOS;
-			cost *= 1.4;
 			break;
 		default: targeting = NO_TARGET; break;
 	}
@@ -175,121 +160,101 @@ Spell::Spell(int level){
 			effect = STRAIGHT_HEAL;
 			expected = CREATURE;
 			preferred = FRIENDLY;
-			cost *= 1;
 			break;
 		case 2:
 			effect = HEAL_OVER_TIME;
 			expected = CREATURE;
 			preferred = FRIENDLY;
-			cost *= .8;
 			break;
 		case 3:
 			effect = STAT_BOOST;
 			expected = CREATURE;
 			preferred = FRIENDLY;
-			cost *= 1;
 			break;
 		case 4:
 			effect = CURE_DEBUFFS;
 			expected = CREATURE;
 			preferred = FRIENDLY;
-			cost *= 1.1;
 			break;
 		case 5: 
 			effect = DETECTION;
 			expected = CREATURE;
 			preferred = NEUTRAL;
-			cost *= 1.1;
 			break;
 		case 6:
 			effect = POLYMORPH;
 			expected = CREATURE;
 			preferred = NEUTRAL;
-			cost *= 1.5;
 			break;
 		case 7: 
 			effect = SHAPE_SHIFTING;
 			expected = CREATURE;
 			preferred = NEUTRAL;
-			cost *= 1.1;
 			break;
 		case 8: 
 			effect = LIGHT;
 			expected = TILE;
 			preferred = NEUTRAL;
-			cost *= 1;
 			break;
 		case 9: 
 			effect = ILLUSION;  //NOTE: illusion with an effect range of all_in_level might be bad, but then again it might not. Essentially, I plan to have it fill the targeted tiles with an illusory player
 			expected = TILE;	//the player's illusory form could possess an elemental subtype. Creatures of opposing subtypes could be naturally hateful towards each other
 			preferred = NEUTRAL;    //TODO: give a creature a will save?
-			cost *= 1.2;
 			break;
 		case 10:
 			effect = SIMULACRUM; //NOTE: simulacrum is similar to illusion in that it copies a creature, but this spell targets a creature and creates a simulacrum of it a short distance away on a random tile
 			expected = CREATURE; // A simulacrum is intended to be much hardier than an illusion, and possibly to possess some attributes of its target
 			preferred = ENEMY;      //NOTE: not actually harmful, but it should prefer 
-			cost *= 1.4;
 			break;               //simulacrum success should be dependent on how close the resources spent resemble the relative mixture of each element a creature possesses (a glass creature should not be copied by a simulacrum spell of the radiation subtype)  
 		case 11:
 			effect = SHIELD;
 			expected = CREATURE;
 			preferred = FRIENDLY;
-			cost *= 1.1;
 			break;
 		case 12:
 			effect = REFLECTION;
 			expected = CREATURE;
 			preferred = FRIENDLY;
-			cost *= 1.2;
 			break;
 		case 13:
 			effect = ABSORPTION;
 			expected = CREATURE;
 			preferred = FRIENDLY;
-			cost *= 1.2;
 			break;
 		case 14: 
 			effect = ANTIMAGIC_ZONE;
 			expected = TILE;
 			preferred = NEUTRAL;
-			cost *= 1.3;
 			break;
 		case 15:
 			effect = DAMAGING_TELEPORT;
 			expected = CREATURE;
 			preferred = ENEMY;
-			cost *= 1.4;
 			break;
 		case 16: 
 			effect = DAMAGING_PULL;
 			expected = CREATURE;
 			preferred = ENEMY;
-			cost *= 1.2;
 			break;
 		case 17:
 			effect = DAMAGING_PUSH;
 			expected = CREATURE;
 			preferred = ENEMY;
-			cost *= 1.3;
 			break;
 		case 18:
 			effect = WEAPON_ENHANCEMENT;
 			expected = CREATURE;
 			preferred = FRIENDLY;
-			cost *= 1.3;
 			break;
 		case 19:
 			effect = PROTECT_FROM_HAZARDS;
 			expected = CREATURE;
 			preferred = FRIENDLY;
-			cost *= 1.2;
 			break;
 		case 20:
 			effect = TELEPORT;
 			expected = CREATURE;
 			preferred = NEUTRAL;
-			cost *= 1.2;
 			break;
 			
 		//THESE SPELLS ARE BAD FOR SELF-TARGETING SPELLS 
@@ -297,91 +262,76 @@ Spell::Spell(int level){
 			effect = STRAIGHT_DAMAGE;
 			expected = CREATURE;
 			preferred = ENEMY;
-			cost *= 1.1;
 			break;
 		case 22:
 			effect = BLEED_DAMAGE;
 			expected = CREATURE;
 			preferred = ENEMY;
-			cost *= 1;
 			break;
 		case 23:
 			effect = STAT_DRAIN;
 			expected = CREATURE;
 			preferred = ENEMY;
-			cost *= 1.1;
 			break;
 		case 24:
 			effect = STAT_SAPPING;
 			expected = CREATURE;
 			preferred = ENEMY;
-			cost *= 1.3;
 			break;
 		case 25:
 			effect = LIFE_LEECHING;
 			expected = CREATURE;
 			preferred = ENEMY;
-			cost *= 1.4;
 			break;
 		case 26:
 			effect = MANA_LEECHING;
 			expected = CREATURE;
 			preferred = ENEMY;
-			cost *= 1.4;
 			break;
 		case 27:
 			effect = INSTAKILL;
 			expected = CREATURE;
 			preferred = ENEMY;
-			cost *= 2.1;
 			break;
 		case 28: 
 			effect = DEBUFFING;
 			expected = CREATURE;
 			preferred = ENEMY;
-			cost *= 1.3;
 			break;
 		case 29:
 			effect = UNSUMMON;
 			expected = CREATURE;
 			preferred = ENEMY;
-			cost *= 1.3;
 			break;
 		case 30:
 			effect = BANISHING;
 			expected = CREATURE;
 			preferred = ENEMY;
-			cost *= 1.4;
 			break;
 		case 31:
 			effect = MANA_DAMAGE;
 			expected = CREATURE;
 			preferred = ENEMY;
-			cost *= 1.1;
 			break;
 		case 32:
 			effect = DOOM_TIMER;
 			expected = CREATURE;
 			preferred = ENEMY;
-			cost *= 1.4;
 			break;
 		case 33:
 			effect = DARKNESS;  //no idea how an elemental darkness would work, but I'll figure it out
 			expected = TILE;
 			preferred = NEUTRAL;
-			cost *= 1;
 			break;
 		case 34:
 			effect = PERCENTILE_DAMAGE;
 			expected = CREATURE;
 			preferred =  ENEMY;
-			cost *= 1.3;
 			break;
 		case 35:
 			effect = RESURRECT;
 			expected = CREATURE;
 			preferred = NEUTRAL;
-			cost *= 1.5;
 			break;
 			
 		//THESE SPELL EFFECTS NEED SPECIFIC TARGETING TYPES
@@ -389,37 +339,32 @@ Spell::Spell(int level){
 			effect = TELEPORTAL;
 			expected = TILE;
 			preferred = NEUTRAL;
-			cost *= 1;
 			break;
 		case 37:
 			effect = ALTER_TERRAIN;
 			expected = TILE;
 			preferred = NEUTRAL;
-			cost *= 1.2;
 			break;
 		case 38:
 			effect = ITEM_CREATION;
 			expected = ITEM;
 			preferred = NEUTRAL;
-			cost *= 1.4;
+			targeting = SELF;
 			break;
 		case 39:
 			effect = LINK;
 			expected = CREATURE;
 			preferred = NEUTRAL;
-			cost *= 1.1;
 			break;
 		case 40:
 			effect = LIFE_TAP;
 			expected = CREATURE;
 			preferred = NEUTRAL;
-			cost *= 1;
 			break;
 		case 41:
 			effect = SUMMON;
 			expected = TILE;
 			preferred = NEUTRAL;
-			cost *= 1.6;
 			break;
 		default: effect = NO_EFFECT; break;
 	}
@@ -429,6 +374,181 @@ Spell::Spell(int level){
 float Spell::setTarget(){
 	TCODRandom *rng = TCODRandom::getInstance();
 	int low = 0, high = 0, lowest = 0, highest = 0, lowT = 0, highT = 0;
+	
+	
+	switch (targeting) {
+		case SELF:
+			cost *= 1;
+			break;
+		case ADJACENT_TILE:
+			cost *= 1;
+			break;
+		case BOLT_SPELL:
+			cost *= 1.1;
+			break;
+		case VISUAL_HOLOCAUST:
+			cost *= 1.5;
+			break;
+		case LEVEL_WIDE_HOLOCAUST:
+			cost *= 1.8;
+			break;
+		case RANDOM_IN_LOS:
+			cost *= 0.8;
+			break;
+		case RANDOM_IN_LEVEL:
+			cost *= 1.2;
+			break;
+		case ALL_ADJACENT_TILES:
+			cost *= 1.3;
+			break;
+		case ALL_CREATURES_CHAINING:
+			cost *= 1.3;
+			break;
+		case ALL_CREATURES_IN_LEVEL:
+			cost *= 2.0;
+			break;
+		case ALL_CREATURES_IN_LINE:
+			cost *= 1.4;
+			break;
+		case SINGLE_CREATURE_IN_SIGHT:
+			cost *= 1;
+			break;
+		case ALL_CREATURES_IN_RADIUS:
+			cost *= 1.3;
+			break;
+		case X_CREATURES_IN_SIGHT:
+			cost *= 1.2;
+			break;
+		case: ALL_CREATURES_IN_LOS:
+			cost *= 1.4;
+			break;
+	}
+	
+	switch (effect) {
+		case STRAIGHT_HEAL:
+			cost *= 1;
+			break;
+		case HEAL_OVER_TIME:
+			cost *= .8;
+			break;
+		case STAT_BOOST:
+			cost *= 1;
+			break;
+		case CURE_DEBUFFS:
+			cost *= 1.1;
+			break;
+		case DETECTION:
+			cost *= 1.1;
+			break;
+		case POLYMORPH:
+			cost *= 1.5;
+			break;
+		case SHAPE_SHIFTING:
+			cost *= 1.1;
+			break;
+		case LIGHT:
+			cost *= 1;
+			break;
+		case ILLUSION:
+			cost *= 1.2;
+			break;
+		case SIMULACRUM:
+			cost *= 1.4;
+			break;
+		case SHIELD:
+			cost *= 1.1;
+			break;
+		case REFLECTION: 
+			cost *= 1.2;
+			break;
+		case ABSORPTION:
+			cost *= 1.2;
+			break;
+		case ANTIMAGIC_ZONE:
+			cost *= 1.3;
+			break;
+		case DAMAGING_TELEPORT:
+			cost *= 1.4;
+			break;
+		case DAMAGING_PULL:
+			cost *= 1.2;
+			break;
+		case DAMAGING_PUSH:
+			cost *= 1.3;
+			break;
+		case WEAPON_ENHANCEMENT:
+			cost *= 1.3;
+			break;
+		case PROTECT_FROM_HAZARDS:
+			cost *= 1.2;
+			break;
+		case TELEPORT:
+			cost *= 1.2;
+			break;
+		case STRAIGHT_DAMAGE:
+			cost *= 1.1;
+			break;
+		case BLEED_DAMAGE:
+			cost *= 1;
+			break;
+		case STAT_DRAIN:
+			cost *= 1.1;
+			break;
+		case STAT_SAPPING:
+			cost *= 1.3;
+			break;
+		case LIFE_LEECHING:
+			cost *= 1.4;
+			break;
+		case MANA_LEECHING:
+			cost *= 1.4;
+			break;
+		case INSTAKILL:
+			cost *= 2.1;
+			break;
+		case DEBUFFING:
+			cost *= 1.3;
+			break;
+		case UNSUMMON:
+			cost *= 1.3;
+			break;
+		case BANISHING:
+			cost *= 1.4;
+			break;
+		case MANA_DAMAGE:
+			cost *= 1.1;
+			break;
+		case DOOM_TIMER:
+			cost *= 1.4;
+			break;
+		case DARKNESS:
+			cost *= 1;
+			break;
+		case PERCENTILE_DAMAGE:
+			cost *= 1.3;
+			break;
+		case RESURRECT:
+			cost *= 1.5;
+			break;
+		case TELEPORTAL:
+			cost *= 1;
+			break;
+		case ALTER_TERRAIN:
+			cost *= 1.2;
+			break;
+		case ITEM_CREATION:
+			cost *= 1.4;
+			break;
+		case LINK:
+			cost *= 1.1;
+			break;
+		case LIFE_TAP:
+			cost *= 1;
+			break;
+		case SUMMON:
+			cost *= 1.6;
+			break;
+	}
 	
 	low = rng->getInt((int).8*cost,(int)cost);
 	high = rng->getInt((int)cost,(int)1.2*cost);

@@ -419,7 +419,7 @@ float Spell::setTarget(){
 		case X_CREATURES_IN_SIGHT:
 			cost *= 1.2;
 			break;
-		case: ALL_CREATURES_IN_LOS:
+		case ALL_CREATURES_IN_LOS:
 			cost *= 1.4;
 			break;
 	}
@@ -549,6 +549,8 @@ float Spell::setTarget(){
 			cost *= 1.6;
 			break;
 	}
+	
+	cost = ceil(cost);
 	
 	low = rng->getInt((int).8*cost,(int)cost);
 	high = rng->getInt((int)cost,(int)1.2*cost);

@@ -147,12 +147,12 @@ Spell::Spell(int level){
 	if (targeting == SELF) {
 		int fart = rng->getInt(1,500);  //make it very unlikely for a bad spell to become a self-targeting spell
 		if (fart <= 499) {
-			effectSwitch = rng->getInt(1,20);
+			effectSwitch = rng->getInt(1,18);
 		} else {
-			effectSwitch = rng->getInt(1,41);
+			effectSwitch = rng->getInt(1,43);
 		}
 	} else {
-		effectSwitch = rng->getInt(1,41);
+		effectSwitch = rng->getInt(1,43);
 	}
 	
 	switch (effectSwitch) {
@@ -229,35 +229,35 @@ Spell::Spell(int level){
 		case 15:
 			effect = DAMAGING_TELEPORT;
 			expected = CREATURE;
-			preferred = ENEMY;
+			preferred = NEUTRAL;
 			break;
-		case 16: 
-			effect = DAMAGING_PULL;
-			expected = CREATURE;
-			preferred = ENEMY;
-			break;
-		case 17:
-			effect = DAMAGING_PUSH;
-			expected = CREATURE;
-			preferred = ENEMY;
-			break;
-		case 18:
+		case 16:
 			effect = WEAPON_ENHANCEMENT;
 			expected = CREATURE;
 			preferred = FRIENDLY;
 			break;
-		case 19:
+		case 17:
 			effect = PROTECT_FROM_HAZARDS;
 			expected = CREATURE;
 			preferred = FRIENDLY;
 			break;
-		case 20:
+		case 18:
 			effect = TELEPORT;
 			expected = CREATURE;
 			preferred = NEUTRAL;
 			break;
 			
 		//THESE SPELLS ARE BAD FOR SELF-TARGETING SPELLS 
+		case 19: 
+			effect = DAMAGING_PULL;
+			expected = CREATURE;
+			preferred = ENEMY;
+			break;
+		case 20:
+			effect = DAMAGING_PUSH;
+			expected = CREATURE;
+			preferred = ENEMY;
+			break;
 		case 21:
 			effect = STRAIGHT_DAMAGE;
 			expected = CREATURE;
@@ -331,7 +331,17 @@ Spell::Spell(int level){
 		case 35:
 			effect = RESURRECT;
 			expected = CREATURE;
-			preferred = NEUTRAL;
+			preferred = FRIENDLY;
+			break;
+		case 42:
+			effect = PULL;
+			expected = CREATURE;
+			preferred = ENEMY;
+			break;
+		case 43:
+			effect = PULL;
+			expected = CREATURE;
+			preferred = ENEMY;
 			break;
 			
 		//THESE SPELL EFFECTS NEED SPECIFIC TARGETING TYPES
@@ -354,18 +364,21 @@ Spell::Spell(int level){
 		case 39:
 			effect = LINK;
 			expected = CREATURE;
-			preferred = NEUTRAL;
+			preferred = ENEMY;
 			break;
 		case 40:
 			effect = LIFE_TAP;
 			expected = CREATURE;
 			preferred = NEUTRAL;
+			targeting = SELF;
 			break;
 		case 41:
 			effect = SUMMON;
 			expected = TILE;
 			preferred = NEUTRAL;
+			targeting = ADJACENT_TILE;
 			break;
+		
 		default: effect = NO_EFFECT; break;
 	}
 	
@@ -422,6 +435,7 @@ float Spell::setTarget(){
 		case ALL_CREATURES_IN_LOS:
 			cost *= 1.4;
 			break;
+		default: break;
 	}
 	
 	switch (effect) {
@@ -548,6 +562,13 @@ float Spell::setTarget(){
 		case SUMMON:
 			cost *= 1.6;
 			break;
+		case PULL:
+			cost *= 1;
+			break;
+		case PUSH:
+			cost *= 1.1;
+			break;
+		default: break;
 	}
 	
 	cost = ceil(cost);

@@ -45,13 +45,15 @@ public:
 		ABSORPTION, //absorb damage done by to the caster by spells of a certain type, refunding mana to the caster and preventing damage
 		ANTIMAGIC_ZONE, //create a zone in which magic (or perhaps a certain elemental subtype of magic) cannot be cast (even by the caster) for a certain amount of time
 		DAMAGING_TELEPORT, //teleports the target(s) and damages those around the target(s)'s starting location in a radius
-		DAMAGING_PULL, //pulls enemies in the targeted area strictly towards the caster, while also doing elemental damage to them
-		DAMAGING_PUSH, //pushes enemies in the targeted area strictly away from the caster and damages them. perhaps does extra damage if they hit a wall and cannot be pushed the full distance away
 		WEAPON_ENHANCEMENT, //gives an elemental brand (and perhaps other stat bonuses) to the equipped weapon(s) of the selected target for a limited amount of time
 		PROTECT_FROM_HAZARDS, //protects the target(s) from elemental hazards (lava, glass shards, radiation, etc...), as determined by the elemental subtype of the casting
 		TELEPORT, //teleports the target(s) to a random location
 		
 		//these ones aren't great for self-targeting spells
+		DAMAGING_PULL, //pulls target(s) strictly towards the caster, while also doing elemental damage to them
+		DAMAGING_PUSH, //pushes target(s) strictly away from the caster and damages them. perhaps does extra damage if they hit a wall and cannot be pushed the full distance away
+		PULL, //pull target(s) towards the caster
+		PUSH, //push target(s) away from the caster
 		STRAIGHT_DAMAGE, //does HP damage to the target(s)
 		BLEED_DAMAGE, //does small HP damage to the target(s)
 		STAT_DRAIN, //reduce the target(s) stat(s)

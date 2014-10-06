@@ -48,6 +48,8 @@ public:
 		WEAPON_ENHANCEMENT, //gives an elemental brand (and perhaps other stat bonuses) to the equipped weapon(s) of the selected target for a limited amount of time
 		PROTECT_FROM_HAZARDS, //protects the target(s) from elemental hazards (lava, glass shards, radiation, etc...), as determined by the elemental subtype of the casting
 		TELEPORT, //teleports the target(s) to a random location
+		DAMAGING_AURA, //places a damaging circular aura around the target(s) that damages surrounding creatures indiscriminately (enemies, neutrals, and friendlies could be damaged)
+		INTELLIGENT_DAMAGING_AURA, //places a damaging circular aura around the the target(s) that damages only the enemies of the target
 		
 		//these ones aren't great for self-targeting spells
 		DAMAGING_PULL, //pulls target(s) strictly towards the caster, while also doing elemental damage to them
@@ -69,6 +71,7 @@ public:
 		DARKNESS,       // not sure how an elemental subtype of a light or darkness spell would work, but perhaps hide or highly increase the stealth value of a creature that would be masked by the elemental darkness (water creature hide in water-darkness)
 		PERCENTILE_DAMAGE, //deals a set percentage of the target(s) max HP
 		RESURRECT, //resurrect dead target(s), does nothing to living target(s)
+		
 		
 		//these ones aren't so compatible with all targeting types
 		TELEPORTAL, //creates a point on the ground to which the caster will return when he casts a teleportation spell, if he's in range; otherwise, his location upon teleportation will be random

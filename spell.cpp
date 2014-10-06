@@ -147,12 +147,12 @@ Spell::Spell(int level){
 	if (targeting == SELF) {
 		int fart = rng->getInt(1,500);  //make it very unlikely for a bad spell to become a self-targeting spell
 		if (fart <= 499) {
-			effectSwitch = rng->getInt(1,18);
+			effectSwitch = rng->getInt(1,20);
 		} else {
-			effectSwitch = rng->getInt(1,43);
+			effectSwitch = rng->getInt(1,45);
 		}
 	} else {
-		effectSwitch = rng->getInt(1,43);
+		effectSwitch = rng->getInt(1,45);
 	}
 	
 	switch (effectSwitch) {
@@ -246,133 +246,143 @@ Spell::Spell(int level){
 			expected = CREATURE;
 			preferred = NEUTRAL;
 			break;
-			
+		case 19:
+			effect = DAMAGING_AURA;
+			expected = CREATURE;
+			preferred = FRIENDLY;
+			break;
+		case 20:
+			effect = INTELLIGENT_DAMAGING_AURA;
+			expected = CREATURE;
+			preferred = FRIENDLY;
+			break;
+		
 		//THESE SPELLS ARE BAD FOR SELF-TARGETING SPELLS 
-		case 19: 
+		case 21: 
 			effect = DAMAGING_PULL;
 			expected = CREATURE;
 			preferred = ENEMY;
 			break;
-		case 20:
+		case 22:
 			effect = DAMAGING_PUSH;
 			expected = CREATURE;
 			preferred = ENEMY;
 			break;
-		case 21:
+		case 23:
 			effect = STRAIGHT_DAMAGE;
 			expected = CREATURE;
 			preferred = ENEMY;
 			break;
-		case 22:
+		case 24:
 			effect = BLEED_DAMAGE;
 			expected = CREATURE;
 			preferred = ENEMY;
 			break;
-		case 23:
+		case 25:
 			effect = STAT_DRAIN;
 			expected = CREATURE;
 			preferred = ENEMY;
 			break;
-		case 24:
+		case 26:
 			effect = STAT_SAPPING;
 			expected = CREATURE;
 			preferred = ENEMY;
 			break;
-		case 25:
+		case 27:
 			effect = LIFE_LEECHING;
 			expected = CREATURE;
 			preferred = ENEMY;
 			break;
-		case 26:
+		case 28:
 			effect = MANA_LEECHING;
 			expected = CREATURE;
 			preferred = ENEMY;
 			break;
-		case 27:
+		case 29:
 			effect = INSTAKILL;
 			expected = CREATURE;
 			preferred = ENEMY;
 			break;
-		case 28: 
+		case 30: 
 			effect = DEBUFFING;
 			expected = CREATURE;
 			preferred = ENEMY;
 			break;
-		case 29:
+		case 31:
 			effect = UNSUMMON;
 			expected = CREATURE;
 			preferred = ENEMY;
 			break;
-		case 30:
+		case 32:
 			effect = BANISHING;
 			expected = CREATURE;
 			preferred = ENEMY;
 			break;
-		case 31:
+		case 33:
 			effect = MANA_DAMAGE;
 			expected = CREATURE;
 			preferred = ENEMY;
 			break;
-		case 32:
+		case 34:
 			effect = DOOM_TIMER;
 			expected = CREATURE;
 			preferred = ENEMY;
 			break;
-		case 33:
+		case 35:
 			effect = DARKNESS;  //no idea how an elemental darkness would work, but I'll figure it out
 			expected = TILE;
 			preferred = NEUTRAL;
 			break;
-		case 34:
+		case 36:
 			effect = PERCENTILE_DAMAGE;
 			expected = CREATURE;
 			preferred =  ENEMY;
 			break;
-		case 35:
+		case 37:
 			effect = RESURRECT;
 			expected = CREATURE;
 			preferred = FRIENDLY;
 			break;
-		case 42:
+		case 38:
 			effect = PULL;
 			expected = CREATURE;
 			preferred = ENEMY;
 			break;
-		case 43:
+		case 39:
 			effect = PULL;
 			expected = CREATURE;
 			preferred = ENEMY;
 			break;
 			
 		//THESE SPELL EFFECTS NEED SPECIFIC TARGETING TYPES
-		case 36:
+		case 40:
 			effect = TELEPORTAL;
 			expected = TILE;
 			preferred = NEUTRAL;
 			break;
-		case 37:
+		case 41:
 			effect = ALTER_TERRAIN;
 			expected = TILE;
 			preferred = NEUTRAL;
 			break;
-		case 38:
+		case 42:
 			effect = ITEM_CREATION;
 			expected = ITEM;
 			preferred = NEUTRAL;
 			targeting = SELF;
 			break;
-		case 39:
+		case 43:
 			effect = LINK;
 			expected = CREATURE;
 			preferred = ENEMY;
 			break;
-		case 40:
+		case 44:
 			effect = LIFE_TAP;
 			expected = CREATURE;
 			preferred = NEUTRAL;
 			targeting = SELF;
 			break;
-		case 41:
+		case 45:
 			effect = SUMMON;
 			expected = TILE;
 			preferred = NEUTRAL;
@@ -567,6 +577,12 @@ float Spell::setTarget(){
 			break;
 		case PUSH:
 			cost *= 1.1;
+			break;
+		case DAMAGING_AURA:
+			cost *= 1.3;
+			break;
+		case INTELLIGENT_DAMAGING_AURA:
+			cost *= 1.4;
 			break;
 		default: break;
 	}

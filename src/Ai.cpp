@@ -367,3 +367,17 @@ void ConfusedMonsterAi::update(Actor *owner) {
 	}
 }
 
+
+
+/* TODO:
+THINK ABOUT ADDING A SCENT SYSTEM THAT AN AI COULD USE TO DETECT OTHER ACTORS
+		-add scent fields (Source and Strength) to the Tile struct
+		-add a means for scent to diminish over time (perhaps when render function goes through every tile on the map, to diminish how often every tile gets iterated over each turn) 
+		-actors generate scent clouds of a certain radius, with drop-off of intensity near the edge
+			-add an aura that can increase or diminish scent cloud size/intensity
+			-provide for the possibility that someone of stronger scent may override the scent of someone else
+		-certain (or all) AI modules can sniff for scent clouds
+		-once they find a scent, look for tiles with a higher scent in search of the player
+		-this ties in with the mana-scent idea I proposed in spell.hpp, so perhaps three fields will be needed for scent, if I wanted to distinguish scents by elemental subtype
+		-might need to add a module called "smelly" to Actor to accomodate these changes
+ */

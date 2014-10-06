@@ -51,29 +51,18 @@ IMMEDIATE TODO (WILL UPDATE AS TASKS GET COMPLETED)(MANY OTHER LONGER-TERM TODOs
 	
 	FINISH SPELLCASTING SYSTEM (THESE FILES ARE NOT IN THE SOURCE YET, AS THE GAME WILL NOT COMPILE WITH THEM AS THEY STAND NOW)
 		-Finish procedural spell generation
-			-*DONE*Add cost modifiers to different spell effects and target selectors
+			-**DONE**Add cost modifiers to different spell effects and target selectors
 			-Finish the choosing of the "pinpoint" versions of targetSelectors
 			-restrict the targetSelector options for the few spells that aren't compatible with most targetSelectors
-			-*DONE*change the way cost is calculated because right now it is actually bad (move it into the setTarget() function
+			-**DONE**change the way cost is calculated because right now it is actually bad (move it into the setTarget() function
 		-Add the actual spell.cast() function
 			-need a means to determine the elemental subtype of a spell
 			-need a means to select the appropriate targets for a spell
 			-need a means to resolve the effects of casting a spell
 	
-	THINK ABOUT ADDING A SCENT SYSTEM THAT AN AI COULD USE TO DETECT OTHER ACTORS
-		-add scent fields (Source and Strength) to the Tile struct
-		-add a means for scent to diminish over time (perhaps when render function goes through every tile on the map, to diminish how often every tile gets iterated over each turn) 
-		-actors generate scent clouds of a certain radius, with drop-off of intensity near the edge
-			-add an aura that can increase or diminish scent cloud size/intensity
-			-provide for the possibility that someone of stronger scent may override the scent of someone else
-		-certain (or all) AI modules can sniff for scent clouds
-		-once they find a scent, look for tiles with a higher scent in search of the player
-		-this ties in with the mana-scent idea I proposed in spell.hpp, so perhaps three fields will be needed for scent, if I wanted to distinguish scents by elemental subtype
-		-might need to add a module called "smelly" to Actor to accomodate these changes
-
-
+	
 DONE (TASKS THAT HAVE BEEN COMPLETED SINCE THE ABOVE SECTION WAS ADDED):
-	*FIXED* FIX THE WAY DEATH MESSAGES ARE PRESENTED
-		-*FIXED*currently, embarassingly, the text for a monster dying is displayed before the text saying you've hit the monster for X damage (for the killing blow)
-		-*FIXED* also, this text currently displays as "The dead orc is now dead!" signifying that his name is changed to his corpseName before the message is read out
+	**FIXED** FIX THE WAY DEATH MESSAGES ARE PRESENTED
+		-**FIXED**currently, embarassingly, the text for a monster dying is displayed before the text saying you've hit the monster for X damage (for the killing blow)
+		-**FIXED** also, this text currently displays as "The dead orc is now dead!" signifying that his name is changed to his corpseName before the message is read out
 		

@@ -30,51 +30,51 @@ public:
 	};
 	enum SpellEffect {  //this is the effect of the spell (pretty straight-forward)
 		NO_EFFECT,
-		STRAIGHT_HEAL,
-		HEAL_OVER_TIME,
-		STAT_BOOST,
-		CURE_DEBUFFS,
-		DETECTION,
-		POLYMORPH,      //permanent
-		SHAPE_SHIFTING, //temporary
+		STRAIGHT_HEAL, //heal damage from the caster (restore HP)
+		HEAL_OVER_TIME, //restore hp a small amount for a set number of turns
+		STAT_BOOST, //increase a stat or stats
+		CURE_DEBUFFS, //remove harmful status effects from the caster
+		DETECTION, //detect items or creatures on the specified tiles
+		POLYMORPH,      //permanent changing of a creature's form
+		SHAPE_SHIFTING, //temporary changing of a creature's form
 		LIGHT,          // not sure how an elemental subtype of a light or darkness spell would work
-		ILLUSION,
-		SIMULACRUM,
-		SHIELD,
-		REFLECTION,
-		ABSORPTION,
-		ANTIMAGIC_ZONE,
-		DAMAGING_TELEPORT,
-		DAMAGING_PULL,
-		DAMAGING_PUSH,
-		WEAPON_ENHANCEMENT,
-		PROTECT_FROM_HAZARDS,
-		TELEPORT,
+		ILLUSION, //create an illusory version of the caster in the specified tiles
+		SIMULACRUM, //create a copy of the target creature a few tiles away from it, that is friendly towards the caster
+		SHIELD, //shield the caster from a set amount (and subtype) of damage before disappearing
+		REFLECTION, //reflect a set amount (and type) of damage back towards the attacker
+		ABSORPTION, //absorb damage done by to the caster by spells of a certain type, refunding mana to the caster and preventing damage
+		ANTIMAGIC_ZONE, //create a zone in which magic (or perhaps a certain elemental subtype of magic) cannot be cast (even by the caster) for a certain amount of time
+		DAMAGING_TELEPORT, //teleports the target(s) and damages those around the target(s)'s starting location in a radius
+		DAMAGING_PULL, //pulls enemies in the targeted area strictly towards the caster, while also doing elemental damage to them
+		DAMAGING_PUSH, //pushes enemies in the targeted area strictly away from the caster and damages them. perhaps does extra damage if they hit a wall and cannot be pushed the full distance away
+		WEAPON_ENHANCEMENT, //gives an elemental brand (and perhaps other stat bonuses) to the equipped weapon(s) of the selected target for a limited amount of time
+		PROTECT_FROM_HAZARDS, //protects the target(s) from elemental hazards (lava, glass shards, radiation, etc...), as determined by the elemental subtype of the casting
+		TELEPORT, //teleports the target(s) to a random location
 		
 		//these ones aren't great for self-targeting spells
-		STRAIGHT_DAMAGE,
-		BLEED_DAMAGE,
-		STAT_DRAIN,
-		STAT_SAPPING,
-		LIFE_LEECHING,
-		MANA_LEECHING,
-		INSTAKILL,
-		DEBUFFING,
-		UNSUMMON,       //would seem to be incompatible with most targeting types (or at least usually useless), but it could attempted to completely destroy a summoned target and just weaken non-summoned targets
-		BANISHING,
-		MANA_DAMAGE,
-		DOOM_TIMER,
-		DARKNESS,       // not sure how an elemental subtype of a light or darkness spell would work
-		PERCENTILE_DAMAGE,
-		RESURRECT,
-
+		STRAIGHT_DAMAGE, //does HP damage to the target(s)
+		BLEED_DAMAGE, //does small HP damage to the target(s)
+		STAT_DRAIN, //reduce the target(s) stat(s)
+		STAT_SAPPING, //reduce the target(s) stat(s) and increase the caster's corresponding stat(s)
+		LIFE_LEECHING, //do bleed damage to the target(s) and do a corresponding amount of healing over time to the caster
+		MANA_LEECHING, //do bleed damage to the target(s)'s mana resource(s) and restore a corresponding amount of the same resource(s) to the caster [do nothing if they have none]
+		INSTAKILL, //instantly reduce the target(s) HP to zero
+		DEBUFFING, //lower the stats of a target, or inflicts them with certain other status effects (blinded, slowed, confused, etc) for a certain amount of time
+		UNSUMMON,       //would seem to be incompatible with most targeting types (or at least it will be usually useless), but it could attempted to completely destroy a summoned target and just weaken non-summoned targets
+		BANISHING, //send the target(s) to another dimension, removing them from the map, but not necessarily killing them; hopefully, I will get around to making this "other dimension" an accessible location, so that the player could be sent here (or send himself here) and have to fight the enemies he sends away
+		MANA_DAMAGE, //inflict damage to the target(s) mana resource(s) [do nothing if they have none]
+		DOOM_TIMER, //set a timer of a set length on the target(s), which decrements each turn; after the timer reaches zero, they are instakilled
+		DARKNESS,       // not sure how an elemental subtype of a light or darkness spell would work, but perhaps hide or highly increase the stealth value of a creature that would be masked by the elemental darkness (water creature hide in water-darkness)
+		PERCENTILE_DAMAGE, //deals a set percentage of the target(s) max HP
+		RESURRECT, //resurrect dead target(s), does nothing to living target(s)
+		
 		//these ones aren't so compatible with all targeting types
-		TELEPORTAL,
-		ALTER_TERRAIN,
-		ITEM_CREATION,
-		LINK,
-		LIFE_TAP,
-		SUMMON
+		TELEPORTAL, //creates a point on the ground to which the caster will return when he casts a teleportation spell, if he's in range; otherwise, his location upon teleportation will be random
+		ALTER_TERRAIN, //adds or removes hazards from the ground (lava pools, shards of glass, etc)
+		ITEM_CREATION, //creates an item of artifact quality for the caster. this one will likely be restricted to MAJOR intensity or above
+		LINK, //"links" the caster and the target. they will share damage or debuffs or something
+		LIFE_TAP, //sacrifices some of the caster's life in exchange for mana of all types
+		SUMMON //summons a random creature near the caster
 		
 		
 	};

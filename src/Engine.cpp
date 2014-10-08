@@ -191,6 +191,9 @@ void Engine::update(){
 		save();
 		load(true);
 	}
+	if (lastKey.vk == TCODK_ENTER && lastKey.ralt) {
+		fullscreen();
+	}
 	player->update();
 	if (gameStatus == NEW_TURN){
 		player->updateAuras();
@@ -540,4 +543,16 @@ const char *Engine::chooseSaveFile(TCODList<const char *> savepaths) {
 		}
 	}
 	return NULL;
+}
+
+void Engine::fullscreen() {
+	int w,h;
+	if (!TCODConsole::isFullscreen()) {
+		engine.gui->message(TCODColor::darkerPink,"going big!");
+		TCODSystem::getCurrentResolution(&w,&h);
+		TCODConsole::initRoot(w/8,h/8,"CASTER EDITION",true);
+	} else {
+		engine.gui->message(TCODColor::darkerPink,"minimizing");
+		TCODConsole::initRoot(engine.screenWidth,engine.screenHeight,"CASTER EDITION",false);
+	}
 }

@@ -37,6 +37,7 @@ public:
 	void nextLevel();
 	float distance(int x1, int x2, int y1, int y2);  //returns the distance between two cells
 	const char* chooseSaveFile(TCODList<const char *> savepaths);   //returns the path to the save file that should be loaded
+	void fullscreen(); //make it fullscreen if it isn't, or make it smaller if it is 
 };
 
 extern Engine engine;

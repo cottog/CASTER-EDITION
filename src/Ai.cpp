@@ -106,7 +106,7 @@ void PlayerAi::update(Actor *owner){
 		case TCODK_KP6: 
 			dx = 1; 
 			break;
-		case TCODK_CHAR: handleActionKey(owner, engine.lastKey.c); break;
+		case TCODK_CHAR: handleActionKey(owner, engine.lastKey.c, (engine.lastKey.rctrl || engine.lastKey.lctrl), (engine.lastKey.ralt || engine.lastKey.lalt)); break;
 		default: break;
 	}
 	if ( dx != 0 || dy != 0){
@@ -152,7 +152,7 @@ bool PlayerAi::moveOrAttack(Actor *owner, int targetx, int targety){
 	return true;
 }
 
-void PlayerAi::handleActionKey(Actor *owner, int ascii) {
+void PlayerAi::handleActionKey(Actor *owner, int ascii, bool control, bool alt) {
 	switch (ascii) {
 		case 'g': //pickup item 
 		{
@@ -206,22 +206,17 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii) {
 			}
 		}
 		break;
-		case 'V': //make it fullscreen
-		{
-			int w,h;
-			if (!TCODConsole::isFullscreen()) {
-				engine.gui->message(TCODColor::darkerPink,"going big!");
-				TCODSystem::getCurrentResolution(&w,&h);
-				TCODConsole::initRoot(w/8,h/8,"CASTER EDITION",true);
-			} else {
-				engine.gui->message(TCODColor::darkerPink,"minimizing");
-				TCODConsole::initRoot(engine.screenWidth,engine.screenHeight,"CASTER EDITION",false);
-			}
-		}
-		break;
 		case 'l' : //use the 'l'ook function
 		{
 			engine.gui->renderKeyLook();
+		}
+		break;
+		case 's':
+		{
+			if (control) {
+				engine.save();
+				engine.gui->message(TCODColor::lightPink, "SAVED");
+			}
 		}
 		break;
 	}

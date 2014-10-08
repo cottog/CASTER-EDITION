@@ -60,7 +60,11 @@ IMMEDIATE TODO (WILL UPDATE AS TASKS GET COMPLETED)(MANY OTHER LONGER-TERM TODOs
 			-need a means to select the appropriate targets for a spell
 			-need a means to resolve the effects of casting a spell
 	
-	
+	MAKE AN ENGINE OR GUI FUNCTION THAT CAN HANDLE LETTING THE PLAYER CHOOSE FROM ANY TCODLIST THAT GETS PASSED TO IT
+		this will make it so one function is called to handle inventory and spellbook choices, and perhaps other containers that the player may be able to chose from
+			
+
+
 DONE (TASKS THAT HAVE BEEN COMPLETED SINCE THE ABOVE SECTION WAS ADDED):
 	**FIXED** FIX THE WAY DEATH MESSAGES ARE PRESENTED
 		-**FIXED**currently, embarassingly, the text for a monster dying is displayed before the text saying you've hit the monster for X damage (for the killing blow)

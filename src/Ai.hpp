@@ -19,7 +19,7 @@ public:
 	void save(TCODZip &zip);
 protected:
 	bool moveOrAttack(Actor *owner, int targetx, int targety);
-	void handleActionKey(Actor *owner, int ascii);
+	void handleActionKey(Actor *owner, int ascii, bool control, bool alt);
 	Actor *choseFromInventory(Actor *owner);
 };
 

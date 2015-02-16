@@ -5,7 +5,7 @@ public:
 		MINOR,MAJOR,NORMAL,EPIC
 	};
 	enum ExpectedTarget {    //whether this particular spell is targeting items, creatures, or people
-		ITEM, CREATURE, TILE
+		ITEM, CREATURE, TILE   //item is as yet unused
 	};
 	enum PreferredType {   //who the spell would prefer to target
 		NEUTRAL, ENEMY, FRIENDLY
@@ -22,7 +22,7 @@ public:
 		ADJACENT_FRIENDLIES, ADJACENT_ENEMIES, ALL_ADJACENT_TILES, //chooses creatures from the 8 tiles immediately adjacent to the caster
 		FRIENDLY_CHAINING, HOSTILE_CHAINING, ALL_CREATURES_CHAINING,  //like chain lightning
 		ALL_FRIENDS_IN_LEVEL, ALL_ENEMIES_IN_LEVEL, ALL_CREATURES_IN_LEVEL, //chooses all creatures in the level
-		ALL_FRIENDLIES_IN_LINE, ALL_ENEMIES_IN_LINE, ALL_CREATURES_IN_LINE, //penetrating spell; passes through enemies and hits each in a line
+		ALL_FRIENDLIES_IN_LINE, ALL_ENEMIES_IN_LINE, ALL_CREATURES_IN_LINE, //penetrating spell; penetrates targets, ignores creatures that aren't targets.
 		ALL_FRIENDLIES_IN_RADIUS, ALL_ENEMIES_IN_RADIUS, ALL_CREATURES_IN_RADIUS, //ball spell
 		SINGLE_FRIENDLY_IN_SIGHT, SINGLE_ENEMY_IN_SIGHT, SINGLE_CREATURE_IN_SIGHT, //single chosen target in sight. not random like the above one
 		X_FRIENDLIES_IN_SIGHT, X_ENEMIES_IN_SIGHT, X_CREATURES_IN_SIGHT, //chooses X random creatures in LoS of the caster

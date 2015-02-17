@@ -7,10 +7,10 @@ public:
 	enum ExpectedTarget {    //whether this particular spell is targeting items, creatures, or people
 		ITEM, CREATURE, TILE   //item is as yet unused
 	};
-	enum PreferredType {   //who the spell would prefer to target
+	enum TargetType {   //who the spell would prefer to target
 		NEUTRAL, ENEMY, FRIENDLY
 	};
-	enum TargetType {   //this determines how the spell will select a target
+	enum TargetSystem {   //this determines how the spell will select a target
 		NO_TARGET,
 		SELF, //target the caster
 		ADJACENT_TILE, //one random tile next to the caster
@@ -19,14 +19,14 @@ public:
 		LEVEL_WIDE_HOLOCAUST, //exactly as the above, but level-wide instead of restricted to sight
 		RANDOM_IN_LOS,  //single random target in LOS
 		RANDOM_IN_LEVEL, //single random target in level
-		ADJACENT_FRIENDLIES, ADJACENT_ENEMIES, ALL_ADJACENT_TILES, //chooses creatures from the 8 tiles immediately adjacent to the caster
-		FRIENDLY_CHAINING, HOSTILE_CHAINING, ALL_CREATURES_CHAINING,  //like chain lightning
-		ALL_FRIENDS_IN_LEVEL, ALL_ENEMIES_IN_LEVEL, ALL_CREATURES_IN_LEVEL, //chooses all creatures in the level
-		ALL_FRIENDLIES_IN_LINE, ALL_ENEMIES_IN_LINE, ALL_CREATURES_IN_LINE, //penetrating spell; penetrates targets, ignores creatures that aren't targets.
-		ALL_FRIENDLIES_IN_RADIUS, ALL_ENEMIES_IN_RADIUS, ALL_CREATURES_IN_RADIUS, //ball spell
-		SINGLE_FRIENDLY_IN_SIGHT, SINGLE_ENEMY_IN_SIGHT, SINGLE_CREATURE_IN_SIGHT, //single chosen target in sight. not random like the above one
-		X_FRIENDLIES_IN_SIGHT, X_ENEMIES_IN_SIGHT, X_CREATURES_IN_SIGHT, //chooses X random creatures in LoS of the caster
-		ALL_FRIENDLIES_IN_LOS, ALL_ENEMIES_IN_LOS, ALL_CREATURES_IN_LOS //chooses all creatures in line of sight
+		ALL_ADJACENT_TILES, //chooses creatures from the 8 tiles immediately adjacent to the caster
+		ALL_CREATURES_CHAINING,  //like chain lightning
+		ALL_CREATURES_IN_LEVEL, //chooses all creatures in the level
+		ALL_CREATURES_IN_LINE, //penetrating spell; penetrates targets, ignores creatures that aren't targets.
+		ALL_CREATURES_IN_RADIUS, //ball spell
+		SINGLE_CREATURE_IN_SIGHT, //single chosen target in sight. not random like the above one
+		X_CREATURES_IN_SIGHT, //chooses X random creatures in LoS of the caster
+		ALL_CREATURES_IN_LOS //chooses all creatures in line of sight
 	};
 	enum SpellEffect {  //this is the effect of the spell (pretty straight-forward)
 		NO_EFFECT,
@@ -112,14 +112,14 @@ public:
 	int *coeffs; //the coefficients in the spell's formula, integral in determining success at casting a spell
 	int *powers; //the exponents used in the spell's formula, see above
 	int *values; //the values the caster has decided to devote to this spell's casting attempt, related to the above as well
-	char *operators; //the operators (+ or *) used in the spell's formula. Pretty much only allowed to be '+' but that may change in the future if I get smarter
 	float target; //the target value for a spell's casting. The values are substituted into the formula's variables, and are then modified by the coefficients, exponents, and operators. The closeness of the resultant integer to this target value determines a spell's success.
 	SpellIntensity intensity;	//the intensity or strength of a spell. Allows spells to scale with the caster's level. Minor, Normal, Major, or Epic
-	TargetType targeting; //the range and extent of creatures that this individual spell will target
-	SpellEffect effect; //the effect of a spell (healing, damage, teleporting, etc). This can (and eventually will) form a useless combination with effect and targettype
+	TargetSystem targeting; //the range and extent of creatures that this individual spell will target
+	SpellEffect effect; //the effect of a spell (healing, damage, teleporting, etc). This can (and eventually will) form a useless combination with effect and targetsysem
 	ExpectedTarget expected; //the type of 'thing' the spell will target (items, creatures, floor tiles)
-	PreferredType preferred; //whether or not the particular spellEffect is supposed to help or harm the player
-	float cost; //a value used to determine the total cost for casting a spell; this is raised or lowered based on the attributes of the spell (targetType, spellEffect)
+	TargetType preferred; //the type of enemy (neutral, enemy, or ally) the spell would optimally target; of course, the spell could potentially do the exact opposite
+	TargetType actual; //the type of enemy (neutral, enemy, or ally) that the spell actually targets, as opposed to the preferred type
+	float cost; //a value used to determine the total cost for casting a spell; this is raised or lowered based on the attributes of the spell (targetsystem, spellEffect)
 	
 	Spell(int level);
 	//TODO: make a means to create a specific spell, rather than a procedurally generated one

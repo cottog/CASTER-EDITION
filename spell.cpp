@@ -8,7 +8,6 @@ Spell::Spell(int level){
 	coeffs = new int[4];
 	powers = new int[4];
 	values = new int[4];
-	operators = new char[3];
 	target = 0;
 	int baseCost = 0;
 	int powerfart = 0;
@@ -78,19 +77,6 @@ Spell::Spell(int level){
 	
 	for (int i = 0; i < 4; i++) {
 		powers[i] = powerfart;
-	}
-
-	for (int i = 0; i<3; i++) {
-		int opp = rng->getInt(1,1);
-		
-		//this will only result in operators[] being filled with plus signs. I have yet to find a good way to mix in '*'
-		//multiplication results in too much of a range for the target number, and gives much greater weight to only a few variables
-		switch(opp){
-			case 1: operators[i] = '+'; break;
-			case 2: operators[i] = '*'; break; 
-			default: break;
-		}
-		std::cout << operators[i] << std::endl;	
 	}
 	
 	int targetswitch = rng->getInt(1,15);
@@ -456,38 +442,27 @@ Spell::Spell(int level){
 		default: effect = NO_EFFECT; break;
 	}
 
-	if (targeting > 7 && expected == CREATURE) {
-		int switcher = rng->getInt(1,100);
-		switch(preferred) {
-
-			case NEUTRAL: {
-				if (switcher <= 5) {
-					targeting = static_cast<Spell::TargetType>((int)targeting - 1); //go from a targeting system that hits all creatures to one that hits enemies
-				} else if (switcher <= 10) {
-					targeting = static_cast<Spell::TargetType>((int)targeting - 2);	//go from a targeting system that hits all creatures to one that hits friendlies
-				}
-				break;
+	if (targeting != SELF && expected == CREATURE) { //we will roll some dice and see if the targets its preferred type, or something else (which could be better or worse)
+		int roll = rng->getInt(1,100);
+		if (roll <= 5) { //5 percent chance to actually target something opposite to what's preferred
+			if (preferred == ENEMY) {
+				actual = FRIENDLY;
+			} 
+			if (preferred == FRIENDLY) {
+				actual = ENEMY;
 			}
-
-			case FRIENDLY: {
-				if (switcher <= 5) { //5% chance to instead target enemies
-					targeting = static_cast<Spell::TargetType>((int)targeting - 1); //go from a targeting system that hits all creatures to one that hits enemies
-
-				} else if (switcher <= 75) { //70% chance to prefer friendlies
-					targeting = static_cast<Spell::TargetType>((int)targeting - 2);	//go from a targeting system that hits all creatures to one that hits friendlies
-				}
-				break;
-			}
-
-			case ENEMY: {
-				if (switcher <= 5){ //5% chance to instead target friendlies
-					targeting = static_cast<Spell::TargetType>((int)targeting - 2); //go from a targeting system that hits all creatures to one that hits friendlies
-				} else if (switcher <= 75) { //75% chance to prefer enemies
-					targeting = static_cast<Spell::TargetType>((int)targeting - 1); //go from a targeting system that hits all creatures to one that hits enemies
+		} else if (roll <= 25) { //20% chance to go from neutral targeting to something more discriminating
+			if (preferred == NEUTRAL) {
+				int roll2 = rng->getInt(0,1);
+				if (roll2) {
+					actual = ENEMY;
+				} else {
+					actual = FRIENDLY;
 				}
 			}
+		} else { //75% chance to target the preferred target
+			actual = preferred;
 		}
-
 	} 
 }
 	
@@ -555,45 +530,6 @@ float Spell::cast(){
 	y = coeffs[2] * pow(values[2],powers[2]);
 	z = coeffs[3] * pow(values[3],powers[3]);
 	
-
-	switch(operators[0]){
-		case '+':
-			switch(operators[1]){
-				case '+':
-					switch(operators[2]){
-						case '+': return 100*((w + x + y + z) / target);
-						case '*': return 100*((w + x + y * z) / target);
-						default: break;
-					}
-				case '*':
-					switch(operators[2]){
-						case '+': return 100*((w + x * y + z) / target);
-						case '*': return 100*((w + x * y * z) / target);
-						default: break;
-					}
-				default: break;
-			}
-
-		case '*':
-			switch(operators[1]){
-				case '+':
-					switch(operators[2]){
-						case '+': return 100*((w * x + y + z) / target);
-						case '*': return 100*((w * x + y * z) / target);
-						default: break;
-					}
-				case '*':
-					switch(operators[2]){
-						case '+': return 100*((w * x * y + z) / target);
-						case '*': return 100*((w * x * y * z) / target);
-						default: break;
-					}
-				default: break;
-			}
-		
-		default: break;	
-	}	
-
 	return 100*(((w + x + y + z)*1.0) / target);
 }
 

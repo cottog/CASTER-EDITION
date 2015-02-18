@@ -72,6 +72,7 @@ Spell::Spell(int level){
 				coeffs[i] = rng->getInt(powerfart,pow(2,powerfart));
 			}
 		break;
+		default: break;
 	}
 
 	
@@ -519,7 +520,7 @@ bool Spell::input(){
 	return true;
 }
 
-float Spell::cast(){
+bool Spell::cast(){
 	int w = 0;	
 	int x = 0;
 	int y = 0;
@@ -530,7 +531,17 @@ float Spell::cast(){
 	y = coeffs[2] * pow(values[2],powers[2]);
 	z = coeffs[3] * pow(values[3],powers[3]);
 	
-	return 100*(((w + x + y + z)*1.0) / target);
-}
+	float result = 100*(((w + x + y + z)*1.0) / target);
 
+	if (result < 80 ) {
+		std::cout << "you have fizzled" << std::endl;
+		return false;
+	} else if (result > 120) {
+		std::cout << "you have overloaded" << std::endl;
+		return false;
+	}
+
+	std::cout << "success" << std::endl;
+	return true;
+}
 

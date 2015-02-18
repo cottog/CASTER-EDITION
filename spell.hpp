@@ -2,13 +2,13 @@
 class Spell{
 public:
 	enum SpellIntensity { //the "intensity" of the spell is a means to scale the spell with caster level; higher-intensity spells cost more and have greater or longer-lasting effects
-		MINOR,MAJOR,NORMAL,EPIC
+		NO_INTENSITY,MINOR,MAJOR,NORMAL,EPIC
 	};
 	enum ExpectedTarget {    //whether this particular spell is targeting items, creatures, or people
-		ITEM, CREATURE, TILE   //item is as yet unused
+		NO_EXPECT, ITEM, CREATURE, TILE   //item is as yet unused
 	};
 	enum TargetType {   //who the spell would prefer to target
-		NEUTRAL, ENEMY, FRIENDLY
+		NO_TYPE,NEUTRAL, ENEMY, FRIENDLY
 	};
 	enum TargetSystem {   //this determines how the spell will select a target
 		NO_TARGET,
@@ -122,10 +122,12 @@ public:
 	float cost; //a value used to determine the total cost for casting a spell; this is raised or lowered based on the attributes of the spell (targetsystem, spellEffect)
 	
 	Spell(int level);
+	//Spell(SpellIntensity intensity = NO_INTENSITY, TargetSystem targeting = NO_TARGET, SpellEffect effect = NO_EFFECT, 
+		//	ExpectedTarget expected = NO_EXPECT, TargetType preferred = NO_TYPE, TargetType actual = NO_TYPE);
 	//TODO: make a means to create a specific spell, rather than a procedurally generated one
 		//will be useful to give bosses or uniques specific spells
 	//TODO: think of what would be best way to handle wands (procedural, not procedural, some of either)
 	float setTarget(); //this function sets the targetNumber for a spell; this is the value to which the results of the spell's formula are compared in order to see if a spell is successfully cast
-	float cast(); //this function resolves the effect of the spell;
+	bool cast(); //this function resolves the effect of the spell;
 	bool input(); //this function is called when a player elects to cast a spell; this takes the amounts of each resource to be spent for the spellcasting and inputs it into the values[] array
 };

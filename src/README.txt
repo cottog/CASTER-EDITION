@@ -52,9 +52,10 @@ IMMEDIATE TODO (WILL UPDATE AS TASKS GET COMPLETED)(MANY OTHER LONGER-TERM TODOs
 	FINISH SPELLCASTING SYSTEM (THESE FILES ARE NOT IN THE SOURCE YET, AS THE GAME WILL NOT COMPILE WITH THEM AS THEY STAND NOW)
 		-Finish procedural spell generation
 			-**DONE**Add cost modifiers to different spell effects and target selectors
-			-Finish the choosing of the "pinpoint" versions of targetSelectors
-			-restrict the targetSelector options for the few spells that aren't compatible with most targetSelectors
-			-**DONE**change the way cost is calculated because right now it is actually bad (move it into the setTarget() function
+			-**DONE**Finish the choosing of the "pinpoint" versions of targetSystems
+			-**DONE**restrict the TargetSystem options for the few spells that aren't compatible with most TargetSystem
+			-See if it would be better to combine SpellEffect, expectedtarget,  and preferred targetType into a struct, as they are very much aligned
+
 		-Add the actual spell.cast() function
 			-need a means to determine the elemental subtype of a spell
 			-need a means to select the appropriate targets for a spell

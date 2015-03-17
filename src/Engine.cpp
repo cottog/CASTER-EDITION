@@ -48,7 +48,12 @@ void Engine::init() {
 	
 	player = new Actor(40,25,'@',text.getText(),TCODColor::white);
 	player->ID = 000000;
-	player->destructible = new PlayerDestructible(30,2,"your cadaver");
+	if (strncmp(text.getText(),"Harold",6) == 0) {
+		player->destructible = new PlayerDestructible(130,2,"your cadaver");
+	} else {
+		player->destructible = new PlayerDestructible(30,2,"your cadaver");
+	}
+	
 	player->attacker = new Attacker(5);
 	player->ai = new PlayerAi();
 	player->container = new Container(26);
@@ -59,7 +64,7 @@ void Engine::init() {
 	actors.push(stairs);
 	map = new Map(mapWidth,mapHeight);
 	map->init(true);
-	gui->message(TCODColor::red,"Welcome, Sorcerer! This is Caster Edition!");
+	gui->message(TCODColor::red,"Welcome, Sorcerer! This is CASTER EDITION!");
 	gameStatus = STARTUP;
 }
 
@@ -200,7 +205,7 @@ void Engine::update(){
 		for (Actor **iterator=actors.begin(); 
 			iterator != actors.end(); iterator++){
 			Actor *actor = *iterator;
-			if (actor != player){
+			if (actor != player && actor->isVisible()){
 				actor->update();
 				actor->updateAuras();
 			}
@@ -555,4 +560,53 @@ void Engine::fullscreen() {
 		engine.gui->message(TCODColor::darkerPink,"minimizing");
 		TCODConsole::initRoot(engine.screenWidth,engine.screenHeight,"CASTER EDITION",false);
 	}
+}
+
+Actor *Engine::chooseFromList(TCODList<Actor *> list,const char *title){
+	static const int PANEL_WIDTH = 50;
+	static const int PANEL_HEIGHT = 28;
+	static TCODConsole con(PANEL_WIDTH,PANEL_HEIGHT);
+	
+	//display the inventory frame
+	con.setDefaultForeground(TCODColor(0,255,50));
+	con.printFrame(0,0,PANEL_WIDTH,PANEL_HEIGHT,true,
+		TCOD_BKGND_DEFAULT,title);
+	
+	//display the items with their keyboard shortcut
+	con.setDefaultForeground(TCODColor::white);
+	int shortcut = 'a';
+	int y=1;
+	for (Actor **it = list.begin();
+		it != list.end(); it++) {
+		Actor *actor = *it;
+		if (actor->pickable->stackSize == 1) {
+			if ((actor->pickable->type == Pickable::EQUIPMENT || actor->pickable->type == Pickable::WEAPON)  && ((Equipment*)(actor->pickable))->equipped == true) {
+				con.print(2,y,"(%c) %s [E]",shortcut,actor->getName());
+			} else {
+				con.print(2,y,"(%c) %s",shortcut,actor->getName());	
+			}
+		} else {
+			con.print(2,y,"(%c) %s [%d]",shortcut,actor->getName(),actor->pickable->stackSize);
+		}
+		y++;
+		shortcut++;
+	}
+	
+	//blit the inventory console on the root console
+	TCODConsole::blit(&con,0,0,PANEL_WIDTH,PANEL_HEIGHT,
+		TCODConsole::root,engine.screenWidth/2 - PANEL_WIDTH/2,
+		engine.screenHeight/2-PANEL_HEIGHT/2);
+	TCODConsole::flush();
+	
+	//wait for a key press
+	TCOD_key_t key;
+	TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS,&key,NULL,true);
+	if (key.vk == TCODK_CHAR) {
+		int actorIndex = key.c - 'a';
+		
+		if (actorIndex >= 0 && actorIndex < list.size()){
+			return list.get(actorIndex);
+		}
+	}
+	return NULL;
 }

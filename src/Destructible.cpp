@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include "main.hpp"
 
-Destructible::Destructible(float maxHp, float dodge, const char *corpseName, int xp, float DR) : 
+Destructible::Destructible(float maxHp, float dodge, const char *corpseName, int xp, float DR, Spell::ElementalSubtype element) : 
 	maxHp(maxHp),hp(maxHp),baseDodge(dodge),totalDodge(dodge),
-	baseDR(DR),totalDR(DR),xp(xp){
+	baseDR(DR),totalDR(DR),xp(xp),element(element){
 	this->corpseName = strdup(corpseName);
 }
 
@@ -20,6 +20,7 @@ void Destructible::save(TCODZip &zip) {
 	zip.putFloat(totalDR);
 	zip.putString(corpseName);
 	zip.putInt(xp);
+	zip.putInt(element);
 }
 
 void Destructible::load(TCODZip &zip) {
@@ -31,6 +32,7 @@ void Destructible::load(TCODZip &zip) {
 	totalDR = zip.getFloat();
 	corpseName = strdup(zip.getString());
 	xp = zip.getInt();
+	element = (Spell::ElementalSubtype)zip.getInt();
 }
 
 Destructible *Destructible::create(TCODZip &zip) {

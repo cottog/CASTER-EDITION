@@ -50,19 +50,20 @@ Please note: there may be some instances of debug messages being output to the s
 IMMEDIATE TODO (WILL UPDATE AS TASKS GET COMPLETED)(MANY OTHER LONGER-TERM TODOs IN SRC FILES):
 	
 	FINISH SPELLCASTING SYSTEM (THESE FILES ARE NOT IN THE SOURCE YET, AS THE GAME WILL NOT COMPILE WITH THEM AS THEY STAND NOW)
-		-Finish procedural spell generation
+		-**DONE**Finish procedural spell generation
 			-**DONE**Add cost modifiers to different spell effects and target selectors
 			-**DONE**Finish the choosing of the "pinpoint" versions of targetSystems
 			-**DONE**restrict the TargetSystem options for the few spells that aren't compatible with most TargetSystem
-			-See if it would be better to combine SpellEffect, expectedtarget,  and preferred targetType into a struct, as they are very much aligned
+			-**DONE**See if it would be better to combine SpellEffect, expectedtarget,  and preferred targetType into a struct, as they are very much aligned
 
 		-Add the actual spell.cast() function
 			-need a means to determine the elemental subtype of a spell
-			-need a means to select the appropriate targets for a spell
-			-need a means to resolve the effects of casting a spell
+			-(IN PROGRESS)need a means to select the appropriate targets for a spell
+			-(IN PROGRESS)need a means to resolve the effects of casting a spell
 	
-	MAKE AN ENGINE OR GUI FUNCTION THAT CAN HANDLE LETTING THE PLAYER CHOOSE FROM ANY TCODLIST THAT GETS PASSED TO IT
-		this will make it so one function is called to handle inventory and spellbook choices, and perhaps other containers that the player may be able to chose from
+	MAKE AN ENGINE OR GUI FUNCTION THAT CAN HANDLE LETTING THE PLAYER CHOOSE FROM ANY TCODLIST<Actor *> THAT GETS PASSED TO IT
+		this will make it so one function is called to handle inventory and perhaps other containers that the player may be able to chose from
+		I would do this for ANY tcodlist but that's too complicated for my taste. I don't see many tcodlists being used for the player to choose from other than <Actor *> and <Spell *>
 			
 
 

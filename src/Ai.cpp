@@ -40,6 +40,8 @@ void PlayerAi::update(Actor *owner){
 		xpLevel++;
 		owner->destructible->xp -= levelUpXp;
 		engine.gui->message(TCODColor::yellow,"You feel a strange rush as the enemy falls to the floor!");
+		engine.gui->render();
+		TCODConsole::root->flush();
 		engine.gui->menu.clear();
 		engine.gui->menu.addItem(Menu::CONSTITUTION,"+20 HP");
 		engine.gui->menu.addItem(Menu::STRENGTH,"+1 Attack");
@@ -223,52 +225,7 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii, bool control, bool alt) 
 }
 
 Actor *PlayerAi::choseFromInventory(Actor *owner){
-	static const int INVENTORY_WIDTH = 50;
-	static const int INVENTORY_HEIGHT = 28;
-	static TCODConsole con(INVENTORY_WIDTH,INVENTORY_HEIGHT);
-	
-	//display the inventory frame
-	con.setDefaultForeground(TCODColor(0,255,50));
-	con.printFrame(0,0,INVENTORY_WIDTH,INVENTORY_HEIGHT,true,
-		TCOD_BKGND_DEFAULT,"INVENTORY");
-	
-	//display the items with their keyboard shortcut
-	con.setDefaultForeground(TCODColor::white);
-	int shortcut = 'a';
-	int y=1;
-	for (Actor **it = owner->container->inventory.begin();
-		it != owner->container->inventory.end(); it++) {
-		Actor *actor = *it;
-		if (actor->pickable->stackSize == 1) {
-			if ((actor->pickable->type == Pickable::EQUIPMENT || actor->pickable->type == Pickable::WEAPON)  && ((Equipment*)(actor->pickable))->equipped == true) {
-				con.print(2,y,"(%c) %s [E]",shortcut,actor->getName());
-			} else {
-				con.print(2,y,"(%c) %s",shortcut,actor->getName());	
-			}
-		} else {
-			con.print(2,y,"(%c) %s [%d]",shortcut,actor->getName(),actor->pickable->stackSize);
-		}
-		y++;
-		shortcut++;
-	}
-	
-	//blit the inventory console on the root console
-	TCODConsole::blit(&con,0,0,INVENTORY_WIDTH,INVENTORY_HEIGHT,
-		TCODConsole::root,engine.screenWidth/2 - INVENTORY_WIDTH/2,
-		engine.screenHeight/2-INVENTORY_HEIGHT/2);
-	TCODConsole::flush();
-	
-	//wait for a key press
-	TCOD_key_t key;
-	TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS,&key,NULL,true);
-	if (key.vk == TCODK_CHAR) {
-		int actorIndex = key.c - 'a';
-		
-		if (actorIndex >= 0 && actorIndex < owner->container->inventory.size()){
-			return owner->container->inventory.get(actorIndex);
-		}
-	}
-	return NULL;
+	return engine.chooseFromList(owner->container->inventory,"INVENTORY");
 }
 
 
@@ -313,6 +270,9 @@ void MonsterAi::moveOrAttack(Actor *owner, int targetx, int targety){
 		if (engine.map->canWalk(owner->x+dx,owner->y+dy)){
 			owner->x += dx;
 			owner->y += dy;
+		} else if (engine.map->canWalk(owner->x+stepdx,owner->y+stepdy)) {
+			owner->x += stepdx;
+			owner->y += stepdy;
 		} else if (engine.map->canWalk(owner->x+stepdx,owner->y)) {
 			owner->x += stepdx;
 		} else if (engine.map->canWalk(owner->x,owner->y+stepdy)) {

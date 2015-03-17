@@ -3,6 +3,7 @@ class Actor;
 #include "Persistent.hpp"
 #include "Aura.hpp"
 #include "Gui.hpp"
+#include "Spell.hpp"
 #include "Destructible.hpp"
 #include "Attacker.hpp"
 #include "Ai.hpp"
@@ -11,4 +12,4 @@ class Actor;
 #include "Actor.hpp"
 #include "Map.hpp"
 #include "Engine.hpp"
-#include "C"
+

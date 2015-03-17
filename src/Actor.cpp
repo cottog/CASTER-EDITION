@@ -114,6 +114,10 @@ float Actor::getDistance(int cx, int cy) const {
 	return sqrtf(dx*dx+dy*dy);
 }
 
+bool Actor::isVisible(){
+	return engine.map->isInFov(x,y);
+}
+
 void Actor::updateAuras() {
 	if (!this->auras.isEmpty()) {
 		for (Aura **iter = this->auras.begin(); iter != this->auras.end(); iter++) {

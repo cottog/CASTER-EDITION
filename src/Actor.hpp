@@ -22,6 +22,7 @@ public:
 	void updateAuras();
 	const char* getName(bool real = false); //real == true only returns the actor's real name, where as == false may return corpseName
 	void setName(const char* name);
+	bool isVisible();
 protected:
 	const char *name; //the actor's name
 };

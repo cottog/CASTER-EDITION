@@ -122,7 +122,7 @@ public:
 	void chooseTargetSystem();
 	float setTarget(); //this function sets the targetNumber for a spell; this is the value to which the results of the spell's formula are compared in order to see if a spell is successfully cast
 	virtual void chooseEffect() = 0;
-	virtual bool cast() = 0; //this function resolves the effect of the spell;
+	virtual bool cast(Actor *caster) = 0; //this function resolves the effect of the spell;
 };
 
 class CreatureSpell : public Spell { //spell class that represents spells that target other Actor objects
@@ -134,7 +134,7 @@ public:
 	CreatureSpell( float target = 0, SpellIntensity intensity = NO_INTENSITY, TargetSystem targeting = NO_TARGET, SpellEffect effect = NO_EFFECT, 
 		ExpectedTarget expected = CREATURE,  float cost = 0, TargetType preferred = NO_TYPE, TargetType actual = NO_TYPE);
 	//use the above constructor to create an empty CreatureSpell object, then use chooseIntensity, then chooseTargetSystem, and then chooseEffect to create a non-empty spell
-	bool cast();
+	bool cast(Actor *caster);
 };
 
 class TileSpell : public Spell { //spell class that represents spells that target map tiles
@@ -143,7 +143,7 @@ public:
 	TileSpell( float target = 0, SpellIntensity intensity = NO_INTENSITY, TargetSystem targeting = NO_TARGET, SpellEffect effect = NO_EFFECT, 
 		ExpectedTarget expected = TILE, float cost = 0 );
 	//use the above constructor to create an empty TileSpell object, then use chooseIntensity, then chooseTargetSystem, and then chooseEffect to create a non-empty spell
-	bool cast();
+	bool cast(Actor *caster);
 };
 
 

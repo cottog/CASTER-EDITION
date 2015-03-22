@@ -412,7 +412,7 @@ CreatureSpell::CreatureSpell( float target, SpellIntensity intensity, TargetSyst
 	Spell(target,intensity,targeting,effect,expected,cost), preferred(preferred),actual(actual) {}
 
 
-bool CreatureSpell::cast(){
+bool CreatureSpell::cast(Actor *caster){
 	std::cout << preferred << std::endl;
 	std::cout << actual << std::endl;
 	std::cout << effect << std::endl;
@@ -424,19 +424,11 @@ bool CreatureSpell::cast(){
 	switch(targeting) {
 		default: return false; break;
 		case SELF: {
-			targets.push(engine.player);
+			targets.push(caster);
 			break;
 		}
 		case ADJACENT_TILE: {
-			for (Actor **iterator = engine.actors.begin();iterator != engine.actors.end(); iterator++) {
-				Actor *actor = *iterator;
-				if (actor != engine.player&&actor->destructible && !actor->destructible->isDead()){
-					float distance = engine.player->getDistance(actor->x,actor->y);
-					if (distance < ((int)intensity)) {
-						targets.push(actor);
-					}
-				}
-			}
+			engine.getAllActorsInRadius(targets, caster->x, caster->y, 1.6,this->actual,caster->hostile);
 			if (targets.isEmpty()) {
 				return false;
 			}
@@ -448,17 +440,18 @@ bool CreatureSpell::cast(){
 			break;
 		}
 		case BOLT_SPELL: {
-			int x = engine.player->x;
-			int y = engine.player->y;
+			int x = caster->x;
+			int y = caster->y;
+			int stepX = caster->x;
+			int stepY = caster->y;
 			if (engine.pickATile(&x,&y,4+2*((int)intensity))){
-				int stepX = x, stepY = y;
-				TCODLine::init(engine.player->x, engine.player->y, x, y);
+				TCODLine::init(caster->x, caster->y, x, y);
 				do {
 					if ( !engine.map->canWalk(stepX,stepY)) {
 						Actor *actor = engine.getActor(stepX,stepY);
 						if (!actor) {
 							break;
-						} else {
+						} else if ( actor != caster && ((this->actual == Spell::NEUTRAL) || (this->actual == Spell::ENEMY && actor->hostile != caster->hostile) || (this->actual == Spell::FRIENDLY && actor->hostile == caster->hostile)) ) {
 							targets.push(actor);
 							break;
 						}
@@ -470,18 +463,18 @@ bool CreatureSpell::cast(){
 			break;
 		}
 		case VISUAL_HOLOCAUST: {
-			int x = engine.player->x;
-			int y = engine.player->y;
+			int x = caster->x;
+			int y = caster->y;
 			if (engine.pickATile(&x,&y,4+2*((int)intensity))){	
 				Actor *actor2 = engine.getActor(x,y);
 				if (!actor2) {
 					return false;
 				} else {
-					Spell::ElementalSubtype elementer = actor2->destructible->element; //we know the actor has a destructible since getActor checks for it
+					Spell::ElementalSubtype targetedElement = actor2->destructible->element; //we know the actor has a destructible since getActor checks for it
 					targets.push(actor2);
 					for (Actor **iterator = engine.actors.begin();iterator != engine.actors.end(); iterator++) {
 					Actor *actor = *iterator;
-						if (actor != engine.player&&actor->destructible && !actor->destructible->isDead() && actor->isVisible() && actor->destructible->element == elementer){
+						if (actor != caster && actor->destructible && !actor->destructible->isDead() && actor->isVisible() && actor->destructible->element == targetedElement && ((this->actual == Spell::NEUTRAL) || (this->actual == Spell::ENEMY && actor->hostile != caster->hostile) || (this->actual == Spell::FRIENDLY && actor->hostile == caster->hostile)) ){
 							targets.push(actor);
 						}
 					}
@@ -492,18 +485,18 @@ bool CreatureSpell::cast(){
 			break;
 		}
 		case LEVEL_WIDE_HOLOCAUST: {
-			int x = engine.player->x;
-			int y = engine.player->y;
+			int x = caster->x;
+			int y = caster->y;
 			if (engine.pickATile(&x,&y,4+2*((int)intensity))){	
 				Actor *actor2 = engine.getActor(x,y);
 				if (!actor2) {
 					return false;
 				} else {
-					Spell::ElementalSubtype elementer = actor2->destructible->element; //we know the actor has a destructible since getActor checks for it
+					Spell::ElementalSubtype targetedElement = actor2->destructible->element; //we know the actor has a destructible since getActor checks for it
 					targets.push(actor2);
 					for (Actor **iterator = engine.actors.begin();iterator != engine.actors.end(); iterator++) {
 					Actor *actor = *iterator;
-						if (actor != engine.player&&actor->destructible && !actor->destructible->isDead() && actor->destructible->element == elementer){  //same as above, but we don't check if its visible
+						if (actor != caster && actor->destructible && !actor->destructible->isDead() && actor->destructible->element == targetedElement && ((this->actual == Spell::NEUTRAL) || (this->actual == Spell::ENEMY && actor->hostile != caster->hostile) || (this->actual == Spell::FRIENDLY && actor->hostile == caster->hostile)) ){  //same as above, but we don't check if its visible
 							targets.push(actor);
 						}
 					}
@@ -512,6 +505,96 @@ bool CreatureSpell::cast(){
 				return false;	
 			}
 			break;	
+		}
+		case RANDOM_IN_LOS: {
+			engine.getAllActorsInRadius(targets, caster->x, caster->y, engine.fovRadius,this->actual,caster->hostile);
+			if (targets.isEmpty()) {
+				return false;
+			}
+			while (targets.size() > 1) {
+				int elNum = rng->getInt(0,targets.size()-1);
+				Actor *toRev = targets.get(elNum);
+				targets.remove(toRev);
+			}
+			break;
+		}
+		case RANDOM_IN_LEVEL: {
+			engine.getAllActorsInRadius(targets, caster->x, caster->y, 0.0,this->actual,caster->hostile);
+			if (targets.isEmpty()) {
+				return false;
+			}
+			while (targets.size() > 1) {
+				int elNum = rng->getInt(0,targets.size()-1);
+				Actor *toRev = targets.get(elNum);
+				targets.remove(toRev);
+			}
+			break;
+		}
+		case ALL_ADJACENT_TILES: {
+			engine.getAllActorsInRadius(targets, caster->x, caster->y, 1.6,this->actual, caster->hostile);
+			if (targets.isEmpty()) {
+				return false;
+			}
+
+			break;
+		}
+		case ALL_CREATURES_CHAINING: {
+			int x = caster->x;
+			int y = caster->y;
+			TCODList<Actor *> possibleJumps; //this TCODList holds the actors to which this spell could possibly jump
+			if (engine.pickATile(&x,&y,4+2*((int)intensity))){
+				Actor *actor = engine.getActor(x,y);
+				if (!actor) {
+					break;
+				} else if ( ((this->actual == Spell::NEUTRAL) || (this->actual == Spell::ENEMY && actor->hostile != caster->hostile) || (this->actual == Spell::FRIENDLY && actor->hostile == caster->hostile)) ) {
+					targets.push(actor);
+					break;
+				}
+			}
+			while ( targets.size() < 1+2*((int)intensity) ) {
+				engine.getAllActorsInRadius(possibleJumps, targets.get(targets.size()-1)->x, targets.get(targets.size()-1)->y, 1+2*((int)intensity),this->actual, caster->hostile);
+
+				if (possibleJumps.isEmpty()) {
+					break;
+				} else {
+					int jumpTarget = rng->getInt(0, possibleJumps.size() - 1);
+					targets.push(possibleJumps.get(jumpTarget));
+					possibleJumps.clear();
+				}
+
+			}
+			break;
+		}
+		case ALL_CREATURES_IN_LEVEL: {
+			engine.getAllActorsInRadius(targets,caster->x, caster->y, 0.0, this->actual, caster->hostile);
+			if (targets.isEmpty()) {
+				return false;
+			}
+			break;
+		}
+		case ALL_CREATURES_IN_LINE: {
+			int x = caster->x;
+			int y = caster->y;
+			int stepX = caster->x;
+			int stepY = caster->y;
+			if (engine.pickATile(&x,&y,4+2*((int)intensity))){
+				TCODLine::init(caster->x, caster->y, x, y);
+				do {
+					if ( !engine.map->canWalk(stepX,stepY)) {
+						Actor *actor = engine.getActor(stepX,stepY);
+						if ( actor && actor != caster && ((this->actual == Spell::NEUTRAL) || (this->actual == Spell::ENEMY && actor->hostile != caster->hostile) || (this->actual == Spell::FRIENDLY && actor->hostile == caster->hostile)) ) {
+							targets.push(actor);
+						}
+					}
+				} while (TCODLine::step(&stepX,&stepY));
+			} else {
+				return false;
+			}
+			break;
+		}
+		case ALL_CREATURES_IN_RADIUS: {
+
+			break;
 		}
 	}
 	return true;
@@ -583,7 +666,7 @@ TileSpell::TileSpell( float target, SpellIntensity intensity, TargetSystem targe
 		ExpectedTarget expected, float cost) :
 	Spell(target,intensity,targeting,effect,expected,cost) {}
 
-bool TileSpell::cast(){
+bool TileSpell::cast(Actor *caster){
 
 
 	std::cout << "tile spell casted" << std::endl;

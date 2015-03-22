@@ -38,7 +38,10 @@ public:
 	float distance(int x1, int x2, int y1, int y2);  //returns the distance between two cells
 	const char* chooseSaveFile(TCODList<const char *> savepaths);   //returns the path to the save file that should be loaded
 	void fullscreen(); //make it fullscreen if it isn't, or make it smaller if it is 
-	Actor *chooseFromList(TCODList<Actor*> list,const char *title);
+	Actor *chooseFromList(TCODList<Actor*> &list,const char *title); //takes any list of actors and allows the player to choose an element from it
+	void getAllActorsInRadius(TCODList<Actor *> &targets, int x, int y, float radius = 0.0, Spell::TargetType targetType = Spell::NO_TYPE, bool casterHostility = false); //this will add to the passed list all living actors that are within (radius) of the specified tile (x,y), and can discriminate based on TargetType if need be 
+	//for the above function, a radius of 0 may add all living actors in the level
+	//for the above function, if using it for Spells, you can tell it what sort of TargetType to look for (all creatures, enemy creatures, or friendly creatures), as well as a bool "hostility" param, which in the case of spells should be the hostility of the caster
 };
 
 extern Engine engine;

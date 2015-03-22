@@ -4,6 +4,7 @@ public:
 	int x, y; //position on map
 	int ch; //ascii code
 	TCODColor col; //color for character
+	bool hostile; //is it hostile to the player?
 	bool blocks; //can we walk on this actor?
 	Attacker *attacker; //does this actor deal damage?
 	Destructible *destructible; //can this actor be destroyed?
@@ -11,8 +12,9 @@ public:
 	Pickable *pickable; //can this actor be picked up and used?
 	Container *container; //can this actor contain other actors?
 	TCODList<Aura *> auras;
+
 	
-	Actor(int x, int y, int ch, const char *name, const TCODColor &col);
+	Actor(int x, int y, int ch, const char *name, const TCODColor &col, bool hostile = true);
 	~Actor();
 	void update();
 	void render() const;

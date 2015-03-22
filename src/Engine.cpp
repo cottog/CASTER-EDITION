@@ -2,7 +2,7 @@
 #include "main.hpp"
 
 Engine::Engine(int screenWidth, int screenHeight) : gameStatus(STARTUP),
-	player(NULL),map(NULL),fovRadius(5),
+	player(NULL),stairs(NULL),map(NULL),fovRadius(5),
 	screenWidth(screenWidth),screenHeight(screenHeight),
 	mapWidth(100),mapHeight(100),level(1){
 	TCODConsole::initRoot(screenWidth,screenHeight,"CASTER EDITION",false);
@@ -46,7 +46,7 @@ void Engine::init() {
 		}
     }
 	
-	player = new Actor(40,25,'@',text.getText(),TCODColor::white);
+	player = new Actor(40,25,'@',text.getText(),TCODColor::white, false);
 	player->ID = 000000;
 	if (strncmp(text.getText(),"Harold",6) == 0) {
 		player->destructible = new PlayerDestructible(130,2,"your cadaver");
@@ -562,7 +562,7 @@ void Engine::fullscreen() {
 	}
 }
 
-Actor *Engine::chooseFromList(TCODList<Actor *> list,const char *title){
+Actor *Engine::chooseFromList(TCODList<Actor *> &list,const char *title){
 	static const int PANEL_WIDTH = 50;
 	static const int PANEL_HEIGHT = 28;
 	static TCODConsole con(PANEL_WIDTH,PANEL_HEIGHT);
@@ -609,4 +609,16 @@ Actor *Engine::chooseFromList(TCODList<Actor *> list,const char *title){
 		}
 	}
 	return NULL;
+}
+
+void Engine::getAllActorsInRadius(TCODList<Actor *> &targets, int x, int y, float radius, Spell::TargetType targetType, bool casterHostility) {
+	for (Actor **iterator = engine.actors.begin();iterator != engine.actors.end(); iterator++) {
+		Actor *actor = *iterator;
+		if (actor->destructible && !actor->destructible->isDead()){
+			float distance = actor->getDistance(x,y);
+			if ((distance < radius || radius == 0.0) && ((targetType == Spell::NO_TYPE || targetType == Spell::NEUTRAL) || (targetType == Spell::ENEMY && actor->hostile != casterHostility) || (targetType == Spell::FRIENDLY && actor->hostile == casterHostility)) ) {	//just to make sure diagonals are captured
+				targets.push(actor);
+			}
+		}
+	}
 }

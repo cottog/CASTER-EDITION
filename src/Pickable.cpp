@@ -43,6 +43,9 @@ bool Pickable::use(Actor *owner, Actor *wearer) {
 
 void Pickable::drop(Actor *owner,Actor *wearer) {
 	if (wearer->container) {
+		if ((owner->pickable->type == EQUIPMENT || owner->pickable->type == WEAPON ) && ((Equipment*)(owner->pickable))->equipped) {
+			((Equipment*)(owner->pickable))->use(owner,wearer);
+		}
 		int nbDropped = 1;
 	
 		if (nbDropped >= owner->pickable->stackSize) {

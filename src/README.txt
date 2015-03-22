@@ -60,10 +60,9 @@ IMMEDIATE TODO (WILL UPDATE AS TASKS GET COMPLETED)(MANY OTHER LONGER-TERM TODOs
 			-need a means to determine the elemental subtype of a spell
 			-(IN PROGRESS)need a means to select the appropriate targets for a spell
 			-(IN PROGRESS)need a means to resolve the effects of casting a spell
+			-Modify the Engine::pickATile function so that enemy AI can use it to target the player (or other Actors if they so choose)
 	
-	MAKE AN ENGINE OR GUI FUNCTION THAT CAN HANDLE LETTING THE PLAYER CHOOSE FROM ANY TCODLIST<Actor *> THAT GETS PASSED TO IT
-		this will make it so one function is called to handle inventory and perhaps other containers that the player may be able to chose from
-		I would do this for ANY tcodlist but that's too complicated for my taste. I don't see many tcodlists being used for the player to choose from other than <Actor *> and <Spell *>
+	
 			
 
 
@@ -71,4 +70,9 @@ DONE (TASKS THAT HAVE BEEN COMPLETED SINCE THE ABOVE SECTION WAS ADDED):
 	**FIXED** FIX THE WAY DEATH MESSAGES ARE PRESENTED
 		-**FIXED**currently, embarassingly, the text for a monster dying is displayed before the text saying you've hit the monster for X damage (for the killing blow)
 		-**FIXED** also, this text currently displays as "The dead orc is now dead!" signifying that his name is changed to his corpseName before the message is read out
-		
+	MAKE AN ENGINE OR GUI FUNCTION THAT CAN HANDLE LETTING THE PLAYER CHOOSE FROM ANY TCODLIST<Actor *> THAT GETS PASSED TO IT
+		this will make it so one function is called to handle inventory and perhaps other containers that the player may be able to chose from
+		I would do this for ANY tcodlist but that's too complicated for my taste. I don't see many tcodlists being used for the player to choose from other than <Actor *> and <Spell *>	
+
+
+BY MY ESTIMATE: ROUGHLY 25,155 DIFFERENT SPELLS POSSIBLE

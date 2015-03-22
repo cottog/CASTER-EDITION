@@ -54,6 +54,8 @@ void Attacker::attack(Actor *owner, Actor *target) {
 		float critRange = 20;
 		int hands = 1;
 
+		lastTarget = target;
+
 		if (owner->container && owner->container->hand1 != NULL) {
 			
 			diceNum = ((Weapon*)owner->container->hand1->pickable)->diceNum;
@@ -147,6 +149,7 @@ void Attacker::attack(Actor *owner, Actor *target) {
 	}
 	if (target->destructible->isDead()) {
 		engine.gui->message(TCODColor::white,"%s is now dead!",target->getName(true));
+		lastTarget = NULL;
 	}
 }
 

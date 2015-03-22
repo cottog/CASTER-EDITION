@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include "main.hpp"
 
-Actor::Actor(int x, int y, int ch, const char *name, const TCODColor &col):
-	ID(0),x(x),y(y),ch(ch),col(col),
+Actor::Actor(int x, int y, int ch, const char *name, const TCODColor &col, bool hostile):
+	ID(0),x(x),y(y),ch(ch),col(col),hostile(hostile),
 	blocks(true),attacker(NULL),destructible(NULL),ai(NULL),
 	pickable(NULL),container(NULL){
 	this->name = strdup(name);
@@ -26,6 +26,7 @@ void Actor::save(TCODZip &zip) {
 	zip.putColor(&col);
 	zip.putString(name);
 	zip.putInt(blocks);
+	zip.putInt(hostile);
 	
 	zip.putInt(auras.size());
 	for (Aura **it = auras.begin(); it!= auras.end(); it++) {
@@ -53,6 +54,7 @@ void Actor::load(TCODZip &zip) {
 	col = zip.getColor();
 	name = strdup(zip.getString());
 	blocks = zip.getInt();
+	hostile = zip.getInt();
 	
 	int nbAuras = zip.getInt();
 	while (nbAuras > 0) {

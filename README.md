@@ -15,3 +15,6 @@ Once the spellcasting system is complete, the game engine would be mostly finish
 
 
 **The linecount in my commits is inflated by somewhere around 11,443 lines as a result of including the files involved with the libraries used by this game.**
+
+#How do I play
+If you'd like to play right now, simply clone the repo or download as zip, and launch the executable. Of course, you can rebuild from source if you have g++. main.cpp has the command you should use to rebuild the file

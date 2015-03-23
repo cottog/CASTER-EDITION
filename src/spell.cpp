@@ -551,10 +551,17 @@ bool CreatureSpell::cast(Actor *caster){
 					break;
 				}
 			}
+
+			if (targets.isEmpty()) {
+				possibleJumps.clearAndDelete();
+				return false;
+			}
+
 			while ( targets.size() < 1+2*((int)intensity) ) {
 				engine.getAllActorsInRadius(possibleJumps, targets.get(targets.size()-1)->x, targets.get(targets.size()-1)->y, 1+2*((int)intensity),this->actual, caster->hostile);
 
 				if (possibleJumps.isEmpty()) {
+					possibleJumps.clearAndDelete();
 					break;
 				} else {
 					int jumpTarget = rng->getInt(0, possibleJumps.size() - 1);
@@ -563,6 +570,7 @@ bool CreatureSpell::cast(Actor *caster){
 				}
 
 			}
+			possibleJumps.clearAndDelete();
 			break;
 		}
 		case ALL_CREATURES_IN_LEVEL: {
@@ -593,7 +601,61 @@ bool CreatureSpell::cast(Actor *caster){
 			break;
 		}
 		case ALL_CREATURES_IN_RADIUS: {
+			int x = caster->x;
+			int y = caster->y;
 
+			if (engine.pickATile(&x,&y,4+2*((int)intensity))){
+				engine.getAllActorsInRadius(targets,caster->x, caster->y, 2+2*((int)intensity), this->actual, caster->hostile);
+
+				if (targets.isEmpty()){
+					return false;
+				}
+
+			} else {
+				return false;
+			}
+			break;
+		}
+		case SINGLE_CREATURE_IN_SIGHT: {
+			int x = caster->x;
+			int y = caster->y;
+			if (engine.pickATile(&x,&y,4+2*((int)intensity))){	
+				Actor *actor = engine.getActor(x,y);
+				if (!actor) {
+					return false;
+				} else {
+					if ( ((this->actual == Spell::NEUTRAL) || (this->actual == Spell::ENEMY && actor->hostile != caster->hostile) || (this->actual == Spell::FRIENDLY && actor->hostile == caster->hostile)) ){
+						targets.push(actor);
+					}
+				}
+			} else {
+				return false;	
+			}
+			break;
+		}
+		case X_CREATURES_IN_SIGHT: {
+			while ( targets.size() < 2+((int)intensity) ) {
+				
+				int x = caster->x;
+				int y = caster->y;
+				if (engine.pickATile(&x,&y,4+2*((int)intensity))){	
+					Actor *actor = engine.getActor(x,y);
+					if (!actor) {
+						break;
+					} else if ( ((this->actual == Spell::NEUTRAL) || (this->actual == Spell::ENEMY && actor->hostile != caster->hostile) || (this->actual == Spell::FRIENDLY && actor->hostile == caster->hostile)) ) {
+						targets.push(actor);
+					}
+				} else {
+					break;	
+				}
+			}
+			if (targets.isEmpty()) {
+				return false;
+			}
+			break;
+		} case ALL_CREATURES_IN_LOS: {
+			
+			
 			break;
 		}
 	}

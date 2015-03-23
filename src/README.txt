@@ -61,6 +61,11 @@ IMMEDIATE TODO (WILL UPDATE AS TASKS GET COMPLETED)(MANY OTHER LONGER-TERM TODOs
 			-(IN PROGRESS)need a means to select the appropriate targets for a spell
 			-(IN PROGRESS)need a means to resolve the effects of casting a spell
 			-Modify the Engine::pickATile function so that enemy AI can use it to target the player (or other Actors if they so choose)
+
+	I SHOULD PROBABLY MAKE AN Engine::pickAnActor() FUNCTION THAT ALLOWS ANOTHER ACTOR TO CHOOSE ANOTHER ACTOR (MOSTLY FOR TARGETING STUFF
+		-this would use pickATile, and mostly consolidate the code involved in many of the Spell::cast() functions to choose an actor for a target
+		-not sure if its worth it to make one for picking multiple actors and takes a reference to a TCODList, which it would then populate
+			-this would then make it seem like that should be used for the Gui::renderKeyLook() function but its really not worth it to initialize a TCODList for that
 	
 	
 			

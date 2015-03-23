@@ -112,7 +112,7 @@ void Map::createRoom(bool first, int x1, int y1, int x2, int y2, bool withActors
 		helmet->pickable = new Equipment(Equipment::HEAD,bonus,requirement);
 		engine.actors.push(helmet);
 		
-		Actor *knife = new Actor(engine.player->x,engine.player->y,'|',"Knife {2d6}",TCODColor::darkerRed);
+		Actor *knife = new Actor(engine.player->x,engine.player->y,'|',"Knife {2d6,H}",TCODColor::darkerRed);
 		knife->blocks = false;
 		knife->ID = 000011;
 		TCODList<ItemBonus *> bonus2;

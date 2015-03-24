@@ -654,11 +654,23 @@ bool CreatureSpell::cast(Actor *caster){
 			}
 			break;
 		} case ALL_CREATURES_IN_LOS: {
-			
-			
+			for (Actor **iterator = engine.actors.begin();iterator != engine.actors.end(); iterator++) {
+				Actor *actor = *iterator;
+				if (actor != caster && actor->isVisible() && actor->destructible && !actor->destructible->isDead() && ((this->actual == Spell::NEUTRAL) || (this->actual == Spell::ENEMY && actor->hostile != caster->hostile) || (this->actual == Spell::FRIENDLY && actor->hostile == caster->hostile)) ){ 
+					targets.push(actor);
+				}
+			}
+
 			break;
 		}
 	}
+	//now all possible TargetSystems have been accounted for, and the TargetType should be accounted for as well
+	//check if targets is empty, and print a message so you know its empty here
+	if (targets.isEmpty()) {
+		engine.gui->message(TCODColor::lightPurple,"targets is empty");
+		return false;
+	}
+
 	return true;
 }
 

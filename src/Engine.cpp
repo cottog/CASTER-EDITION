@@ -44,6 +44,12 @@ void Engine::init() {
 			TCODConsole::root->print(30,26,"Please choose a name that hasn't already been used.");
 			TCODConsole::root->print(30,27,"Or delete the file containing this name");
 		}
+		if (strncmp(text.getText(),"",1) == 0) {
+			goodName = false;
+			text.reset();
+			TCODConsole::root->setDefaultForeground(TCODColor::red);
+			TCODConsole::root->print(30,26,"Invalid name.");
+		}
     }
 	
 	player = new Actor(40,25,'@',text.getText(),TCODColor::white, false);

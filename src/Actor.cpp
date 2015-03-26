@@ -9,6 +9,16 @@ Actor::Actor(int x, int y, int ch, const char *name, const TCODColor &col, bool 
 	this->name = strdup(name);
 }
 
+Actor::Actor(const Actor &actor):
+	ID(0),x(actor.x),y(actor.y),ch(actor.ch),col(actor.col),hostile(actor.hostile),
+	blocks(actor.blocks),attacker(NULL),destructible(NULL),ai(actor.ai),pickable(NULL),container(NULL){
+	
+	attacker = new Attacker(*actor.attacker);
+	destructible = new MonsterDestructible(actor.destructible->maxHp,actor.destructible->baseDodge,actor.destructible->corpseName,0);
+	container = new Container(actor.container->size);
+	this->name = strdup(name);
+}
+
 Actor::~Actor(){
 	delete(name);
 	if (attacker) delete attacker;

@@ -15,6 +15,7 @@ public:
 
 	
 	Actor(int x, int y, int ch, const char *name, const TCODColor &col, bool hostile = true);
+	Actor(const Actor &actor);	//copy constructor; doesn't work for Pickable actors, as I dont expect to use it for that
 	~Actor();
 	void update();
 	void render() const;

@@ -223,6 +223,27 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii, bool control, bool alt) 
 			}
 		}
 		break;
+		case 'c':
+		{
+			if (control){
+				engine.gui->message(TCODColor::white,"Got here!");
+				int pos = engine.findNearbyOpenTile(engine.player->x,engine.player->y);
+				if (pos != 0){
+					Actor *actor = new Actor(*engine.player);
+					actor->x = pos / (engine.mapWidth+1);
+					actor->y = pos % (engine.mapWidth+1);
+					actor->hostile = true;
+					actor->blocks = true;
+					actor->ai = new MonsterAi();
+					actor->setName("Simulacrum");
+					engine.gui->message(TCODColor::white,"%s %d %d",actor->getName(),actor->x,actor->y);
+					engine.actors.push(actor);
+				}
+			} else {
+				engine.gui->message(TCODColor::white,"position: %d %d",engine.player->x,engine.player->y);
+			}
+		break;
+		}
 	}
 }
 

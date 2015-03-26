@@ -9,6 +9,7 @@ public:
 	Actor *lastTarget; //last target attacked by this attacker
 	
 	Attacker (float power, float str = 0, float dex = 0);
+	Attacker(const Attacker &attacker);
 	void attack(Actor *owner, Actor *target);
 	void load(TCODZip &zip);
 	void save(TCODZip &zip);

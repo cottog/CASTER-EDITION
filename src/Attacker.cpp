@@ -7,6 +7,11 @@ Attacker::Attacker(float power, float str, float dex) :
 	lastTarget(NULL) {
 }
 
+Attacker::Attacker(const Attacker &attacker) : 
+	basePower(attacker.basePower), totalPower(attacker.totalPower), baseStr(attacker.baseStr), totalStr(attacker.totalStr), baseDex(attacker.baseDex), totalDex(attacker.totalDex),
+	lastTarget(NULL) {
+}
+
 void Attacker::save(TCODZip &zip) {
 	zip.putFloat(basePower);
 	zip.putFloat(totalPower);

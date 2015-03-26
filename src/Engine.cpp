@@ -41,8 +41,8 @@ void Engine::init() {
 		} else {
 			text.reset();
 			TCODConsole::root->setDefaultForeground(TCODColor::red);
-			TCODConsole::root->print(30,26,"Please choose a name that hasn't already been used.");
-			TCODConsole::root->print(30,27,"Or delete the file containing this name");
+			TCODConsole::root->print(30,27,"Please choose a name that hasn't already been used.");
+			TCODConsole::root->print(30,28,"Or delete the file containing this name");
 		}
 		if (strncmp(text.getText(),"",1) == 0) {
 			goodName = false;

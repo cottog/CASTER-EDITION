@@ -713,7 +713,7 @@ bool CreatureSpell::cast(Actor *caster){
 				break;
 			}
 			case SIMULACRUM: {
-				//make a copy of the selected 
+				//make a copy of the selected actor and place it nearby
 
 				break;
 			}

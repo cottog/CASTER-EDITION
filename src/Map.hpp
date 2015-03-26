@@ -1,11 +1,13 @@
 struct Tile {
-    bool explored; // can we walk through this tile?
-    Tile() : explored(false) {}
+    bool explored;	//have we walked through this tile?
+    bool blocked;	//can we walk through this tile?
+    Tile() : explored(false),blocked(false) {}
 };
  
 class Map : public Persistent {
 public :
     int width,height;
+    Tile *tiles; //no longer protected as it will be used to determine if a 
  
     Map(int width, int height);
     ~Map();
@@ -20,7 +22,7 @@ public :
 	void load(TCODZip &zip);
 	void save(TCODZip &zip);
 protected :
-    Tile *tiles;
+    
 	TCODMap *map;
 	long seed;
 	TCODRandom *banana;

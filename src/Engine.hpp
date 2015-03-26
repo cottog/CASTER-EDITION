@@ -42,6 +42,8 @@ public:
 	void getAllActorsInRadius(TCODList<Actor *> &targets, int x, int y, float radius = 0.0, Spell::TargetType targetType = Spell::NO_TYPE, bool casterHostility = false); //this will add to the passed list all living actors that are within (radius) of the specified tile (x,y), and can discriminate based on TargetType if need be 
 	//for the above function, a radius of 0 may add all living actors in the level
 	//for the above function, if using it for Spells, you can tell it what sort of TargetType to look for (all creatures, enemy creatures, or friendly creatures), as well as a bool "hostility" param, which in the case of spells should be the hostility of the caster
+	int findNearbyOpenTile(int x, int y); //returns the coords of an open tile that is adjacent (or equal) to the set of coordinates passed to the function;	returns the coords in the form x*(mapWidth+1)+y
+	
 };
 
 extern Engine engine;

@@ -149,8 +149,10 @@ bool PlayerAi::moveOrAttack(Actor *owner, int targetx, int targety){
 			engine.gui->message(TCODColor::white,"there's a %s here",actor->getName());
 		}
 	}
+	engine.map->tiles[owner->x+owner->y*engine.mapWidth].blocked = false;
 	owner->x = targetx;
 	owner->y = targety;
+	engine.map->tiles[owner->x+owner->y*engine.mapWidth].blocked = owner->blocks;
 	return true;
 }
 
@@ -263,7 +265,8 @@ void MonsterAi::moveOrAttack(Actor *owner, int targetx, int targety){
 	int stepdx = (dx > 0 ? 1:-1);
 	int stepdy = (dy > 0 ? 1:-1);
 	float distance = sqrtf(dx*dx+dy*dy);
-	
+
+	engine.map->tiles[owner->x+owner->y*engine.mapWidth].blocked = false;
 	if (distance >= 2) {
 		dx = (int)(round(dx/distance));
 		dy = (int)(round(dy/distance));
@@ -281,6 +284,7 @@ void MonsterAi::moveOrAttack(Actor *owner, int targetx, int targety){
 	} else if (owner->attacker) {
 		owner->attacker->attack(owner,engine.player);
 	}
+	engine.map->tiles[owner->x+owner->y*engine.mapWidth].blocked = owner->blocks;
 }
 
 ConfusedMonsterAi::ConfusedMonsterAi(int nbTurns, Ai *oldAi)

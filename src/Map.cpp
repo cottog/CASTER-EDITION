@@ -59,6 +59,7 @@ void Map::save(TCODZip &zip) {
 	zip.putInt(seed);
 	for (int i=0; i< width*height; i++) {
 		zip.putInt(tiles[i].explored);
+		zip.putInt(tiles[i].blocked);
 	}
 }
 
@@ -67,6 +68,7 @@ void Map::load(TCODZip &zip) {
 	init(false);
 	for (int i =0; i<width*height; i++) {
 		tiles[i].explored = zip.getInt();
+		tiles[i].blocked = zip.getInt();
 	}
 }
 
@@ -250,13 +252,8 @@ bool Map::canWalk(int x, int y) const {
 		//this is a wall
 		return false;
 	}
-	for (Actor **iterator=engine.actors.begin(); 
-		iterator != engine.actors.end(); iterator++){
-		Actor *actor = *iterator;
-		if (actor->blocks && actor->x == x && actor->y == y){
-			//there is an actor here. Cannot walk
-			return false;
-		}
+	if ( tiles[x+y*width].blocked ){
+		return false;
 	}
 	return true;
 }
@@ -275,6 +272,7 @@ void Map::addItem(int x, int y) {
 		healthPotion->blocks = false;
 		healthPotion->pickable = new Healer(4);
 		engine.actors.push(healthPotion);
+		engine.sendToBack(healthPotion);
 	} else if (dice <70+10) {
 		//create a scroll of lightning bolt
 		Actor *scrollOfLightningBolt = new Actor(x,y,'?',"Scroll of LIghtning Bolt",
@@ -283,6 +281,7 @@ void Map::addItem(int x, int y) {
 		scrollOfLightningBolt->blocks = false;
 		scrollOfLightningBolt->pickable = new LightningBolt(5,20);
 		engine.actors.push(scrollOfLightningBolt);
+		engine.sendToBack(scrollOfLightningBolt);
 	} else if (dice < 70+10+10) {
 		//create a scroll of fireball
 		Actor *scrollOfFireball = new Actor(x,y,'?',"Scroll of Fireball",
@@ -291,6 +290,7 @@ void Map::addItem(int x, int y) {
 		scrollOfFireball->blocks = false;
 		scrollOfFireball->pickable = new Fireball(8,3,12);
 		engine.actors.push(scrollOfFireball);
+		engine.sendToBack(scrollOfFireball);
 	} else {
 		//create a scroll of confusion
 		Actor *scrollOfConfusion = new Actor(x,y,'?',"scroll of confusion",
@@ -299,5 +299,6 @@ void Map::addItem(int x, int y) {
 		scrollOfConfusion->blocks = false;
 		scrollOfConfusion->pickable = new Confuser(10,3);
 		engine.actors.push(scrollOfConfusion);
+		engine.sendToBack(scrollOfConfusion);
 	}
 }

@@ -159,37 +159,49 @@ void Engine::load(bool pause) {
 		TCODConsole::root->clear();
 		load(false);
 	} else {
-		TCODZip zip;
-		engine.term();
 		char buf[128] = "";
 		strcat(buf,"saves/");
 		strcat(buf,chooseSaveFile(savepaths));
-		zip.loadFromFile(buf);
-		level = zip.getInt();
-		//load the map
-		int width = zip.getInt();
-		int height = zip.getInt();
-		map = new Map(width,height);
-		map->load(zip);
-		//then the player
-		player = new Actor(0,0,0,NULL,TCODColor::white);
-		player->load(zip);
-		actors.push(player);
-		//then the stairs
-		stairs = new Actor(0,0,0,NULL,TCODColor::white);
-		stairs->load(zip);
-		actors.push(stairs);
-		//then all the other actors
-		int nbActors = zip.getInt();
-		while (nbActors > 0) {
-			Actor *actor = new Actor(0,0,0,NULL,TCODColor::white);
-			actor->load(zip);
-			actors.push(actor);
-			nbActors--;
+		bool fileChosen = true;
+		if (strcmp(buf,"saves/") == 0) {
+			if (pause){
+				return;
+			} else {
+				fileChosen = false;
+				TCODConsole::root->clear();
+				load(false);
+			}
 		}
-		//finally the message log
-		gui->load(zip);
-		gameStatus = STARTUP;
+		if (fileChosen){
+			TCODZip zip;
+			engine.term();
+			zip.loadFromFile(buf);
+			level = zip.getInt();
+			//load the map
+			int width = zip.getInt();
+			int height = zip.getInt();
+			map = new Map(width,height);
+			map->load(zip);
+			//then the player
+			player = new Actor(0,0,0,NULL,TCODColor::white);
+			player->load(zip);
+			actors.push(player);
+			//then the stairs
+			stairs = new Actor(0,0,0,NULL,TCODColor::white);
+			stairs->load(zip);
+			actors.push(stairs);
+			//then all the other actors
+			int nbActors = zip.getInt();
+			while (nbActors > 0) {
+				Actor *actor = new Actor(0,0,0,NULL,TCODColor::white);
+				actor->load(zip);
+				actors.push(actor);
+				nbActors--;
+			}
+			//finally the message log
+			gui->load(zip);
+			gameStatus = STARTUP;
+		}
 	}
 	savepaths.clearAndDelete();
 }
@@ -553,7 +565,7 @@ const char *Engine::chooseSaveFile(TCODList<const char *> savepaths) {
 			return savepaths.get(fileIndex);
 		}
 	}
-	return NULL;
+	return "";
 }
 
 void Engine::fullscreen() {
@@ -627,4 +639,15 @@ void Engine::getAllActorsInRadius(TCODList<Actor *> &targets, int x, int y, floa
 			}
 		}
 	}
+}
+
+int Engine::findNearbyOpenTile(int x, int y){
+	for (int i = -1; i < 2; i++){
+		for (int j = -1; j < 2; j++){
+			if ( map->canWalk(x+i,y+j) )  {
+				return (x+i)*(mapWidth+1) + (y+j);
+			}	
+		}
+	}
+	return 0;
 }

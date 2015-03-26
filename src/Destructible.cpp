@@ -69,6 +69,7 @@ void Destructible::die(Actor *owner){
 	owner->col = TCODColor::darkRed;
 	//owner->setName(corpseName);
 	owner->blocks = false;
+	engine.map->tiles[owner->x+owner->y*engine.mapWidth].blocked=false;
 	//make sure corpses are drawn before living actors
 	engine.sendToBack(owner);
 }

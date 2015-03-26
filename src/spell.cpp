@@ -714,8 +714,20 @@ bool CreatureSpell::cast(Actor *caster){
 			}
 			case SIMULACRUM: {
 				//make a copy of the selected actor and place it nearby
-
+				int pos = engine.findNearbyOpenTile(actor->x,actor->y);
+				if (pos != 0){
+					Actor *simulacrum = new Actor(*actor);
+					simulacrum->x = pos / (engine.mapWidth+1);
+					simulacrum->y = pos % (engine.mapWidth+1);
+					simulacrum->hostile = caster->hostile;	//simulacrums are friendly towards their creator
+					simulacrum->blocks = true;
+					simulacrum->ai = new MonsterAi();
+					engine.actors.push(simulacrum);
+				}
 				break;
+			}
+			case SHIELD: {
+				
 			}
 		}
 	}	

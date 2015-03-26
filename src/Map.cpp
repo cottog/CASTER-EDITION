@@ -225,6 +225,14 @@ void Map::render() const {
 	
 }
 
+void Map::exploreTile(int x, int y) {
+	if (x > width || y > height) {
+		return;
+	}
+	tiles[x+y*width].explored = true;
+	return;
+}
+
 bool Map::isExplored(int x, int y) const {
 	return tiles[x+y*width].explored;
 }

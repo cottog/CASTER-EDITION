@@ -671,6 +671,56 @@ bool CreatureSpell::cast(Actor *caster){
 		return false;
 	}
 
+	for (Actor **iterator = targets.begin();
+		iterator != targets.end(); iterator++) {
+		
+		Actor *actor = *iterator;
+
+		switch(effect) {
+			default: return false; break;
+			case STRAIGHT_HEAL: {
+				actor->destructible->heal(5+10*((int)intensity));	//assume that all actors here are Destructible and !isDead(); if it crashes, fix it above, where they are added to targets
+				break;
+			}
+			case HEAL_OVER_TIME: {
+				Aura *hot = new Aura(10+((int)intensity),3*((int)intensity),Aura::HEALTH,Aura::ITERABLE);
+				actor->auras.push(hot);
+				break;
+			}
+			case STAT_BOOST: {
+				//determine what elements correspond to what stat and then add this functionality
+
+				break;
+			}
+			case CURE_DEBUFFS: {
+				//once you figure out what buffs correspond to what element, do the inverse here
+
+				break;
+			}
+			case DETECTION: {
+				engine.map->exploreTile(actor->x,actor->y);
+				break;
+			}
+			case POLYMORPH: {
+				//once you have an enemyFactory class, use that here to generate a new body for the target actor
+				//this new body will be determined by the element of the spell
+
+				break;
+			}
+			case SHAPE_SHIFTING: {
+				//do the smae as polymorph, but make an Aura for shape_shifting so they can go back to their old body
+
+				break;
+			}
+			case SIMULACRUM: {
+				//make a copy of the selected 
+
+				break;
+			}
+		}
+	}	
+
+
 	return true;
 }
 

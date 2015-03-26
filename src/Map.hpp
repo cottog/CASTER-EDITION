@@ -14,6 +14,7 @@ public :
 	bool isExplored(int x, int y) const;
 	bool canWalk(int x, int y) const;
 	void computeFov();
+	void exploreTile(int x, int y); //this should typically be used for detection or magic mapping spells
  	void render() const;
 	void init(bool withActors);
 	void load(TCODZip &zip);

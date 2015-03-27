@@ -60,6 +60,10 @@ void Engine::init() {
 		player->destructible = new PlayerDestructible(30,2,"your cadaver");
 	}
 	
+	Aura *shield = new ShieldAura(10,10);
+	shield->apply(engine.player);
+	engine.player->auras.push(shield);
+	
 	player->attacker = new Attacker(5);
 	player->ai = new PlayerAi();
 	player->container = new Container(26);
@@ -642,8 +646,8 @@ void Engine::getAllActorsInRadius(TCODList<Actor *> &targets, int x, int y, floa
 }
 
 int Engine::findNearbyOpenTile(int x, int y){
-	for (int i = -1; i < 2; i++){
-		for (int j = -1; j < 2; j++){
+	for (int i = -1; i < 2; i++){		//check the 9 (3x3) tiles immediately adjacent to the given coordinates
+		for (int j = -1; j < 2; j++){	//I might try and put two shuffle bags here for i and j so that the order of tile-checking is more random.
 			if ( map->canWalk(x+i,y+j) )  {
 				return (x+i)*(mapWidth+1) + (y+j);
 			}	

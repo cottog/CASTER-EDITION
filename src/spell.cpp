@@ -683,7 +683,7 @@ bool CreatureSpell::cast(Actor *caster){
 				break;
 			}
 			case HEAL_OVER_TIME: {
-				Aura *hot = new Aura(10+((int)intensity),3*((int)intensity),Aura::HEALTH,Aura::ITERABLE);
+				Aura *hot = new Aura(10+((int)intensity),3*((int)intensity),Aura::HEALTH,Aura::ITERABLE); //this will have to change when auras are changed around
 				actor->auras.push(hot);
 				break;
 			}
@@ -727,8 +727,19 @@ bool CreatureSpell::cast(Actor *caster){
 				break;
 			}
 			case SHIELD: {
-				
+				Aura *shield = new ShieldAura(10+3*((int)intensity),10*((int)intensity));
+				aura->apply(target);
+				target.auras.push(shield);
+				break;
 			}
+			case REFLECTION: {
+				//essentially, this should add a ReflectionAura to the target, which simply holds a duration and an elemental subtype
+				//above, where we iterate through the list of targets, we will then check if they have an aura of type REFLECTION, and if that Aura's elemental subtype matches that of this spell
+				//if both of the above conditions hold, target is instead changed to caster, effectively reflecting the spell
+
+				break;
+			}
+			case 
 		}
 	}	
 

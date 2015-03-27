@@ -1,7 +1,7 @@
-class Aura : public Persistent {
+class Aura : public Persistent {	//have to make a factory just like with Pickables, so that you can save and load all the different aura types
 public:
 	enum StatType {
-		NONE,ALL,TOTALSTR,TOTALPOWER,TOTALDEX,TOTALINTEL,TOTALDODGE,TOTALDR,HEALTH,MAXHEALTH,LIGHT
+		NONE,ALL,TOTALSTR,TOTALPOWER,TOTALDEX,TOTALINTEL,TOTALDODGE,TOTALDR,HEALTH,MAXHEALTH,LIGHT,SHIELD
 	};
 	enum LifeStyle {
 		CONTINUOUS,    // buff/debuff that lasts for a certain time
@@ -18,6 +18,14 @@ public:
 	Aura(int duration = 0, int bonus = 0, StatType stat = NONE, LifeStyle life = CONTINUOUS);
 	void save(TCODZip &zip);
 	void load(TCODZip &Zip);
+	virtual void apply(Actor *target);
+	virtual void unApply(Actor *target);
+};
+
+
+class ShieldAura : public Aura {
+public:
+	ShieldAura(int duration = 0, int bonus = 0);
 	void apply(Actor *target);
 	void unApply(Actor *target);
 };

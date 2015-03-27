@@ -51,11 +51,20 @@ void Gui::render(){
 	sidebar->printFrame(0,0,MSG_X,engine.screenHeight - con->getHeight(),
 		true, TCOD_BKGND_ALPHA(50),"CHARACTER INFO");
 	
-	//draw the health bar
-	renderBar(1,5,BAR_WIDTH,"HP",engine.player->destructible->hp,
-		engine.player->destructible->maxHp,
-		TCODColor::lightRed,TCODColor::darkerRed);
-		
+	if (engine.player->destructible->shield) {	//was gonna do this in-line, but I am unsure if making a logical check in every line makes more sense than this if-else statement 
+		//draw the shield bar, if it is there
+		renderBar(1,5,BAR_WIDTH,"SHIELD",engine.player->destructible->shield,
+			engine.player->destructible->maxShield,
+			TCODColor::green,TCODColor::darkerGreen);
+	} else {
+		//draw the health bar
+		renderBar(1,5,BAR_WIDTH,"HP",engine.player->destructible->hp,
+			engine.player->destructible->maxHp,
+			TCODColor::lightRed,TCODColor::darkerRed);
+	}
+	
+	sidebar->print(1,17,"%d",engine.player->destructible->shield);
+
 	//draw the XP bar
 	PlayerAi *ai = (PlayerAi *)engine.player->ai;
 	char xpTxt[128];
@@ -65,8 +74,14 @@ void Gui::render(){
 	
 	//draw the last target's hp bar
 	if ((engine.player->attacker->lastTarget != NULL)&&(engine.player->attacker->lastTarget!=engine.player)&&(!engine.player->attacker->lastTarget->destructible->isDead())) {
-		renderBar(1,13,BAR_WIDTH, "target's HP",engine.player->attacker->lastTarget->destructible->hp,
-			engine.player->attacker->lastTarget->destructible->maxHp,TCODColor::lightRed, TCODColor::darkerRed);
+
+		if (engine.player->attacker->lastTarget->destructible->shield){
+			renderBar(1,13,BAR_WIDTH, "target's Shield",engine.player->attacker->lastTarget->destructible->shield,
+				engine.player->attacker->lastTarget->destructible->maxShield,TCODColor::green, TCODColor::darkerGreen);
+		} else {
+			renderBar(1,13,BAR_WIDTH, "target's HP",engine.player->attacker->lastTarget->destructible->hp,
+				engine.player->attacker->lastTarget->destructible->maxHp,TCODColor::lightRed, TCODColor::darkerRed);
+		}
     }
 	
 	//draw the message log

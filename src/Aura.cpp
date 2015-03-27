@@ -21,6 +21,7 @@ void Aura::load(TCODZip &zip) {
 }
 
 void Aura::apply(Actor *target) {
+	engine.gui->message(TCODColor::red,"aura applied");
 	switch(stat) {
 		case NONE: break;
 		case ALL:
@@ -141,4 +142,26 @@ void Aura::unApply(Actor *target) {
 			default: break;
 		}
 	}
+}
+
+ShieldAura::ShieldAura(int duration, int bonus) :
+	 Aura(duration, bonus, SHIELD, CONTINUOUS){
+}
+
+void ShieldAura::apply(Actor *target) {
+	engine.gui->message(TCODColor::red,"Shield applied");
+	if (target->destructible) {
+		target->destructible->maxShield += bonus;
+		target->destructible->shield += bonus;
+	}
+}
+
+void ShieldAura::unApply(Actor *target) {
+	if (target->destructible) {
+		target->destructible->maxShield -= bonus;
+		target->destructible->shield -= bonus;
+	}
+
+	if (target->destructible->shield < 0) target->destructible->shield = 0;
+	if (target->destructible->maxShield < 0) target->destructible->maxShield = 0;
 }

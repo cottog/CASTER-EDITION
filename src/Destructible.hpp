@@ -2,6 +2,8 @@ class Destructible : public Persistent{
 public:
 	float maxHp; //maximum health points
 	float hp; //current health points
+	float maxShield;	//maximum shield, which is essentially a secondary, non-fatal health pool
+	float shield;		//current shield value
 	float baseDodge; //miss bonus to enemy miss chance
 	float totalDodge;
 	float baseDR;    //hit points deflected
@@ -10,7 +12,7 @@ public:
 	int xp;
 	Spell::ElementalSubtype element;
 
-	Destructible(float maxHp, float dodge, const char *corpseName, int xp=0, float DR=0, Spell::ElementalSubtype element = Spell::FORCE);
+	Destructible(float maxHp, float dodge, const char *corpseName, int xp=0, float DR=0, float maxShield = 0, Spell::ElementalSubtype element = Spell::FORCE);
 	~Destructible();
 	inline bool isDead() {return hp <= 0; }
 	float takeDamage(Actor *owner, Actor *attacker, float damage);
@@ -35,7 +37,7 @@ public:
 
 class PlayerDestructible : public Destructible {
 public:
-	PlayerDestructible(float maxHp, float defense, const char *corpseName);
+	PlayerDestructible(float maxHp, float defense, const char *corpseName,float maxShield = 0);
 	void die(Actor *owner);
 	void save(TCODZip &zip);
 };

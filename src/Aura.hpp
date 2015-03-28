@@ -1,7 +1,12 @@
 class Aura : public Persistent {	//have to make a factory just like with Pickables, so that you can save and load all the different aura types
 public:
 	enum StatType {
-		NONE,ALL,TOTALSTR,TOTALPOWER,TOTALDEX,TOTALINTEL,TOTALDODGE,TOTALDR,HEALTH,MAXHEALTH,LIGHT,SHIELD
+		NONE,TOTALSTR,TOTALPOWER,TOTALDEX,TOTALINTEL,TOTALDODGE,
+		TOTALDR,
+		HEALTH,
+		MAXHEALTH,
+		LIGHT,
+		SHIELD
 	};
 	enum LifeStyle {
 		CONTINUOUS,    // buff/debuff that lasts for a certain time
@@ -17,15 +22,44 @@ public:
 	
 	Aura(int duration = 0, int bonus = 0, StatType stat = NONE, LifeStyle life = CONTINUOUS);
 	void save(TCODZip &zip);
-	void load(TCODZip &Zip);
-	virtual void apply(Actor *target);
-	virtual void unApply(Actor *target);
+	void load(TCODZip &zip);
+	virtual void apply(Actor *target) = 0;
+	virtual void unApply(Actor *target) = 0;
+	static Aura *create(TCODZip &zip);
 };
 
 
 class ShieldAura : public Aura {
 public:
-	ShieldAura(int duration = 0, int bonus = 0);
+	ShieldAura(int duration = 0, int bonus = 0, LifeStyle life = CONTINUOUS);
+	void apply(Actor *target);
+	void unApply(Actor *target);
+};
+
+class Heal : public Aura {
+public:
+	Heal(int duration, int tick, LifeStyle life = ITERABLE);	//tick is the amount healed per turn (or once)
+	void apply(Actor *target);
+	void unApply(Actor *target);
+};
+
+class HealthBoost : public Aura {
+public:
+	HealthBoost(int duration, int boost, LifeStyle life = CONTINUOUS);	//boost is the amount your maxHealth is boosted by
+	void apply(Actor *target);
+	void unApply(Actor *target);
+};
+
+class LightBoost : public Aura {
+public:
+	LightBoost(int duration, int boost, LifeStyle life = CONTINUOUS);
+	void apply(Actor *target);
+	void unApply(Actor *target);
+};
+
+class DRBoost : public Aura {
+public:
+	DRBoost(int duration, int boost, LifeStyle life = CONTINUOUS);
 	void apply(Actor *target);
 	void unApply(Actor *target);
 };

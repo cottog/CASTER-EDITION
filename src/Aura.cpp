@@ -34,6 +34,8 @@ Aura *Aura::create(TCODZip &zip){
 		case MAXHEALTH: aura = new HealthBoost(0,0); break;
 		case LIGHT: aura = new LightBoost(0,0); break;
 		case SHIELD: aura = new ShieldAura(0,0); break;
+		case REFLECTION: aura = new ReflectionAura(0); break;
+		case ABSORPTION: aura = new AbsorptionAura(0,0); break;
 	}
 	aura->load(zip);
 	return aura;
@@ -230,4 +232,24 @@ void StrBoost::unApply(Actor *target){
 		bonus *= totalDuration;
 	}
 	if (target->attacker) target->attacker->totalStr -= bonus;
+}
+
+ReflectionAura::ReflectionAura(int duration) :
+	Aura(duration, 0, REFLECTION, CONTINUOUS){
+}
+
+void ReflectionAura::apply(Actor *target){
+}
+
+void ReflectionAura::unApply(Actor *target){
+}
+
+AbsorptionAura::AbsorptionAura(int duration, int percentage) :
+	Aura(duration, percentage, ABSORPTION, CONTINUOUS){
+}
+
+void AbsorptionAura::apply(Actor *target){
+}
+
+void AbsorptionAura::unApply(Actor *target){
 }

@@ -227,11 +227,13 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii, bool control, bool alt) 
 		{
 			if (control){
 				engine.gui->message(TCODColor::white,"Got here!");
-				int pos = engine.findNearbyOpenTile(engine.player->x,engine.player->y);
-				if (pos != 0){
+				int x = owner->x;
+				int y = owner->y;
+				bool tileFound = engine.findNearbyOpenTile(&x, &y);
+				if (tileFound){
 					Actor *actor = new Actor(*engine.player);
-					actor->x = pos / (engine.mapWidth+1);
-					actor->y = pos % (engine.mapWidth+1);
+					actor->x = x;
+					actor->y = y;
 					actor->hostile = true;
 					actor->blocks = true;
 					actor->ai = new MonsterAi();

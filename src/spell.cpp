@@ -693,6 +693,17 @@ bool CreatureSpell::cast(Actor *caster){
 		iterator != targets.end(); iterator++) {
 		
 		Actor *actor = *iterator;
+		for (Aura **it = actor->auras.begin(); it!= actor->auras.end(); it++) {
+			Aura *aura = *it;
+			if(aura->stat == Aura::REFLECTION){
+				targets.push(caster);
+				continue;
+			}
+			if(aura->stat == Aura::ABSORPTION){
+				//if(target->caster) target->caster->gainMana(cost*(aura->bonus/100));	//gain mana proportial to cost of spell, dependent on absorption magnitude
+				continue;
+			}
+		}
 
 		switch(effect) {
 			default: targets.clearAndDelete(); return false; break;
@@ -732,11 +743,13 @@ bool CreatureSpell::cast(Actor *caster){
 			}
 			case SIMULACRUM: {
 				//make a copy of the selected actor and place it nearby
-				int pos = engine.findNearbyOpenTile(actor->x,actor->y);
-				if (pos != 0){
+				int x = actor->x;
+				int y = actor->y;
+				bool tileOpen = engine.findNearbyOpenTile(&x,&y);
+				if (tileOpen){
 					Actor *simulacrum = new Actor(*actor);
-					simulacrum->x = pos / (engine.mapWidth+1);
-					simulacrum->y = pos % (engine.mapWidth+1);
+					simulacrum->x = x;
+					simulacrum->y = y;
 					simulacrum->hostile = caster->hostile;	//simulacrums are friendly towards their creator
 					simulacrum->blocks = true;
 					simulacrum->ai = new MonsterAi();
@@ -753,7 +766,18 @@ bool CreatureSpell::cast(Actor *caster){
 				//essentially, this should add a ReflectionAura to the target, which simply holds a duration and an elemental subtype
 				//above, where we iterate through the list of targets, we will then check if they have an aura of type REFLECTION, and if that Aura's elemental subtype matches that of this spell
 				//if both of the above conditions hold, target is instead changed to caster, effectively reflecting the spell
-
+				//this functionality is partially implemented; the elemental subtype functionality isn't there yet
+				Aura *reflection = new ReflectionAura(5+2*((int)intensity));
+				actor->auras.push(reflection);
+				break;
+			}
+			case ABSORPTION: {
+				//this will function similarly to the above case, where it will be handled by an aura
+				//for an AbsorptionAura, however, instead of adding the caster as a new target, it instead gives the target a portion of the mana cost of the spell, depending on the intensity of the absorption
+				//spells absorbed in this way have no other effect on the target
+				//this functionality is partially implemented; the elemental subtype functionality isn't there yet
+				Aura *absorption = new AbsorptionAura(10+((int)intensity),20*((int)intensity));
+				actor->auras.push(absorption);
 				break;
 			}
 		}

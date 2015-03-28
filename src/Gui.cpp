@@ -206,8 +206,8 @@ Menu::MenuItemCode Menu::pick(DisplayMode mode) {
 		menux += 2;
 		menuy += 3;
 	} else {
-		static TCODImage img("harold.png");
-		img.blit2x(TCODConsole::root,0,0);
+		//static TCODImage img("harold.png");
+		//img.blit2x(TCODConsole::root,0,0);
 		menux = 65;
 		TCODConsole::root->setDefaultForeground(TCODColor::black);
 		TCODConsole::root->print(18,2,"HAROLD THE SORCEROR");

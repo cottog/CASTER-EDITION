@@ -1,7 +1,8 @@
 class Aura : public Persistent {	//have to make a factory just like with Pickables, so that you can save and load all the different aura types
 public:
 	enum StatType {
-		NONE,TOTALSTR,TOTALPOWER,TOTALDEX,TOTALINTEL,TOTALDODGE,TOTALDR,HEALTH,MAXHEALTH,LIGHT,SHIELD
+		NONE,TOTALSTR,TOTALPOWER,TOTALDEX,TOTALINTEL,TOTALDODGE,TOTALDR,HEALTH,MAXHEALTH,LIGHT,SHIELD,
+		REFLECTION, ABSORPTION
 	};
 	enum LifeStyle {
 		CONTINUOUS,    // buff/debuff that lasts for a certain time
@@ -90,6 +91,20 @@ public:
 class StrBoost : public Aura{
 public:
 	StrBoost(int duration, int boost, LifeStyle life = CONTINUOUS);
+	void apply(Actor *target);
+	void unApply(Actor *target);
+};
+
+class ReflectionAura : public Aura{
+public:
+	ReflectionAura(int duration);
+	void apply(Actor *target);
+	void unApply(Actor *target);
+};
+
+class AbsorptionAura : public Aura{
+public:
+	AbsorptionAura(int duration, int percentage);	//an absorption aura will absorb a percentage of a spells' mana. we are using ints here, not floats, so put 80 if you want 80% absorption
 	void apply(Actor *target);
 	void unApply(Actor *target);
 };

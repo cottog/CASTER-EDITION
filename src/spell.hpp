@@ -82,12 +82,11 @@ public:
 		LIFE_TAP //45 sacrifices some of the caster's life in exchange for mana of all types
 	};
 	enum ElementalSubtype {  //these are the possible subtypes of a spell, determined by how much of each resource is spent on it
-		NO_SUBTYPE,
-		FORCE,
-		FIRE,
-		WATER,
-		EARTH,
-		AIR,
+		NO_SUBTYPE,	//0000
+		FIRE,		//0001
+		AIR,		//0010
+		WATER,		//0100
+		EARTH,		//1000
 		LIGHTNING,
 		STEAM,
 		LAVA,
@@ -97,7 +96,8 @@ public:
 		GLASS,
 		RADIATION,
 		METAL,
-		POISON
+		POISON,
+		FORCE		//1111
 	};
 	
 	//TODO: create the LastCast object for casting spell's more quickly

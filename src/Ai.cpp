@@ -240,7 +240,9 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii, bool control, bool alt) 
 					engine.actors.push(actor);
 				}
 			} else {
-				engine.gui->message(TCODColor::white,"position: %d %d",engine.player->x,engine.player->y);
+				Aura *shield = new ShieldAura(10,10);
+				engine.player->auras.push(shield);
+				engine.gameStatus = Engine::NEW_TURN; 
 			}
 		break;
 		}

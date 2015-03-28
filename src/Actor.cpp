@@ -69,8 +69,7 @@ void Actor::load(TCODZip &zip) {
 	
 	int nbAuras = zip.getInt();
 	while (nbAuras > 0) {
-		Aura *aura = new Aura();
-		aura->load(zip);
+		Aura *aura = Aura::create(zip);
 		auras.push(aura);
 		nbAuras--;
 	}
@@ -135,10 +134,9 @@ void Actor::updateAuras() {
 	if (!this->auras.isEmpty()) {
 		for (Aura **iter = this->auras.begin(); iter != this->auras.end(); iter++) {
 			Aura *aura = *iter;
+			aura->apply(this);
 			aura->duration--;
-			if (aura->life == Aura::ITERABLE) {
-				aura->apply(this);
-			}
+			
 			if (aura->duration == 0) {
 				aura->unApply(this);
 				delete *iter;

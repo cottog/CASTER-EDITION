@@ -701,7 +701,7 @@ bool CreatureSpell::cast(Actor *caster){
 				break;
 			}
 			case HEAL_OVER_TIME: {
-				Aura *hot = new Aura(10+((int)intensity),3*((int)intensity),Aura::HEALTH,Aura::ITERABLE); //this will have to change when auras are changed around
+				Aura *hot = new HealAura(10+((int)intensity),3*((int)intensity),Aura::ITERABLE); //this will have to change when auras are changed around
 				actor->auras.push(hot);
 				break;
 			}
@@ -746,8 +746,7 @@ bool CreatureSpell::cast(Actor *caster){
 			}
 			case SHIELD: {
 				Aura *shield = new ShieldAura(10+3*((int)intensity),10*((int)intensity));
-				aura->apply(target);
-				target.auras.push(shield);
+				actor->auras.push(shield);
 				break;
 			}
 			case REFLECTION: {
@@ -757,7 +756,6 @@ bool CreatureSpell::cast(Actor *caster){
 
 				break;
 			}
-			case 
 		}
 	}	
 

@@ -51,7 +51,7 @@ Destructible *Destructible::create(TCODZip &zip) {
 }
 
 float Destructible::takeDamage(Actor *owner, Actor *attacker, float damage){
-	if (owner->attacker && (owner->attacker->lastTarget == NULL || owner->attacker->lastTarget->destructible->isDead())) {
+	if (attacker && owner->attacker && (owner->attacker->lastTarget == NULL || owner->attacker->lastTarget->destructible->isDead())) {
 		owner->attacker->lastTarget = attacker;
 	}
 	float damageTaken = 0;

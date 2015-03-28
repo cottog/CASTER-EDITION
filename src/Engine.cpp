@@ -61,7 +61,6 @@ void Engine::init() {
 	}
 	
 	Aura *shield = new ShieldAura(10,10);
-	shield->apply(engine.player);
 	engine.player->auras.push(shield);
 	
 	player->attacker = new Attacker(5);

@@ -243,7 +243,7 @@ void Poison::load(TCODZip &zip) {
 }
 
 bool Poison::use(Actor *owner, Actor *wearer) {
-	Aura *poison = new Aura(duration,-1*tick,Aura::HEALTH,Aura::ITERABLE);
+	Aura *poison = new HealAura(duration,-1*tick,Aura::ITERABLE);
 	wearer->auras.push(poison);
 	engine.gui->message(TCODColor::lightGreen,"%s begins to look a little queasy!",wearer->getName());
 	return Pickable::use(owner,wearer);

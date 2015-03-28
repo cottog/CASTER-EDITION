@@ -82,23 +82,23 @@ public:
 		LIFE_TAP //45 sacrifices some of the caster's life in exchange for mana of all types
 	};
 	enum ElementalSubtype {  //these are the possible subtypes of a spell, determined by how much of each resource is spent on it
-		NO_SUBTYPE,	//0000
-		FIRE,		//0001
-		AIR,		//0010
-		WATER,		//0100
-		EARTH,		//1000
-		LIGHTNING,
-		STEAM,
-		LAVA,
-		ICE,
-		MUD,
-		DUST,
-		GLASS,
-		RADIATION,
-		METAL,
-		POISON,
-		FORCE		//1111
-	};
+		NO_SUBTYPE = 0,	//0000	NOTHING
+		FIRE,			//0001	FIRE
+		AIR,			//0010	AIR
+		LIGHTNING,		//0011	FIRE+AIR
+		WATER,			//0100	WATER
+		STEAM,			//0101	WATER+FIRE
+		ICE,			//0110	WATER+AIR
+		RADIATION,		//0111	FIRE+AIR+WATER 
+		EARTH,			//1000	EARTH
+		LAVA,			//1001	FIRE+EARTH
+		DUST,			//1010	AIR+EARTH
+		GLASS,			//1011	FIRE+AIR+EARTH 
+		MUD,			//1100	WATER+EARTH
+		METAL,			//1101	FIRE+WATER+EARTH
+		POISON,			//1110	EARTH+AIR+WATER
+		FORCE			//1111
+	};	//originally I planned for some elemental subtypes to have share resistances, but I figure why not let each elemental subtype have its own resistance? I might implement a system such that gaining resistance in a base element propagates to a lesser extent to its derivative elements, as outlined above
 	
 	//TODO: create the LastCast object for casting spell's more quickly
 	//TODO: consider creating a tiny description of each spell that indicates what its purpose may be; this would be achieved by having each spell contain a string or TCODText object and you appending characters to it that would be defined in a wiki for players to read

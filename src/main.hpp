@@ -11,5 +11,6 @@ class Actor;
 #include "Container.hpp"
 #include "Actor.hpp"
 #include "Map.hpp"
+#include "ShuffleBag.hpp"
 #include "Engine.hpp"
 

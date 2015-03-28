@@ -645,14 +645,24 @@ void Engine::getAllActorsInRadius(TCODList<Actor *> &targets, int x, int y, floa
 }
 
 bool Engine::findNearbyOpenTile(int *x, int *y){
-	for (int i = -1; i < 2; i++){		//check the 9 (3x3) tiles immediately adjacent to the given coordinates
-		for (int j = -1; j < 2; j++){	//I might try and put two shuffle bags here for i and j so that the order of tile-checking is more random.
-			if ( map->canWalk(*x+i,*y+j) )  {
-				*x += i;
-				*y += j;
-				return true;
-			}	
-		}
+
+	ShuffleBag<int> xBag;
+	ShuffleBag<int> yBag;
+
+	for (int num = -1; num < 2; num++){
+		xBag.add(num);
+		yBag.add(num);
 	}
+
+	while (!xBag.isEmpty()){	//xBag and yBag are the same size
+		int i = xBag.retrieve();
+		int j = yBag.retrieve();
+
+		if ( map->canWalk(*x+i,*y+j) )  {
+			*x += i;
+			*y += j;
+			return true;
+		}	
+	}	
 	return false;
 }

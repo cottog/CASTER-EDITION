@@ -780,6 +780,11 @@ bool CreatureSpell::cast(Actor *caster){
 				actor->auras.push(absorption);
 				break;
 			}
+			case DAMAGING_TELEPORT:{
+				//this spell is intended to teleport the target and damage those in a certain radius around his location
+				
+				break;
+			}
 		}
 	}	
 

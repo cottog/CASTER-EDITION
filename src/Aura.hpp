@@ -2,7 +2,7 @@ class Aura : public Persistent {	//have to make a factory just like with Pickabl
 public:
 	enum StatType {
 		NONE,TOTALSTR,TOTALPOWER,TOTALDEX,TOTALINTEL,TOTALDODGE,TOTALDR,HEALTH,MAXHEALTH,LIGHT,SHIELD,
-		REFLECTION, ABSORPTION
+		REFLECTION, ABSORPTION, DAMAGING_AURA
 	};
 	enum LifeStyle {
 		CONTINUOUS,    // buff/debuff that lasts for a certain time
@@ -17,8 +17,8 @@ public:
 	LifeStyle life; //how should this aura act during its duration?
 	
 	Aura(int duration = 0, int bonus = 0, StatType stat = NONE, LifeStyle life = CONTINUOUS);
-	void save(TCODZip &zip);
-	void load(TCODZip &zip);
+	virtual void save(TCODZip &zip);
+	virtual void load(TCODZip &zip);
 	virtual void apply(Actor *target) = 0;
 	virtual void unApply(Actor *target) = 0;
 	static Aura *create(TCODZip &zip);
@@ -107,4 +107,17 @@ public:
 	AbsorptionAura(int duration, int percentage);	//an absorption aura will absorb a percentage of a spells' mana. we are using ints here, not floats, so put 80 if you want 80% absorption
 	void apply(Actor *target);
 	void unApply(Actor *target);
+};
+
+class DamagingAura : public Aura{
+public:
+	int radius;	//how far around the target does this aura cause damage?
+	bool smart;	//does this damaging aura damage everyone or just enemies?
+
+	DamagingAura(int duration, int damage, int radius, bool smart);
+	void save(TCODZip &zip);
+	void load(TCODZip &zip);
+	void apply(Actor *target);
+	void unApply(Actor *target);
+
 };

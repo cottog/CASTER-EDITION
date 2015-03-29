@@ -795,8 +795,8 @@ bool CreatureSpell::cast(Actor *caster){
 
 				if (!inRadius.isEmpty()){
 
-					for (Actor **iter = targets.begin();
-						iter != targets.end(); iter++) {
+					for (Actor **iter = inRadius.begin();
+						iter != inRadius.end(); iter++) {
 						Actor *act1 = *iter;
 
 						if (act1->destructible) act1->destructible->takeDamage(act1, caster, 3+((int)intensity)*((int)intensity));
@@ -815,6 +815,7 @@ bool CreatureSpell::cast(Actor *caster){
 				actor->x = x;
 				actor->y = y;
 
+				inRadius.clearAndDelete();
 				break;
 			}
 			case WEAPON_ENHANCEMENT: {
@@ -828,9 +829,37 @@ bool CreatureSpell::cast(Actor *caster){
 				break;
 			}
 			case TELEPORT: {
+				int minX = actor->x + ((int)intensity)*2;
+				int maxX = actor->x + ((int)intensity)*6;
+				int minY = actor->y + ((int)intensity)*2;
+				int maxY = actor->y + ((int)intensity)*6;
+				int x = 0;
+				int y = 0;
+				bool locationFound = false;
+				
+				while (!locationFound){
+					x = rng->getInt(minX, maxX);
+					y = rng->getInt(minY, maxY);
 
+					if (engine.map->canWalk(x,y)) {
+						locationFound = true;
+					}
+				}
+
+				actor->x = x;
+				actor->y = y;
 				break;
 			} 
+			case DAMAGING_AURA: {
+				Aura *damaging = new DamagingAura(10+((int)intensity), 2+2*((int)intensity), 3+((int)intensity), false);
+				actor->auras.push(damaging);
+				break;
+			}
+			case INTELLIGENT_DAMAGING_AURA: {
+				Aura *damaging = new DamagingAura(10+((int)intensity), 2+2*((int)intensity), 3+((int)intensity), true);
+				actor->auras.push(damaging);
+				break;
+			}
 		}
 	}	
 

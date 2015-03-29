@@ -36,6 +36,7 @@ Aura *Aura::create(TCODZip &zip){
 		case SHIELD: aura = new ShieldAura(0,0); break;
 		case REFLECTION: aura = new ReflectionAura(0); break;
 		case ABSORPTION: aura = new AbsorptionAura(0,0); break;
+		case DAMAGING_AURA: aura = new DamagingAura(0,0,0,false); break;
 	}
 	aura->load(zip);
 	return aura;
@@ -252,4 +253,51 @@ void AbsorptionAura::apply(Actor *target){
 }
 
 void AbsorptionAura::unApply(Actor *target){
+}
+
+DamagingAura::DamagingAura(int duration, int damage, int radius, bool smart) :
+	Aura(duration, damage, DAMAGING_AURA, ITERABLE),radius(radius),smart(smart){
+}
+
+void DamagingAura::save(TCODZip &zip){
+	zip.putInt(stat);
+	zip.putInt(totalDuration);
+	zip.putInt(duration);
+	zip.putInt(bonus);
+	zip.putInt(life);
+	zip.putInt(radius);
+	zip.putInt(smart);
+}
+
+void DamagingAura::load(TCODZip &zip){
+	totalDuration = zip.getInt();
+	duration = zip.getInt();
+	bonus = zip.getInt();
+	life = (LifeStyle)zip.getInt();
+	radius = zip.getInt();
+	smart = zip.getInt();
+}
+
+void DamagingAura::apply(Actor *target){
+	TCODList<Actor *> inRadius;
+	if (!smart){
+		engine.getAllActorsInRadius(inRadius,target->x, target->y, radius);
+	} else {
+		engine.getAllActorsInRadius(inRadius,target->x, target->y, radius, Spell::ENEMY, target->hostile);
+	}
+
+	if (!inRadius.isEmpty()){
+
+		for (Actor **iter = inRadius.begin();
+			iter != inRadius.end(); iter++) {
+			Actor *act1 = *iter;
+
+			if (act1->destructible) act1->destructible->takeDamage(act1, target, bonus);
+		}
+	}
+
+	inRadius.clearAndDelete();
+}
+
+void DamagingAura::unApply(Actor *target){
 }

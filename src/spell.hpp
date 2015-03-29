@@ -2,7 +2,7 @@
 class Spell{ //abstract class representing a generic spell; note the pure virtual function cast()
 public:
 	enum SpellIntensity { //the "intensity" of the spell is a means to scale the spell with caster level; higher-intensity spells cost more and have greater or longer-lasting effects
-		NO_INTENSITY,MINOR,MAJOR,NORMAL,EPIC
+		NO_INTENSITY = 0,MINOR,MAJOR,NORMAL,EPIC
 	};
 	enum ExpectedTarget {    //whether this particular spell is targeting items, creatures, or people
 		NO_EXPECT, ITEM, CREATURE, TILE   //item is as yet unused
@@ -79,26 +79,26 @@ public:
 		ITEM_CREATION, //42 creates an item of artifact quality for the caster. this one will likely be restricted to MAJOR intensity or above
 		LINK, //43 "links" the caster and the target. they will share damage or debuffs or something
 		SUMMON, //44 summons a random creature near the caster
-		LIFE_TAP //45 sacrifices some of the caster's life in exchange for mana of all types
+		LIFE_TAP //45 sacrifices some of the caster's life in exchange for mana
 	};
 	enum ElementalSubtype {  //these are the possible subtypes of a spell, determined by how much of each resource is spent on it
 		NO_SUBTYPE = 0,	//0000	NOTHING
-		FIRE,			//0001	FIRE
-		AIR,			//0010	AIR
+		FIRE,			//0001	FIRE 				Intelligence
+		AIR,			//0010	AIR 				Speed
 		LIGHTNING,		//0011	FIRE+AIR
-		WATER,			//0100	WATER
+		WATER,			//0100	WATER 				Dexterity
 		STEAM,			//0101	WATER+FIRE
 		ICE,			//0110	WATER+AIR
-		RADIATION,		//0111	FIRE+AIR+WATER 
-		EARTH,			//1000	EARTH
+		RADIATION,		//0111	FIRE+AIR+WATER 		Mix stats around
+		EARTH,			//1000	EARTH 				Strength
 		LAVA,			//1001	FIRE+EARTH
-		DUST,			//1010	AIR+EARTH
+		DUST,			//1010	AIR+EARTH 			
 		GLASS,			//1011	FIRE+AIR+EARTH 
 		MUD,			//1100	WATER+EARTH
 		METAL,			//1101	FIRE+WATER+EARTH
-		POISON,			//1110	EARTH+AIR+WATER
-		FORCE			//1111
-	};	//originally I planned for some elemental subtypes to have share resistances, but I figure why not let each elemental subtype have its own resistance? I might implement a system such that gaining resistance in a base element propagates to a lesser extent to its derivative elements, as outlined above
+		POISON,			//1110	EARTH+AIR+WATER 	maxHP
+		FORCE			//1111	FIRE+AIR+WATER+EARTH
+	};	//originally I planned for some elemental subtypes to have shared resistances, but I figure why not let each elemental subtype have its own resistance? I might implement a system such that gaining resistance in a base element propagates to a lesser extent to its derivative elements, as outlined above
 	
 	//TODO: create the LastCast object for casting spell's more quickly
 	//TODO: consider creating a tiny description of each spell that indicates what its purpose may be; this would be achieved by having each spell contain a string or TCODText object and you appending characters to it that would be defined in a wiki for players to read

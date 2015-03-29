@@ -1,7 +1,8 @@
 struct Tile {
     bool explored;	//have we walked through this tile?
     bool blocked;	//can we walk through this tile?
-    Tile() : explored(false),blocked(false) {}
+    bool wall;		//is this a wall? used for display purposes
+    Tile() : explored(false),blocked(false),wall(true) {}
 };
  
 class Map : public Persistent {

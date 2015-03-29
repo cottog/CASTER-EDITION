@@ -43,6 +43,7 @@ Map::Map(int width, int height) : width(width),height(height) {
 Map::~Map() {
     delete [] tiles;
 	delete map;
+	delete banana;
 }
 
 void Map::init(bool withActors) {
@@ -91,6 +92,7 @@ void Map::dig(int x1, int y1, int x2, int y2) {
     for (int tilex=x1; tilex <= x2; tilex++) {
         for (int tiley=y1; tiley <= y2; tiley++) {
             map->setProperties(tilex,tiley,true,true);
+            tiles[tilex+tiley*width].wall = false;
         }
     }
 }
@@ -182,7 +184,7 @@ void Map::addMonster(int x, int y){
 }
 
 bool Map::isWall(int x, int y) const {
-    return !map->isWalkable(x,y);
+    return tiles[x+y*width].wall;
 }
  
 void Map::render() const {
@@ -248,11 +250,13 @@ bool Map::isInFov(int x, int y) const {
 }
 
 bool Map::canWalk(int x, int y) const {
-	if (isWall(x,y)){
-		//this is a wall
+	if (x > width || y > height){	//(x,y) is outside of the map
 		return false;
 	}
-	if ( tiles[x+y*width].blocked ){
+	if (isWall(x,y)) {	//(x,y) is a wall
+		return false;
+	}
+	if ( tiles[x+y*width].blocked ){	//another actor is there
 		return false;
 	}
 	return true;

@@ -782,9 +782,55 @@ bool CreatureSpell::cast(Actor *caster){
 			}
 			case DAMAGING_TELEPORT:{
 				//this spell is intended to teleport the target and damage those in a certain radius around his location
-				
+				int minX = actor->x + ((int)intensity)*2;
+				int maxX = actor->x + ((int)intensity)*6;
+				int minY = actor->y + ((int)intensity)*2;
+				int maxY = actor->y + ((int)intensity)*6;
+				int x = 0;
+				int y = 0;
+				bool locationFound = false;
+
+				TCODList<Actor *> inRadius;
+				engine.getAllActorsInRadius(inRadius,actor->x, actor->y, 3+((int)intensity));
+
+				if (!inRadius.isEmpty()){
+
+					for (Actor **iter = targets.begin();
+						iter != targets.end(); iter++) {
+						Actor *act1 = *iter;
+
+						if (act1->destructible) act1->destructible->takeDamage(act1, caster, 3+((int)intensity)*((int)intensity));
+					}
+				}
+
+				while (!locationFound){
+					x = rng->getInt(minX, maxX);
+					y = rng->getInt(minY, maxY);
+
+					if (engine.map->canWalk(x,y)) {
+						locationFound = true;
+					}
+				}
+
+				actor->x = x;
+				actor->y = y;
+
 				break;
 			}
+			case WEAPON_ENHANCEMENT: {
+				//implement a means to add additional damage dice to a weapon, with an elemental subtype associated with it
+				//this will most likely be a struct and the weapon stores a TCODList of them
+				break;
+			}
+			case PROTECT_FROM_HAZARDS: {
+				//I'm not sure how to implement this; possibly just an Aura that a hazard object searches for before it damages you
+				//not sure if that's the best way
+				break;
+			}
+			case TELEPORT: {
+
+				break;
+			} 
 		}
 	}	
 

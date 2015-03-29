@@ -7,7 +7,7 @@ public:
 	type_T retrieve();	//retrieves a random element from the TCODList, removing it from the TCODList in the process
 	bool isEmpty();		//returns true if the bag is empty, false if not
 protected:
-	TCODList<type_T> bag;
+	TCODList<type_T> bag;	//if I were using this without the TCOD Library I would probably use std::vector here
 };
 
 template <class type_T>

@@ -76,11 +76,14 @@ HealAura::HealAura(int duration, int tick, LifeStyle life) :
 }
 
 void HealAura::apply(Actor *target) {
+	TCODRandom *rng = TCODRandom::getInstance();
+	int realAmount = rng->getInt(bonus*0.8,bonus*1.2);
+
 	if ( (life == CONTINUOUS && duration == totalDuration) || life == ITERABLE ) { 
 		if (bonus > 0) {
-			if (target->destructible) target->destructible->heal(bonus);
+			if (target->destructible) target->destructible->heal(realAmount);
 		} else {
-			if (target->destructible) target->destructible->takeDamage(target,NULL,-1*bonus);
+			if (target->destructible) target->destructible->takeDamage(target,NULL,-1*realAmount);
 		}
 	}
 }
@@ -279,6 +282,9 @@ void DamagingAura::load(TCODZip &zip){
 }
 
 void DamagingAura::apply(Actor *target){
+	TCODRandom *rng = TCODRandom::getInstance();
+	int realDamage = rng->getInt(bonus*0.8,bonus*1.2);
+
 	TCODList<Actor *> inRadius;
 	if (!smart){
 		engine.getAllActorsInRadius(inRadius,target->x, target->y, radius);
@@ -292,7 +298,7 @@ void DamagingAura::apply(Actor *target){
 			iter != inRadius.end(); iter++) {
 			Actor *act1 = *iter;
 
-			if (act1->destructible) act1->destructible->takeDamage(act1, target, bonus);
+			if (act1->destructible) act1->destructible->takeDamage(act1, target, realDamage);
 		}
 	}
 

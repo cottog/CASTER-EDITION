@@ -708,7 +708,10 @@ bool CreatureSpell::cast(Actor *caster){
 		switch(effect) {
 			default: targets.clearAndDelete(); return false; break;
 			case STRAIGHT_HEAL: {
-				actor->destructible->heal(5+10*((int)intensity));	//assume that all actors here are Destructible and !isDead(); if it crashes, fix it above, where they are added to targets
+
+				int heal = rng->getInt( (5+10*((int)intensity))*0.8, (5+10*((int)intensity))*1.2); //choose a random amount of HP to heal
+				actor->destructible->heal(heal);	//assume that all actors here are Destructible and !isDead(); if it crashes, fix it above, where they are added to targets
+
 				break;
 			}
 			case HEAL_OVER_TIME: {
@@ -758,7 +761,8 @@ bool CreatureSpell::cast(Actor *caster){
 				break;
 			}
 			case SHIELD: {
-				Aura *shield = new ShieldAura(10+3*((int)intensity),10*((int)intensity));
+				int shieldAmount = rng->getInt( (10*((int)intensity))*0.8, (10*((int)intensity))*1.2);	//find a random amount to shield the target by
+				Aura *shield = new ShieldAura(10+3*((int)intensity),shieldAmount);
 				actor->auras.push(shield);
 				break;
 			}
@@ -799,7 +803,9 @@ bool CreatureSpell::cast(Actor *caster){
 						iter != inRadius.end(); iter++) {
 						Actor *act1 = *iter;
 
-						if (act1->destructible) act1->destructible->takeDamage(act1, caster, 3+((int)intensity)*((int)intensity));
+						int damage = rng->getInt( (3+((int)intensity)*((int)intensity))*.8, (3+((int)intensity)*((int)intensity))*1.2); //choose a random amount of damage
+
+						if (act1->destructible) act1->destructible->takeDamage(act1, caster, damage);
 					}
 				}
 
@@ -859,6 +865,47 @@ bool CreatureSpell::cast(Actor *caster){
 				Aura *damaging = new DamagingAura(10+((int)intensity), 2+2*((int)intensity), 3+((int)intensity), true);
 				actor->auras.push(damaging);
 				break;
+			}
+			case DAMAGING_PULL: {
+				int x = actor->x;
+				int y = actor->y;
+				TCODLine::init(x, y, caster->x, caster->y);
+				int steps = 0;
+				do {
+					if ( steps == 1+((int)intensity) || !engine.map->canWalk(actor->x,actor->y) ) {
+						break;
+					} else {
+						actor->x = x;
+						actor->y = y;
+					}
+				} while (TCODLine::step(&x,&y));
+
+				int damage = rng->getInt( (3+5*((int)intensity))*.8, (3+5*((int)intensity))*1.2);	//choose a random amount of damage
+
+				if (actor->destructible) actor->destructible->takeDamage(actor, caster, damage);
+
+				break;
+			}
+			case DAMAGING_PUSH: {
+				int startX = actor->x;
+				int startY = actor->y;
+				int endX = 2*actor->x - caster->x;
+				int endY = 2*actor->y - caster->y;
+
+				TCODLine::init(startX,startY,endX,endY);
+				int steps = 0;
+
+				do {
+					if ( steps == 1+((int)intensity) || !engine.map->canWalk(actor->x,actor->y) ) {
+						break;
+					} else {
+						actor->x = x;
+						actor->y = y;
+					}
+				} while (TCODLine::step(&x,&y));
+
+				int damage = rng->getInt( (3+5*((int)intensity))*.8, (3+5*((int)intensity))*1.2);	//choose a random amount of damage
+				if (actor->destructible) actor->destructible->takeDamage(actor, caster, damage);
 			}
 		}
 	}	

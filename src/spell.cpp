@@ -899,10 +899,10 @@ bool CreatureSpell::cast(Actor *caster){
 					if ( steps == 1+((int)intensity) || !engine.map->canWalk(actor->x,actor->y) ) {
 						break;
 					} else {
-						actor->x = x;
-						actor->y = y;
+						actor->x = startX;
+						actor->y = startY;
 					}
-				} while (TCODLine::step(&x,&y));
+				} while (TCODLine::step(&startX,&startY));
 
 				int damage = rng->getInt( (3+5*((int)intensity))*.8, (3+5*((int)intensity))*1.2);	//choose a random amount of damage
 				if (actor->destructible) actor->destructible->takeDamage(actor, caster, damage);

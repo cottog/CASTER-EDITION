@@ -77,7 +77,7 @@ HealAura::HealAura(int duration, int tick, LifeStyle life) :
 
 void HealAura::apply(Actor *target) {
 	TCODRandom *rng = TCODRandom::getInstance();
-	int realAmount = rng->getInt(bonus*0.8,bonus*1.2);
+	int realAmount = rng->getInt(bonus*0.8,bonus*1.25);
 
 	if ( (life == CONTINUOUS && duration == totalDuration) || life == ITERABLE ) { 
 		if (bonus > 0) {
@@ -283,7 +283,7 @@ void DamagingAura::load(TCODZip &zip){
 
 void DamagingAura::apply(Actor *target){
 	TCODRandom *rng = TCODRandom::getInstance();
-	int realDamage = rng->getInt(bonus*0.8,bonus*1.2);
+	int realDamage = rng->getInt(bonus*0.8,bonus*1.25);
 
 	TCODList<Actor *> inRadius;
 	if (!smart){

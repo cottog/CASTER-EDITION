@@ -709,7 +709,7 @@ bool CreatureSpell::cast(Actor *caster){
 			default: targets.clearAndDelete(); return false; break;
 			case STRAIGHT_HEAL: {
 
-				int heal = rng->getInt( (5+10*((int)intensity))*0.8, (5+10*((int)intensity))*1.2); //choose a random amount of HP to heal
+				int heal = rng->getInt( (5+10*((int)intensity))*0.8, (5+10*((int)intensity))*1.25); //choose a random amount of HP to heal
 				actor->destructible->heal(heal);	//assume that all actors here are Destructible and !isDead(); if it crashes, fix it above, where they are added to targets
 
 				break;
@@ -761,7 +761,7 @@ bool CreatureSpell::cast(Actor *caster){
 				break;
 			}
 			case SHIELD: {
-				int shieldAmount = rng->getInt( (10*((int)intensity))*0.8, (10*((int)intensity))*1.2);	//find a random amount to shield the target by
+				int shieldAmount = rng->getInt( (10*((int)intensity))*0.8, (10*((int)intensity))*1.25);	//find a random amount to shield the target by
 				Aura *shield = new ShieldAura(10+3*((int)intensity),shieldAmount);
 				actor->auras.push(shield);
 				break;
@@ -803,7 +803,7 @@ bool CreatureSpell::cast(Actor *caster){
 						iter != inRadius.end(); iter++) {
 						Actor *act1 = *iter;
 
-						int damage = rng->getInt( (3+((int)intensity)*((int)intensity))*.8, (3+((int)intensity)*((int)intensity))*1.2); //choose a random amount of damage
+						int damage = rng->getInt( (3+((int)intensity)*((int)intensity))*.8, (3+((int)intensity)*((int)intensity))*1.25); //choose a random amount of damage
 
 						if (act1->destructible) act1->destructible->takeDamage(act1, caster, damage);
 					}
@@ -880,7 +880,7 @@ bool CreatureSpell::cast(Actor *caster){
 					}
 				} while (TCODLine::step(&x,&y));
 
-				int damage = rng->getInt( (3+5*((int)intensity))*.8, (3+5*((int)intensity))*1.2);	//choose a random amount of damage
+				int damage = rng->getInt( (3+5*((int)intensity))*.8, (3+5*((int)intensity))*1.25);	//choose a random amount of damage
 
 				if (actor->destructible) actor->destructible->takeDamage(actor, caster, damage);
 
@@ -904,8 +904,17 @@ bool CreatureSpell::cast(Actor *caster){
 					}
 				} while (TCODLine::step(&startX,&startY));
 
-				int damage = rng->getInt( (3+5*((int)intensity))*.8, (3+5*((int)intensity))*1.2);	//choose a random amount of damage
+				int damage = rng->getInt( (3+5*((int)intensity))*.8, (3+5*((int)intensity))*1.25);	//choose a random amount of damage
 				if (actor->destructible) actor->destructible->takeDamage(actor, caster, damage);
+
+				break;
+			}
+			case STRAIGHT_DAMAGE: {
+				int potentialDamage = ((2/3)*((int)intensity)*((int)intensity)*((int)intensity))+(6.5*((int)intensity)*((int)intensity))+(-13.1666*((int)intensity))+16;
+				int damage = rng->getInt(.9*potentialDamage,1.11*potentialDamage);
+				if (actor->destructible) actor->destructible->takeDamage(actor, caster, damage);
+				
+				break;
 			}
 		}
 	}	

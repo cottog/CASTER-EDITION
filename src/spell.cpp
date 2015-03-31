@@ -715,7 +715,7 @@ bool CreatureSpell::cast(Actor *caster){
 				break;
 			}
 			case HEAL_OVER_TIME: {
-				Aura *hot = new HealAura(10+((int)intensity),3*((int)intensity),Aura::ITERABLE); //this will have to change when auras are changed around
+				Aura *hot = new HealAura(10+((int)intensity),4+3*((int)intensity),Aura::ITERABLE); //this will have to change when auras are changed around
 				actor->auras.push(hot);
 				break;
 			}
@@ -913,6 +913,53 @@ bool CreatureSpell::cast(Actor *caster){
 				int potentialDamage = ((2/3)*((int)intensity)*((int)intensity)*((int)intensity))+(6.5*((int)intensity)*((int)intensity))+(-13.1666*((int)intensity))+16;
 				int damage = rng->getInt(.9*potentialDamage,1.11*potentialDamage);
 				if (actor->destructible) actor->destructible->takeDamage(actor, caster, damage);
+				
+				break;
+			}
+			case BLEED_DAMAGE: {
+				Aura *hot = new HealAura(10+((int)intensity),-1*(4+3*((int)intensity)),Aura::ITERABLE); 
+				actor->auras.push(hot);
+
+				break;
+			}
+			case STAT_DRAIN: {
+				//this will be added once elemental subtypes are all tied to a (stat or stats)
+				break;
+			}
+			case STAT_SAPPING: {
+				//this will be added at the same time as the above
+				break;
+			}
+			case LIFE_LEECHING: {
+				//damage the target and heal the caster for a portion of that damage
+				int potentialDamage = ((2/3)*((int)intensity)*((int)intensity)*((int)intensity))+(6.5*((int)intensity)*((int)intensity))+(-13.1666*((int)intensity))+16;
+				int damage = rng->getInt(.45*potentialDamage,.555*potentialDamage);	//half the damage of the straight-damage spell
+				if (actor->destructible) actor->destructible->takeDamage(actor, caster, damage);
+
+				if (caster->destructible) caster->destructible->heal(.5*damage);
+
+				break;
+			}
+			case MANA_LEECHING: {
+				//damage the mana of the target and give mana to the caster
+				break;
+			}
+			case INSTAKILL: {
+				if (actor->destructible) actor->destructible->takeDamage(actor, caster, 9999);	//should kill most Actors, but might not actually kill very big bosses, as intended
+				break;
+			}
+			case DEBUFFING: {
+				//same spiel concerning elemental subtypes and buffs/debuffs
+				break;
+			}
+			case UNSUMMON: {
+				//think of the best way to identify whether or not a specific actor is a summoned creature and get rid of them
+				break;
+			}
+			case BANISHING: {
+				//right now this simply deletes the target, but in the future, it should push the target to a list of banished creatures, which will be used to populate the Abyss
+				engine.actors.remove(actor);
+				delete actor;
 				
 				break;
 			}

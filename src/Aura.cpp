@@ -37,6 +37,7 @@ Aura *Aura::create(TCODZip &zip){
 		case REFLECTION: aura = new ReflectionAura(0); break;
 		case ABSORPTION: aura = new AbsorptionAura(0,0); break;
 		case DAMAGING_AURA: aura = new DamagingAura(0,0,0,false); break;
+		case DOOM: aura = new DoomAura(0,0); break;
 	}
 	aura->load(zip);
 	return aura;
@@ -308,3 +309,13 @@ void DamagingAura::apply(Actor *target){
 void DamagingAura::unApply(Actor *target){
 }
 
+DoomAura::DoomAura(int duration, int damage) :
+	Aura(duration, damage, DOOM, CONTINUOUS){
+}
+
+void DoomAura::apply(Actor *target){
+}
+
+void DoomAura::unApply(Actor *target){
+	if (target->destructible) target->destructible->takeDamage(target,NULL,bonus);
+}

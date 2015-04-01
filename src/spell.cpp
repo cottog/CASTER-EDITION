@@ -960,7 +960,28 @@ bool CreatureSpell::cast(Actor *caster){
 				//right now this simply deletes the target, but in the future, it should push the target to a list of banished creatures, which will be used to populate the Abyss
 				engine.actors.remove(actor);
 				delete actor;
-				
+
+				break;
+			}
+			case MANA_DAMAGE:{
+				//int potentialDamage = ((2/3)*((int)intensity)*((int)intensity)*((int)intensity))+(6.5*((int)intensity)*((int)intensity))+(-13.1666*((int)intensity))+16;
+				//int damage = rng->getInt(.45*potentialDamage,.555*potentialDamage);	//half the damage of the straight-damage spell
+				//if(target->caster) target->caster->gainMana(-1*damage);
+
+				break;
+			}
+			case DOOM_TIMER: {
+				//this adds a DoomAura to the target, which counts down and kills the target at the end of the countdown; the higher the intensity, the lower the timer
+				//similar to instakill, this DoomAura simply inflicts a lot of damage to the target, so it may not kill big enemies
+
+				Aura *doom = new DoomAura(13-2*((int)intensity),90*((int)intensity));
+				actor->auras.push(doom);
+				break;
+			}
+			case PERCENTILE_DAMAGE: {
+				//deal a percentage of the target's health as damage; the higher the intensity, the bigger the percentage
+
+				if (actor->destructible) actor->destructible->takeDamage(actor, caster, actor->destructible->maxHp*(.2*((int)intensity) ));
 				break;
 			}
 		}

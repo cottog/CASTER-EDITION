@@ -2,7 +2,7 @@ class Aura : public Persistent {	//have to make a factory just like with Pickabl
 public:
 	enum StatType {
 		NONE,TOTALSTR,TOTALPOWER,TOTALDEX,TOTALINTEL,TOTALDODGE,TOTALDR,HEALTH,MAXHEALTH,LIGHT,SHIELD,
-		REFLECTION, ABSORPTION, DAMAGING_AURA
+		REFLECTION, ABSORPTION, DAMAGING_AURA, DOOM
 	};
 	enum LifeStyle {
 		CONTINUOUS,    // buff/debuff that lasts for a certain time
@@ -120,4 +120,11 @@ public:
 	void apply(Actor *target);
 	void unApply(Actor *target);
 
+};
+
+class DoomAura : public Aura{	//AFTER A TIMER, DOES BIG DAMAGE TO AN ENEMY
+public:
+	DoomAura(int duration, int damage);	
+	void apply(Actor *target);
+	void unApply(Actor *target);
 };

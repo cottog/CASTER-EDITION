@@ -17,6 +17,7 @@ public:
 	inline bool isDead() {return hp <= 0; }
 	float takeDamage(Actor *owner, Actor *attacker, float damage);
 	virtual void die(Actor *owner);
+	void resurrect(Actor *owner, float percentage);	//resets the character's blocking bool, character, and color; the character's hp is equal to percentage*maxHp; it will only go up to maxHp
 	float heal(float amount);
 	void load(TCODZip &zip);
 	void save(TCODZip &zip);

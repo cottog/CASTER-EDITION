@@ -3,7 +3,7 @@
 #include "main.hpp"
 
 Actor::Actor(int x, int y, int ch, const char *name, const TCODColor &col, bool hostile):
-	ID(0),x(x),y(y),ch(ch),col(col),hostile(hostile),
+	ID(0),x(x),y(y),ch(ch),trueCh(ch),col(col),trueCol(col),hostile(hostile),
 	blocks(true),attacker(NULL),destructible(NULL),ai(NULL),
 	pickable(NULL),container(NULL){
 	this->name = strdup(name);
@@ -34,7 +34,9 @@ void Actor::save(TCODZip &zip) {
 	zip.putInt(x);
 	zip.putInt(y);
 	zip.putInt(ch);
+	zip.putInt(trueCh);
 	zip.putColor(&col);
+	zip.putColor(&trueCol);
 	zip.putString(name);
 	zip.putInt(blocks);
 	zip.putInt(hostile);
@@ -62,7 +64,9 @@ void Actor::load(TCODZip &zip) {
 	x = zip.getInt();
 	y = zip.getInt();
 	ch = zip.getInt();
+	trueCh = zip.getInt();
 	col = zip.getColor();
+	trueCol = zip.getColor();
 	name = strdup(zip.getString());
 	blocks = zip.getInt();
 	hostile = zip.getInt();
@@ -136,7 +140,7 @@ void Actor::updateAuras() {
 			Aura *aura = *iter;
 			aura->apply(this);
 			aura->duration--;
-			
+
 			if (aura->duration == 0) {
 				aura->unApply(this);
 				delete *iter;

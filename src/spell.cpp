@@ -984,6 +984,12 @@ bool CreatureSpell::cast(Actor *caster){
 				if (actor->destructible) actor->destructible->takeDamage(actor, caster, actor->destructible->maxHp*(.2*((int)intensity) ));
 				break;
 			}
+			case RESURRECT: {
+				if (actor->destructible && actor->destructible->isDead()) {
+					actor->destructible->resurrect(actor, 0.2*((int)intensity));	//resurrect the target and give it .2,.4,.6, or .8 of maxHp as health
+				}
+				break;
+			}
 		}
 	}	
 

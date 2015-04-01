@@ -3,7 +3,9 @@ public:
 	int ID;   //used to identify similar actors, helps stacking
 	int x, y; //position on map
 	int ch; //ascii code
+	int trueCh;	//the actual ascii code, in case they need to get rezzed
 	TCODColor col; //color for character
+	TCODColor trueCol;	//the actual color for the character, in case they need to get rezzed
 	bool hostile; //is it hostile to the player?
 	bool blocks; //can we walk on this actor?
 	Attacker *attacker; //does this actor deal damage?

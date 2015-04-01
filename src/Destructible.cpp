@@ -51,10 +51,15 @@ Destructible *Destructible::create(TCODZip &zip) {
 }
 
 float Destructible::takeDamage(Actor *owner, Actor *attacker, float damage){
+	if (owner->destructible->isDead()){
+		return 0;
+	}
+
 	if (attacker && owner->attacker && (owner->attacker->lastTarget == NULL || owner->attacker->lastTarget->destructible->isDead())) {
 		owner->attacker->lastTarget = attacker;
 	}
 	float damageTaken = 0;
+
 
 	if (shield) {
 		shield -= damage;
@@ -93,6 +98,27 @@ void Destructible::die(Actor *owner){
 	engine.map->tiles[owner->x+owner->y*engine.mapWidth].blocked=false;
 	//make sure corpses are drawn before living actors
 	engine.sendToBack(owner);
+}
+
+void Destructible::resurrect(Actor *owner, float percentage){
+	if (!owner->destructible->isDead()) {
+		return;
+	}
+	if (percentage < 0 ) {
+		percentage *= -1;
+	}
+	if (percentage > 1.0){
+		percentage = 1.0;
+	}
+
+
+	owner->ch = owner->trueCh;
+	owner->col = owner->trueCol;
+	owner->blocks = true;
+	engine.map->tiles[owner->x+owner->y*engine.mapWidth].blocked=true;
+	owner->destructible->hp = owner->destructible->maxHp * percentage;
+	engine.actors.remove(owner);
+	engine.actors.push(owner);
 }
 
 float Destructible::heal(float amount){

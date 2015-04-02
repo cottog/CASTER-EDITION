@@ -131,7 +131,7 @@ void CreatureSpell::chooseEffect(){
 	if (targeting == SELF) {
 		int fart = rng->getInt(1,500);  //make it very unlikely for a bad spell to become a self-targeting spell
 		if (fart <= 499) {
-			effectSwitch = rng->getInt(1,17);
+			effectSwitch = rng->getInt(1,18);
 		} else {
 			effectSwitch = rng->getInt(1,38);
 		}
@@ -242,125 +242,122 @@ void CreatureSpell::chooseEffect(){
 			preferred = FRIENDLY;
 			cost *= 1.4;
 			break;
-		
+		case 18:
+			effect = CONTROLLED_TELEPORT;
+			expected = CREATURE;
+			preferred = FRIENDLY;
+			cost *= 1.5;
+			break;
 		//THESE SPELLS ARE BAD FOR SELF-TARGETING SPELLS 
-		case 18: 
+		case 19: 
 			effect = DAMAGING_PULL;
 			expected = CREATURE;
 			preferred = ENEMY;
 			cost *= 1.2;
 			break;
-		case 19:
+		case 20:
 			effect = DAMAGING_PUSH;
 			expected = CREATURE;
 			preferred = ENEMY;
 			cost *= 1.3;
 			break;
-		case 20:
+		case 21:
 			effect = STRAIGHT_DAMAGE;
 			expected = CREATURE;
 			preferred = ENEMY;
 			cost *= 1.1;
 			break;
-		case 21:
+		case 22:
 			effect = BLEED_DAMAGE;
 			expected = CREATURE;
 			preferred = ENEMY;
 			cost *= 1;
 			break;
-		case 22:
+		case 23:
 			effect = STAT_DRAIN;
 			expected = CREATURE;
 			preferred = ENEMY;
 			cost *= 1.1;
 			break;
-		case 23:
+		case 24:
 			effect = STAT_SAPPING;
 			expected = CREATURE;
 			preferred = ENEMY;
 			cost *= 1.3;
 			break;
-		case 24:
+		case 25:
 			effect = LIFE_LEECHING;
 			expected = CREATURE;
 			preferred = ENEMY;
 			cost *= 1.4;
 			break;
-		case 25:
+		case 26:
 			effect = MANA_LEECHING;
 			expected = CREATURE;
 			preferred = ENEMY;
 			cost *= 1.4;
 			break;
-		case 26:
+		case 27:
 			effect = INSTAKILL;
 			expected = CREATURE;
 			preferred = ENEMY;
 			cost *= 2.1;
 			break;
-		case 27: 
+		case 28: 
 			effect = DEBUFFING;
 			expected = CREATURE;
 			preferred = ENEMY;
 			cost *= 1.3;
 			break;
-		case 28:
+		case 29:
 			effect = UNSUMMON;
 			expected = CREATURE;
 			preferred = ENEMY;
 			cost *= 1.3;
 			break;
-		case 29:
+		case 30:
 			effect = BANISHING;
 			expected = CREATURE;
 			preferred = ENEMY;
 			cost *= 1.4;
 			break;
-		case 30:
+		case 31:
 			effect = MANA_DAMAGE;
 			expected = CREATURE;
 			preferred = ENEMY;
 			cost *= 1.1;
 			break;
-		case 31:
+		case 32:
 			effect = DOOM_TIMER;
 			expected = CREATURE;
 			preferred = ENEMY;
 			cost *= 1.4;
 			break;
-		case 32:
+		case 33:
 			effect = PERCENTILE_DAMAGE;
 			expected = CREATURE;
 			preferred =  ENEMY;
 			cost *= 1.3;
 			break;
-		case 33:
+		case 34:
 			effect = RESURRECT;
 			expected = CREATURE;
 			preferred = FRIENDLY;
 			cost *= 1.5;
 			break;
-		case 34:
+		case 35:
 			effect = PULL;
 			expected = CREATURE;
 			preferred = ENEMY;
 			cost *= 1;
 			break;
-		case 35:
+		case 36:
 			effect = PUSH;
 			expected = CREATURE;
 			preferred = ENEMY;
 			cost *= 1.1;
 			break;
 		//THESE SPELL EFFECTS NEED SPECIFIC TARGETING TYPES
-		case 36:
-			effect = ITEM_CREATION;
-			expected = CREATURE;
-			preferred = NEUTRAL;
-			targeting = SELF;
-			cost = baseCost;
-			cost *= 1.4;
-			break;
 		case 37:
 			effect = LINK;
 			expected = CREATURE;
@@ -700,7 +697,7 @@ bool CreatureSpell::cast(Actor *caster){
 				continue;
 			}
 			if(aura->stat == Aura::ABSORPTION){
-				//if(target->caster) target->caster->gainMana(cost*(aura->bonus/100));	//gain mana proportial to cost of spell, dependent on absorption magnitude
+				//if(actor->caster) actor->caster->gainMana(cost*(aura->bonus/100));	//gain mana proportial to cost of spell, dependent on absorption magnitude
 				continue;
 			}
 		}
@@ -941,11 +938,21 @@ bool CreatureSpell::cast(Actor *caster){
 				break;
 			}
 			case MANA_LEECHING: {
-				//damage the mana of the target and give mana to the caster
+				/*
+				int potentialDamage = ((2/3)*((int)intensity)*((int)intensity)*((int)intensity))+(6.5*((int)intensity)*((int)intensity))+(-13.1666*((int)intensity))+16;
+				int damage = rng->getInt(.45*potentialDamage,.555*potentialDamage);	//half the damage of the straight-damage spell
+				if (actor->caster){
+					actor->caster->gainMana(-1*damage);
+				} else {
+					continue;
+				}
+				if (caster->caster) caster->caster->gainMana(.75*damage);
+				*/
+
 				break;
 			}
 			case INSTAKILL: {
-				if (actor->destructible) actor->destructible->takeDamage(actor, caster, 9999);	//should kill most Actors, but might not actually kill very big bosses, as intended
+				if (actor->destructible) actor->destructible->takeDamage(actor, caster, 250*((int)intensity)-1);	//should kill most Actors, but might not actually kill very big bosses, as intended
 				break;
 			}
 			case DEBUFFING: {
@@ -954,6 +961,8 @@ bool CreatureSpell::cast(Actor *caster){
 			}
 			case UNSUMMON: {
 				//think of the best way to identify whether or not a specific actor is a summoned creature and get rid of them
+				//prolly just put a bool in the Actor class, or put a String tag member variable that can be used to identify summons, uniques, regular mobs, etc
+				//the tag field will be useful to differentiate between mobs that need "the" in front of their names or not
 				break;
 			}
 			case BANISHING: {
@@ -966,7 +975,7 @@ bool CreatureSpell::cast(Actor *caster){
 			case MANA_DAMAGE:{
 				//int potentialDamage = ((2/3)*((int)intensity)*((int)intensity)*((int)intensity))+(6.5*((int)intensity)*((int)intensity))+(-13.1666*((int)intensity))+16;
 				//int damage = rng->getInt(.45*potentialDamage,.555*potentialDamage);	//half the damage of the straight-damage spell
-				//if(target->caster) target->caster->gainMana(-1*damage);
+				//if(actor->caster) actor->caster->gainMana(-1*damage);
 
 				break;
 			}
@@ -974,7 +983,7 @@ bool CreatureSpell::cast(Actor *caster){
 				//this adds a DoomAura to the target, which counts down and kills the target at the end of the countdown; the higher the intensity, the lower the timer
 				//similar to instakill, this DoomAura simply inflicts a lot of damage to the target, so it may not kill big enemies
 
-				Aura *doom = new DoomAura(13-2*((int)intensity),90*((int)intensity));
+				Aura *doom = new DoomAura(13-2*((int)intensity),250*((int)intensity)-1);
 				actor->auras.push(doom);
 				break;
 			}
@@ -988,6 +997,76 @@ bool CreatureSpell::cast(Actor *caster){
 				if (actor->destructible && actor->destructible->isDead()) {
 					actor->destructible->resurrect(actor, 0.2*((int)intensity));	//resurrect the target and give it .2,.4,.6, or .8 of maxHp as health
 				}
+				break;
+			}
+			case CONTROLLED_TELEPORT: {
+				bool locationFound = false; 
+
+				while (!locationFound) {
+					int x = caster->x;
+					int y = caster->y;
+					
+					if (engine.pickATile(&x,&y,4+2*((int)intensity))){	
+						if (engine.map->canWalk(x,y)){
+							locationFound = true;
+							actor->x = x;
+							actor->y = y;
+						}
+					}
+				}	
+				break;
+			}
+			case PULL: {
+				int x = actor->x;
+				int y = actor->y;
+				TCODLine::init(x, y, caster->x, caster->y);
+				int steps = 0;
+				do {
+					if ( steps == 1+((int)intensity) || !engine.map->canWalk(actor->x,actor->y) ) {
+						break;
+					} else {
+						actor->x = x;
+						actor->y = y;
+					}
+				} while (TCODLine::step(&x,&y));	
+				//I thought at first, why not just pass the actual actor here by reference, but there's no way to step back (or peek ahead) in a TCODLine that I know of
+				//so once it steps forward and the actor shouldin't be there, its all bad news
+
+				break;
+			}
+			case PUSH: {
+				int startX = actor->x;
+				int startY = actor->y;
+				int endX = 2*actor->x - caster->x;
+				int endY = 2*actor->y - caster->y;
+
+				TCODLine::init(startX,startY,endX,endY);
+				int steps = 0;
+
+				do {
+					if ( steps == 1+((int)intensity) || !engine.map->canWalk(actor->x,actor->y) ) {
+						break;
+					} else {
+						actor->x = startX;
+						actor->y = startY;
+					}
+				} while (TCODLine::step(&startX,&startY));
+
+				break;
+			}
+			case LINK: {
+				//prolly store an actor pointer in the Caster class to handle Links.
+				//since this is restricted to target single creatures, it shouldn't need more than a single pointer
+				//however, if an actor casts this on themself once and then does it again, the way I plan to implement it will cause an infinite loop
+				//I think I will prevent everyone but the player from doing so
+				//the player will be warned about possible "magical instabilities" caused by their action, but they will be allowed to do it
+				break;
+			}
+			case LIFE_TAP: {
+				int potentialDamage = ((2/3)*((int)intensity)*((int)intensity)*((int)intensity))+(6.5*((int)intensity)*((int)intensity))+(-13.1666*((int)intensity))+16;
+				int damage = rng->getInt(.9*potentialDamage,1.11*potentialDamage);
+				if (actor->destructible) actor->destructible->takeDamage(actor,NULL,damage);
+				// if (caster->caster) caster->caster->gainMana(damage);
 				break;
 			}
 		}

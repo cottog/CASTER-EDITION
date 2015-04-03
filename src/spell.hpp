@@ -84,18 +84,18 @@ public:
 	enum ElementalSubtype {  //these are the possible subtypes of a spell, determined by how much of each resource is spent on it
 		NO_SUBTYPE = 0,	//0000	NOTHING 				
 		FIRE,			//0001	FIRE 					Intelligence
-		AIR,			//0010	AIR 					Speed
-		LIGHTNING,		//0011	FIRE+AIR 				
-		WATER,			//0100	WATER 					Dexterity
+		AIR,			//0010	AIR 					Dexterity (ranged accuracy)
+		LIGHTNING,		//0011	FIRE+AIR 				Speed
+		WATER,			//0100	WATER 					Mana
 		STEAM,			//0101	WATER+FIRE 				
 		ICE,			//0110	WATER+AIR 				
 		RADIATION,		//0111	FIRE+AIR+WATER 			Mix stats around
-		EARTH,			//1000	EARTH 					Strength
-		LAVA,			//1001	FIRE+EARTH 				
-		DUST,			//1010	AIR+EARTH 				
+		EARTH,			//1000	EARTH 					Power (bonus damage)
+		LAVA,			//1001	FIRE+EARTH 				lower speed and small DoT
+		DUST,			//1010	AIR+EARTH 				Strength (melee accuracy)
 		GLASS,			//1011	FIRE+AIR+EARTH 			
-		MUD,			//1100	WATER+EARTH 			
-		METAL,			//1101	FIRE+WATER+EARTH 			
+		MUD,			//1100	WATER+EARTH 			fovRadius
+		METAL,			//1101	FIRE+WATER+EARTH 		lower weapon damage	
 		POISON,			//1110	EARTH+AIR+WATER 		maxHP
 		FORCE			//1111	FIRE+AIR+WATER+EARTH 	
 	};	//originally I planned for some elemental subtypes to have shared resistances, but I figure why not let each elemental subtype have its own resistance? I might implement a system such that gaining resistance in a base element propagates to a lesser extent to its derivative elements, as outlined above
@@ -118,11 +118,16 @@ public:
 		ExpectedTarget expected = NO_EXPECT, float cost = 0);
 	
 	//TODO: think of what would be best way to handle wands (procedural, not procedural, some of either)
-	void chooseIntensity(int level);
-	void chooseTargetSystem();
+	void chooseIntensity(int level);	//choose the Intensity of the spell
+	void chooseTargetSystem();	//choose the TargetSystem of the spell
 	float setTarget(); //this function sets the targetNumber for a spell; this is the value to which the results of the spell's formula are compared in order to see if a spell is successfully cast
-	virtual void chooseEffect() = 0;
+	virtual void chooseEffect() = 0;	//choose the SpellEffect of the spell
 	virtual bool cast(Actor *caster) = 0; //this function resolves the effect of the spell;
+	void setName();	//set the name of the spell, depending on its attributes (not a traditional setter)
+	const char *getName() {return name;}	//getter for the spell name
+
+protected:
+	const char *name;	//the name of the spell	
 };
 
 class CreatureSpell : public Spell { //spell class that represents spells that target other Actor objects
@@ -148,3 +153,7 @@ public:
 
 
 //now take the idea of a "Cantus," a chant that the caster will mutter in order to cast a spell. The cantus corresponds to 4 characters, which hold integer values from 0 to 26
+
+
+//this might not be the best way to do it, but to create a completely usable spell,
+//create either an instance of TileSpell or CreatureSpell, call chooseIntensity, chooseTargetSystem, chooseEffect, and then finally setName()

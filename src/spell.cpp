@@ -1,11 +1,12 @@
-#include <iostream>
 #include <cmath>
 #include "libtcod.hpp"
 #include "main.hpp"
 
 Spell::Spell(float target, SpellIntensity intensity, TargetSystem targeting, SpellEffect effect, 
 		ExpectedTarget expected , float cost) :
-	target(target), intensity(intensity),targeting(targeting),effect(effect),expected(expected),cost(cost) {}
+	target(target), intensity(intensity),targeting(targeting),effect(effect),expected(expected),cost(cost) {
+		name = strdup("");
+	}
 
 
 float Spell::setTarget(){
@@ -16,6 +17,107 @@ float Spell::setTarget(){
 		target += pow((rng->getInt(0,25)),(int)(intensity));
 	}
 	return target;
+}
+
+void Spell::setName(){
+	char buf[64] = "";
+	TCODRandom *rng = TCODRandom::getInstance();
+	int nameSwitch = rng->getInt(1,17);
+	switch (nameSwitch){
+		case 1: strcat(buf,"Atlantes'"); break;
+		case 2: strcat(buf,"Circe's"); break;
+		case 3: strcat(buf,"Merlin's"); break;
+		case 4: strcat(buf,"Torgrod's"); break;
+		case 5: strcat(buf,"Medea's"); break;
+		case 6: strcat(buf,"Alatar's"); break;
+		case 7: strcat(buf,"Tom-Tom's"); break;
+		case 8: strcat(buf,"Silent's"); break;
+		case 9: strcat(buf,"Prospero's"); break;
+		case 10: strcat(buf,"Thoth-Amon's"); break;
+		case 11: strcat(buf,"Yara's"); break;
+		case 12: strcat(buf,"Hecate's"); break;
+		case 13: strcat(buf,"Vegoia's"); break;
+		case 14: strcat(buf,"Vyasa's"); break;
+		case 15: strcat(buf,"Abramelin's"); break;
+		case 16: strcat(buf,"Balzak's"); break;
+		case 17: strcat(buf,"K'aarna's"); break;
+	}
+	switch (intensity) {
+		case MINOR: strcat(buf," Minor"); break;
+		case MAJOR: strcat(buf," Major"); break;
+		case EPIC: strcat(buf," Epic"); break;
+		case NORMAL: break;
+		default: break;
+	}
+	nameSwitch = rng->getInt(1,2);
+	switch (targeting){
+		case SELF: strcat(buf,nameSwitch? " Personal":" Secret"); break;
+		case ADJACENT_TILE: strcat(buf,nameSwitch? " Short-Range":" Limited"); break;
+		case BOLT_SPELL: strcat(buf,nameSwitch? " Bolt of":" Flash of"); break;
+		case VISUAL_HOLOCAUST: strcat(buf,nameSwitch? " Discerning":" Astute"); break;
+		case LEVEL_WIDE_HOLOCAUST: strcat(buf,nameSwitch? " Whisper of":" Murmur of"); break;
+		case RANDOM_IN_LOS: strcat(buf,nameSwitch? " Eye of":" Leer of"); break;
+		case RANDOM_IN_LEVEL: strcat(buf,nameSwitch? " Random":" Arbitrary"); break;
+		case ALL_ADJACENT_TILES: strcat(buf,nameSwitch? " Aura of":" Ambient"); break;
+		case ALL_CREATURES_CHAINING: strcat(buf,nameSwitch? " Chain of":" Arcing"); break;
+		case ALL_CREATURES_IN_LEVEL: strcat(buf,nameSwitch? " Shout of":" Roar of"); break;
+		case  ALL_CREATURES_IN_LINE: strcat(buf,nameSwitch? " Ray of":" Line of"); break;
+		case ALL_CREATURES_IN_RADIUS: strcat(buf,nameSwitch? " Orb of":" Ball of"); break;
+		case SINGLE_CREATURE_IN_SIGHT: strcat(buf,nameSwitch? expected==TILE? " Locus of" : " Wink of": expected==TILE? " Point of" : " Glimmer of"); break;
+		case X_CREATURES_IN_SIGHT: strcat(buf,nameSwitch? " Thoughts of":" Image of"); break;
+		case ALL_CREATURES_IN_LOS: strcat(buf,nameSwitch? " Gaze of":" Visage of"); break;
+		default: break;
+	}
+
+	switch(effect){
+		case STRAIGHT_HEAL: strcat(buf, " Healing"); break;
+		case HEAL_OVER_TIME: strcat(buf, " Relaxation"); break;
+		case STAT_BOOST: strcat(buf, " Enhancement"); break;
+		case CURE_DEBUFFS: strcat(buf, " Revitalization"); break;
+		case DETECTION: strcat(buf, " Revelation"); break;
+		case POLYMORPH: strcat(buf, " Metamorphosis"); break;
+		case SHAPE_SHIFTING: strcat(buf, " Transfiguration"); break;
+		case LIGHT: strcat(buf, " Illumination"); break;
+		case ILLUSION: strcat(buf, " Illusion"); break;
+		case SIMULACRUM: strcat(buf, " Duplication"); break;
+		case SHIELD: strcat(buf, " Protection"); break;
+		case REFLECTION: strcat(buf, " Reflection"); break;
+		case ABSORPTION: strcat(buf, " Consumption"); break;
+		case ANTIMAGIC_ZONE: strcat(buf, " Negation"); break;
+		case DAMAGING_TELEPORT: strcat(buf, " Harmful Dislocation"); break;
+		case WEAPON_ENHANCEMENT: strcat(buf, " Improvement"); break;
+		case PROTECT_FROM_HAZARDS: strcat(buf, " Resistance"); break;
+		case TELEPORT: strcat(buf, " Dislocation"); break;
+		case DAMAGING_AURA: strcat(buf, " Harm"); break;
+		case INTELLIGENT_DAMAGING_AURA: strcat(buf, " Selective Harm"); break;
+		case CONTROLLED_TELEPORT: strcat(buf, " Translocation"); break;
+		case DAMAGING_PULL: strcat(buf, " Harmful Tugging"); break;
+		case DAMAGING_PUSH: strcat(buf, " Harmful Nudging"); break;
+		case PULL: strcat(buf, " Tugging"); break;
+		case PUSH: strcat(buf, " Nudging"); break;
+		case STRAIGHT_DAMAGE: strcat(buf, " Destruction"); break;
+		case BLEED_DAMAGE: strcat(buf, " Stinging"); break;
+		case STAT_DRAIN: strcat(buf, " Weakness"); break;
+		case STAT_SAPPING: strcat(buf, " Borrowed Vitality"); break;
+		case LIFE_LEECHING: strcat(buf, " Stolen Vitality"); break;
+		case MANA_LEECHING: strcat(buf, " Stolen Mentality"); break;
+		case INSTAKILL: strcat(buf, " Annihilation"); break;
+		case DEBUFFING: strcat(buf, " Devitalization"); break;
+		case UNSUMMON: strcat(buf, " Returning"); break;
+		case BANISHING: strcat(buf, " Banishing"); break;
+		case MANA_DAMAGE: strcat(buf, " Mental Strain"); break;
+		case DOOM_TIMER: strcat(buf, " Certain Doom"); break;
+		case DARKNESS: strcat(buf, " Obscurity"); break;
+		case PERCENTILE_DAMAGE: strcat(buf, " Measured Destruction"); break;
+		case RESURRECT: strcat(buf, " Rebirth"); break;
+		case TELEPORTAL: strcat(buf, " Stability"); break;
+		case ALTER_TERRAIN: strcat(buf, " Terraforming"); break;
+		case LINK: strcat(buf, " Union"); break;
+		case SUMMON: strcat(buf, " Calling"); break;
+		case LIFE_TAP: strcat(buf, " Sacrifice"); break;
+		default: break;
+	}
+	this->name = buf;
 }
 
 void Spell::chooseTargetSystem(){
@@ -381,7 +483,6 @@ void CreatureSpell::chooseEffect(){
 
 	if (targeting != SELF) { //we will roll some dice and see if the targets its preferred type, or something else (which could be better or worse)
 		int roll = rng->getInt(1,100);
-		std::cout << roll << std::endl;
 		if (roll <= 5) { //5 percent chance to actually target something opposite to what's preferred
 			if (preferred == ENEMY) {
 				actual = FRIENDLY;
@@ -410,10 +511,6 @@ CreatureSpell::CreatureSpell( float target, SpellIntensity intensity, TargetSyst
 
 
 bool CreatureSpell::cast(Actor *caster){
-	std::cout << preferred << std::endl;
-	std::cout << actual << std::endl;
-	std::cout << effect << std::endl;
-	std::cout << "creature spell casted" << std::endl;
 
 	TCODRandom *rng = TCODRandom::getInstance();
 	TCODList<Actor *> targets;
@@ -1145,6 +1242,5 @@ TileSpell::TileSpell( float target, SpellIntensity intensity, TargetSystem targe
 bool TileSpell::cast(Actor *caster){
 
 
-	std::cout << "tile spell casted" << std::endl;
 	return true;
 }

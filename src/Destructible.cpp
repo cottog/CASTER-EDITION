@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "main.hpp"
 
 Destructible::Destructible(float maxHp, float dodge, const char *corpseName, int xp, float DR, float maxShield, Spell::ElementalSubtype element) : 

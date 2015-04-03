@@ -1,14 +1,10 @@
 class Caster : public Persistent {
 public:
-	float sanguine;
-	float totalSanguine;
-	float yellow;
-	float totalYellow;
-	float black;
-	float totalBlack;
-	float phlegm;
-	float totalPhlegm;
+	float mana;
+	float totalMana;
 	
+
 	bool cast(Spell spell);
-	
+protected:
+	std::String *cantus;	
 };

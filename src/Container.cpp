@@ -1,6 +1,4 @@
 #include "main.hpp"
-#include <iostream>
-#include <string>
 
 Container::Container(int size) : size(size), wallet(0),head(NULL),chest(NULL),
 	legs(NULL),feet(NULL),hand1(NULL),hand2(NULL),gloves(NULL),ranged(NULL) {
@@ -56,7 +54,6 @@ void Container::load(TCODZip &zip) {
 	bool has_gloves = zip.getInt();
 	bool has_ranged = zip.getInt();
 	if(has_head){
-		std::cout << "got here" << std::endl;
 		head = new Actor(0,0,0,NULL,TCODColor::white);
 		head->load(zip);
 	}

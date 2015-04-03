@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <iostream>
 #include "main.hpp"
 
 Attacker::Attacker(float power, float str, float dex) : 

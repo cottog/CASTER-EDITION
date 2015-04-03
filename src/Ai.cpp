@@ -1,5 +1,4 @@
 #include "main.hpp"
-#include <stdio.h>
 #include <cmath>
 
 Ai *Ai::create(TCODZip &zip) {

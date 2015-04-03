@@ -13,24 +13,22 @@ Ai *Ai::create(TCODZip &zip) {
 	return ai;
 }
 
-PlayerAi::PlayerAi() : xpLevel(1) {
+PlayerAi::PlayerAi(){
 }
 
 void PlayerAi::save(TCODZip &zip) {
 	zip.putInt(PLAYER);
-	zip.putInt(xpLevel);
 }
 
 void PlayerAi::load(TCODZip &zip) {
-	xpLevel = zip.getInt();
 }
 
 
 const int LEVEL_UP_BASE = 20;
 const int LEVEL_UP_FACTOR = 15;
 
-int PlayerAi::getNextLevelXp() {
-	return LEVEL_UP_BASE + (xpLevel-1) * LEVEL_UP_FACTOR;
+int PlayerAi::getNextLevelXp(Actor *owner) {
+	return LEVEL_UP_BASE + (owner->xpLevel-1) * LEVEL_UP_FACTOR;
 }
 
 void PlayerAi::update(Actor *owner){
@@ -38,9 +36,9 @@ void PlayerAi::update(Actor *owner){
 		return;
 	}
 
-	int levelUpXp = getNextLevelXp();
+	int levelUpXp = getNextLevelXp(owner);
 	if (owner->destructible->xp >= levelUpXp) {
-		xpLevel++;
+		owner->xpLevel++;
 		owner->destructible->xp -= levelUpXp;
 		engine.gui->message(TCODColor::yellow,"You feel a strange rush as the enemy falls to the floor!");
 		engine.gui->render();

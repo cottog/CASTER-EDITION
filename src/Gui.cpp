@@ -66,11 +66,10 @@ void Gui::render(){
 	sidebar->print(1,17,"%d",engine.player->destructible->shield);
 
 	//draw the XP bar
-	PlayerAi *ai = (PlayerAi *)engine.player->ai;
 	char xpTxt[128];
-	sprintf(xpTxt,"XP(%d)",ai->xpLevel);
+	sprintf(xpTxt,"XP(%d)",engine.player->xpLevel);
 	renderBar(1,7,BAR_WIDTH,xpTxt,engine.player->destructible->xp,
-		ai->getNextLevelXp(),TCODColor::lightViolet,TCODColor::darkerViolet);
+		((PlayerAi*)engine.player->ai)->getNextLevelXp(engine.player),TCODColor::lightViolet,TCODColor::darkerViolet);
 	
 	//draw the last target's hp bar
 	if ((engine.player->attacker->lastTarget != NULL)&&(engine.player->attacker->lastTarget!=engine.player)&&(!engine.player->attacker->lastTarget->destructible->isDead())) {

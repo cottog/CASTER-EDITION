@@ -1,9 +1,9 @@
 #include <math.h>
 #include "main.hpp"
 
-Actor::Actor(int x, int y, int ch, const char *name, const TCODColor &col, bool hostile):
+Actor::Actor(int x, int y, int ch, const char *name, const TCODColor &col, bool hostile, int xpLevel):
 	ID(0),x(x),y(y),ch(ch),trueCh(ch),col(col),trueCol(col),hostile(hostile),
-	blocks(true),attacker(NULL),destructible(NULL),ai(NULL),
+	blocks(true),xpLevel(xpLevel),attacker(NULL),destructible(NULL),ai(NULL),
 	pickable(NULL),container(NULL){
 	this->name = strdup(name);
 }
@@ -39,6 +39,7 @@ void Actor::save(TCODZip &zip) {
 	zip.putString(name);
 	zip.putInt(blocks);
 	zip.putInt(hostile);
+	zip.putInt(xpLevel);
 	
 	zip.putInt(auras.size());
 	for (Aura **it = auras.begin(); it!= auras.end(); it++) {
@@ -69,6 +70,7 @@ void Actor::load(TCODZip &zip) {
 	name = strdup(zip.getString());
 	blocks = zip.getInt();
 	hostile = zip.getInt();
+	xpLevel = zip.getInt();
 	
 	int nbAuras = zip.getInt();
 	while (nbAuras > 0) {

@@ -8,6 +8,7 @@ public:
 	TCODColor trueCol;	//the actual color for the character, in case they need to get rezzed
 	bool hostile; //is it hostile to the player?
 	bool blocks; //can we walk on this actor?
+	int xpLevel; //what level is this Actor?
 	Attacker *attacker; //does this actor deal damage?
 	Destructible *destructible; //can this actor be destroyed?
 	Ai *ai; //does this actor update itself?
@@ -16,7 +17,7 @@ public:
 	TCODList<Aura *> auras;
 
 	
-	Actor(int x, int y, int ch, const char *name, const TCODColor &col, bool hostile = true);
+	Actor(int x, int y, int ch, const char *name, const TCODColor &col, bool hostile = true, int xpLevel = 1);
 	Actor(const Actor &actor);	//copy constructor; doesn't work for Pickable actors, as I dont expect to use it for that
 	~Actor();
 	void update();

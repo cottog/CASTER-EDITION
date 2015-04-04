@@ -4,13 +4,13 @@
 Actor::Actor(int x, int y, int ch, const char *name, const TCODColor &col, bool hostile, int xpLevel):
 	ID(0),x(x),y(y),ch(ch),trueCh(ch),col(col),trueCol(col),hostile(hostile),
 	blocks(true),xpLevel(xpLevel),attacker(NULL),destructible(NULL),ai(NULL),
-	pickable(NULL),container(NULL){
+	pickable(NULL),container(NULL),caster(NULL){
 	this->name = strdup(name);
 }
 
 Actor::Actor(const Actor &actor):
 	ID(0),x(actor.x),y(actor.y),ch(actor.ch),col(actor.col),hostile(actor.hostile),
-	blocks(actor.blocks),attacker(NULL),destructible(NULL),ai(actor.ai),pickable(NULL),container(NULL){
+	blocks(actor.blocks),attacker(NULL),destructible(NULL),ai(actor.ai),pickable(NULL),container(NULL),caster(NULL){
 	
 	attacker = new Attacker(*actor.attacker);
 	destructible = new MonsterDestructible(actor.destructible->maxHp,actor.destructible->baseDodge,actor.destructible->corpseName,0);
@@ -51,12 +51,14 @@ void Actor::save(TCODZip &zip) {
 	zip.putInt(ai != NULL);
 	zip.putInt(pickable != NULL);
 	zip.putInt(container != NULL);
+	zip.putInt(caster != NULL);
 	
 	if (attacker) attacker->save(zip);
 	if (destructible) destructible->save(zip);
 	if (ai) ai->save(zip);
 	if (pickable) pickable->save(zip);
 	if (container) container->save(zip);
+	if (caster) caster->save(zip);
 }
 
 void Actor::load(TCODZip &zip) {
@@ -84,6 +86,7 @@ void Actor::load(TCODZip &zip) {
 	bool hasAi = zip.getInt();
 	bool hasPickable = zip.getInt();
 	bool hasContainer = zip.getInt();
+	bool hasCaster = zip.getInt();
 	
 	if (hasAttacker) {
 		attacker = new Attacker(0.0f);
@@ -105,6 +108,10 @@ void Actor::load(TCODZip &zip) {
 	if (hasContainer) {
 		container = new Container(0);
 		container->load(zip);
+	}
+	if (hasCaster) {
+		caster = new Caster(0.0f);
+		caster->load(zip);
 	}
 }
 

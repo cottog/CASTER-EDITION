@@ -51,7 +51,7 @@ void Gui::render(){
 	sidebar->printFrame(0,0,MSG_X,engine.screenHeight - con->getHeight(),
 		true, TCOD_BKGND_ALPHA(50),"CHARACTER INFO");
 	
-	if (engine.player->destructible->shield) {	//was gonna do this in-line, but I am unsure if making a logical check in every line makes more sense than this if-else statement 
+	if (engine.player->destructible->shield) {
 		//draw the shield bar, if it is there
 		renderBar(1,5,BAR_WIDTH,"SHIELD",engine.player->destructible->shield,
 			engine.player->destructible->maxShield,
@@ -63,12 +63,18 @@ void Gui::render(){
 			TCODColor::lightRed,TCODColor::darkerRed);
 	}
 	
-	sidebar->print(1,17,"%d",engine.player->destructible->shield);
+	//draw the palyer's mana bar, if they have one
+	if (engine.player->caster) {
+		renderBar(1,7,BAR_WIDTH,"MANA",engine.player->caster->mana,
+			engine.player->caster->maxMana,
+			TCODColor::lightBlue,TCODColor::darkerBlue);
+	}
+
 
 	//draw the XP bar
 	char xpTxt[128];
 	sprintf(xpTxt,"XP(%d)",engine.player->xpLevel);
-	renderBar(1,7,BAR_WIDTH,xpTxt,engine.player->destructible->xp,
+	renderBar(1,9,BAR_WIDTH,xpTxt,engine.player->destructible->xp,
 		((PlayerAi*)engine.player->ai)->getNextLevelXp(engine.player),TCODColor::lightViolet,TCODColor::darkerViolet);
 	
 	//draw the last target's hp bar
@@ -98,10 +104,14 @@ void Gui::render(){
 	
 	//dungeon level
 	sidebar->setDefaultForeground(TCODColor::white);
-	sidebar->print(3,9,"Dungeon level %d", engine.level);
+	sidebar->print(3,11,"Dungeon level %d", engine.level);
 	
 	//character name
 	sidebar->print(3,3,"Name: %s",engine.player->getName(true));
+
+	if (engine.player->caster && engine.player->caster->hasCantus()) {
+		sidebar->print(1,17,"Current Cantus: %s",engine.player->caster->getCantus());
+	}
 	
 	//blit the GUI  consoles on the root console
 	TCODConsole::blit(con,0,0,engine.screenWidth,PANEL_HEIGHT,

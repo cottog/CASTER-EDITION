@@ -4,6 +4,7 @@ class Actor;
 #include "Aura.hpp"
 #include "Gui.hpp"
 #include "Spell.hpp"
+#include "Caster.hpp"
 #include "Destructible.hpp"
 #include "Attacker.hpp"
 #include "Ai.hpp"
@@ -13,4 +14,3 @@ class Actor;
 #include "Map.hpp"
 #include "ShuffleBag.hpp"
 #include "Engine.hpp"
-

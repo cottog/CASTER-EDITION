@@ -1,4 +1,3 @@
-#include <cmath>
 #include "libtcod.hpp"
 #include "main.hpp"
 
@@ -14,9 +13,41 @@ float Spell::setTarget(){
 	target = 0;
 
 	for (int x=0; x<4; x++){
-		target += pow((rng->getInt(0,25)),(int)(intensity));
+		target += (rng->getInt(0,25));
 	}
 	return target;
+}
+
+Spell *Spell::newSpell(Actor *caster){
+	Spell *spell = NULL;
+	TCODRandom *rng = TCODRandom::getInstance();
+	int typeSwitch = rng->getInt(1,45);
+	if (typeSwitch <= 38){
+		spell = new CreatureSpell();
+	} else {
+		spell = new TileSpell(); 
+	}
+	spell->chooseIntensity(caster->xpLevel);
+	spell->setTarget();
+	spell->chooseTargetSystem();
+	spell->chooseEffect();
+	spell->setName();
+
+	return spell;
+}
+
+Spell *Spell::create(TCODZip &zip){
+	Spell *spell = NULL;
+	ExpectedTarget spellType = (ExpectedTarget)zip.getInt();
+
+	switch(spellType){
+		case CREATURE: spell = new CreatureSpell(); break;
+		case TILE: spell = new TileSpell(); break;
+		default: break;
+	}
+	spell->load(zip);
+
+	return spell;
 }
 
 void Spell::setName(){
@@ -224,6 +255,27 @@ void Spell::chooseIntensity(int level){
 		intensity = EPIC;
 		cost = 54;
 	}
+}
+
+void CreatureSpell::save(TCODZip &zip){
+	zip.putInt(expected);
+	zip.putFloat(target);
+	zip.putInt(intensity);
+	zip.putInt(targeting);
+	zip.putInt(effect);
+	zip.putFloat(cost);
+	zip.putInt(preferred);
+	zip.putInt(actual);
+}
+
+void CreatureSpell::load(TCODZip &zip){
+	target = zip.getFloat();
+	intensity = (SpellIntensity)zip.getInt();
+	targeting = (TargetSystem)zip.getInt();
+	effect = (SpellEffect)zip.getInt();
+	cost = zip.getFloat();
+	preferred = (TargetType)zip.getInt();
+	actual = (TargetType)zip.getInt();
 }
 
 void CreatureSpell::chooseEffect(){
@@ -1171,6 +1223,23 @@ bool CreatureSpell::cast(Actor *caster){
 
 	targets.clearAndDelete();
 	return true;
+}
+
+void TileSpell::save(TCODZip &zip){
+	zip.putInt(expected);
+	zip.putFloat(target);
+	zip.putInt(intensity);
+	zip.putInt(targeting);
+	zip.putInt(effect);
+	zip.putFloat(cost);
+}
+
+void TileSpell::load(TCODZip &zip){
+	target = zip.getFloat();
+	intensity = (SpellIntensity)zip.getInt();
+	targeting = (TargetSystem)zip.getInt();
+	effect = (SpellEffect)zip.getInt();
+	cost = zip.getFloat();
 }
 
 void TileSpell::chooseEffect(){

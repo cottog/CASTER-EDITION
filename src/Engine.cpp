@@ -17,7 +17,7 @@ Engine::~Engine(){
 }
 
 void Engine::init() {
-	TCODText text(30,25,21,1, 20);
+	TCODText text(30,25,21,1,21);
     TCOD_key_t key;
 	TCODConsole::root->clear();
 	bool goodName = false;
@@ -66,6 +66,7 @@ void Engine::init() {
 	player->attacker = new Attacker(5);
 	player->ai = new PlayerAi();
 	player->container = new Container(26);
+	player->caster = new Caster(10);
 	actors.push(player);
 	stairs = new Actor(0,0,'>',"stairs",TCODColor::white);
 	stairs->ID = 000001;

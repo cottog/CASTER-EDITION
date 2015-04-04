@@ -118,11 +118,15 @@ public:
 		ExpectedTarget expected = NO_EXPECT, float cost = 0);
 	
 	//TODO: think of what would be best way to handle wands (procedural, not procedural, some of either)
+	Spell *newSpell(Actor *caster);	//returns a spell with all aspects randomly generated
 	void chooseIntensity(int level);	//choose the Intensity of the spell
 	void chooseTargetSystem();	//choose the TargetSystem of the spell
 	float setTarget(); //this function sets the targetNumber for a spell; this is the value to which the results of the spell's formula are compared in order to see if a spell is successfully cast
 	virtual void chooseEffect() = 0;	//choose the SpellEffect of the spell
 	virtual bool cast(Actor *caster) = 0; //this function resolves the effect of the spell;
+	virtual void save(TCODZip &zip) = 0;
+	virtual void load(TCODZip &zip) = 0;
+	static Spell *create(TCODZip &zip);
 	void setName();	//set the name of the spell, depending on its attributes (not a traditional setter)
 	const char *getName() {return name;}	//getter for the spell name
 
@@ -140,6 +144,8 @@ public:
 		ExpectedTarget expected = CREATURE,  float cost = 0, TargetType preferred = NO_TYPE, TargetType actual = NO_TYPE);
 	//use the above constructor to create an empty CreatureSpell object, then use chooseIntensity, then chooseTargetSystem, and then chooseEffect to create a non-empty spell
 	bool cast(Actor *caster);
+	void save(TCODZip &zip);
+	void load(TCODZip &zip);
 };
 
 class TileSpell : public Spell { //spell class that represents spells that target map tiles
@@ -149,6 +155,8 @@ public:
 		ExpectedTarget expected = TILE, float cost = 0 );
 	//use the above constructor to create an empty TileSpell object, then use chooseIntensity, then chooseTargetSystem, and then chooseEffect to create a non-empty spell
 	bool cast(Actor *caster);
+	void save(TCODZip &zip);
+	void load(TCODZip &zip);
 };
 
 
@@ -156,4 +164,4 @@ public:
 
 
 //this might not be the best way to do it, but to create a completely usable spell,
-//create either an instance of TileSpell or CreatureSpell, call chooseIntensity, chooseTargetSystem, chooseEffect, and then finally setName()
+//create either an instance of TileSpell or CreatureSpell, call chooseIntensity, setTarget, chooseTargetSystem, chooseEffect, and then finally setName()

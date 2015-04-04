@@ -202,7 +202,7 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii, bool control, bool alt) 
 		case '>': //go down the stairs, if atop them
 		{
 			if (engine.stairs->x == owner->x && engine.stairs->y == owner->y) {
-				engine.player->attacker->lastTarget = NULL;
+				owner->attacker->lastTarget = NULL;
 				engine.nextLevel();
 			} else {
 				engine.gui->message(TCODColor::lightGrey,"There are no stairs here.");
@@ -225,21 +225,7 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii, bool control, bool alt) 
 		case 'c':
 		{
 			if (control){
-				engine.gui->message(TCODColor::white,"Got here!");
-				int x = owner->x;
-				int y = owner->y;
-				bool tileFound = engine.findNearbyOpenTile(&x, &y);
-				if (tileFound){
-					Actor *actor = new Actor(*engine.player);
-					actor->x = x;
-					actor->y = y;
-					actor->hostile = true;
-					actor->blocks = true;
-					actor->ai = new MonsterAi();
-					actor->setName("Simulacrum");
-					engine.gui->message(TCODColor::white,"%s %d %d",actor->getName(),actor->x,actor->y);
-					engine.actors.push(actor);
-				}
+				if (owner->caster) owner->caster->enterCantus();
 			} else {
 				Aura *shield = new ShieldAura(10,10);
 				engine.player->auras.push(shield);

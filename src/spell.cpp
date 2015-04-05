@@ -4,9 +4,8 @@
 Spell::Spell(float target, SpellIntensity intensity, TargetSystem targeting, SpellEffect effect, 
 		ExpectedTarget expected , float cost) :
 	target(target), intensity(intensity),targeting(targeting),effect(effect),expected(expected),cost(cost) {
-		name = strdup("");
+		name = "";
 	}
-
 
 float Spell::setTarget(){
 	TCODRandom *rng = TCODRandom::getInstance();
@@ -32,7 +31,8 @@ Spell *Spell::newSpell(Actor *caster){
 	spell->chooseTargetSystem();
 	spell->chooseEffect();
 	spell->setName();
-
+	engine.gui->message(TCODColor::lightGrey,"%s",spell->getName());
+	engine.gui->message(TCODColor::white,"%f %d %d %d %d %f %s",spell->target,spell->intensity,spell->targeting,spell->effect,spell->expected,spell->cost,spell->getName());
 	return spell;
 }
 
@@ -148,6 +148,7 @@ void Spell::setName(){
 		case LIFE_TAP: strcat(buf, " Sacrifice"); break;
 		default: break;
 	}
+	engine.gui->message(TCODColor::red,"%s",buf);
 	this->name = buf;
 }
 
@@ -266,6 +267,7 @@ void CreatureSpell::save(TCODZip &zip){
 	zip.putFloat(cost);
 	zip.putInt(preferred);
 	zip.putInt(actual);
+	zip.putString(name.c_str());
 }
 
 void CreatureSpell::load(TCODZip &zip){
@@ -276,6 +278,7 @@ void CreatureSpell::load(TCODZip &zip){
 	cost = zip.getFloat();
 	preferred = (TargetType)zip.getInt();
 	actual = (TargetType)zip.getInt();
+	name = zip.getString();
 }
 
 void CreatureSpell::chooseEffect(){
@@ -598,7 +601,7 @@ bool CreatureSpell::cast(Actor *caster){
 						Actor *actor = engine.getActor(stepX,stepY);
 						if (!actor) {
 							break;
-						} else if ( actor != caster && ((this->actual == Spell::NEUTRAL) || (this->actual == Spell::ENEMY && actor->hostile != caster->hostile) || (this->actual == Spell::FRIENDLY && actor->hostile == caster->hostile)) ) {
+						} else if ( ((this->actual == Spell::NEUTRAL) || (this->actual == Spell::ENEMY && actor->hostile != caster->hostile) || (this->actual == Spell::FRIENDLY && actor->hostile == caster->hostile)) ) {
 							targets.push(actor);
 							break;
 						}
@@ -743,11 +746,11 @@ bool CreatureSpell::cast(Actor *caster){
 			int stepX = caster->x;
 			int stepY = caster->y;
 			if (engine.pickATile(&x,&y,4+2*((int)intensity))){
-				TCODLine::init(caster->x, caster->y, x, y);
+				TCODLine::init(stepX, stepY, x, y);
 				do {
 					if ( !engine.map->canWalk(stepX,stepY)) {
 						Actor *actor = engine.getActor(stepX,stepY);
-						if ( actor && actor != caster && ((this->actual == Spell::NEUTRAL) || (this->actual == Spell::ENEMY && actor->hostile != caster->hostile) || (this->actual == Spell::FRIENDLY && actor->hostile == caster->hostile)) ) {
+						if ( actor && ((this->actual == Spell::NEUTRAL) || (this->actual == Spell::ENEMY && actor->hostile != caster->hostile) || (this->actual == Spell::FRIENDLY && actor->hostile == caster->hostile)) ) {
 							targets.push(actor);
 						}
 					}
@@ -1232,6 +1235,7 @@ void TileSpell::save(TCODZip &zip){
 	zip.putInt(targeting);
 	zip.putInt(effect);
 	zip.putFloat(cost);
+	zip.putString(name.c_str());
 }
 
 void TileSpell::load(TCODZip &zip){
@@ -1240,6 +1244,7 @@ void TileSpell::load(TCODZip &zip){
 	targeting = (TargetSystem)zip.getInt();
 	effect = (SpellEffect)zip.getInt();
 	cost = zip.getFloat();
+	name = zip.getString();
 }
 
 void TileSpell::chooseEffect(){

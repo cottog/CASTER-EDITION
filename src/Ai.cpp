@@ -227,12 +227,20 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii, bool control, bool alt) 
 			if (control){
 				if (owner->caster) owner->caster->enterCantus();
 			} else {
-				Aura *shield = new ShieldAura(10,10);
-				engine.player->auras.push(shield);
-				engine.gameStatus = Engine::NEW_TURN; 
+				if (owner->caster) {
+					Spell *spell = owner->caster->chooseFromSpellBook();
+					if (spell != NULL){
+						owner->caster->cast(owner, spell);
+					}
+				} 
 			}
 		break;
 		}
+		case 'C':
+		{
+			if (owner->caster) owner->caster->learnSpell(owner);
+		}
+		break;
 	}
 }
 

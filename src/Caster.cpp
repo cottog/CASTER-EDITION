@@ -1,6 +1,8 @@
 #include "main.hpp"
+#include <cctype>
+#include <cmath>
 
-Caster::Caster(float maxMana) : mana(maxMana), maxMana(maxMana), cantus(""){
+Caster::Caster(float maxMana) : mana(maxMana), maxMana(maxMana),cantusValue(0),element(Spell::NO_SUBTYPE), cantus(""){
 }
 
 Caster::~Caster(){
@@ -10,6 +12,8 @@ Caster::~Caster(){
 void Caster::save(TCODZip &zip){
 	zip.putFloat(mana);
 	zip.putFloat(maxMana);
+	zip.putInt(cantusValue);
+	zip.putInt(element);
 	zip.putString(cantus.c_str());
 	zip.putInt(spellBook.size());
 
@@ -21,6 +25,8 @@ void Caster::save(TCODZip &zip){
 void Caster::load(TCODZip &zip){
 	mana = zip.getFloat();
 	maxMana = zip.getFloat();
+	cantusValue = zip.getInt();
+	element = (Spell::ElementalSubtype)zip.getInt();
 	cantus = zip.getString();
 	int nbSpells = zip.getInt();
 
@@ -43,6 +49,12 @@ void Caster::enterCantus(){
 	TCODText text(15,4,5,1, 5);
     TCOD_key_t key;
 
+    int max = 0;
+    int index = 0;
+    int subtype = 0;
+
+    cantusValue = 0;
+
 	do {
 		cantusMenu->setDefaultForeground(TCODColor::white);
 		cantusMenu->print(1,4, "Enter Cantus:");
@@ -55,8 +67,127 @@ void Caster::enterCantus(){
 	} while(text.update(key));
 
 	cantus = text.getText();
+
+	std::string::iterator it;
+  	for ( it = cantus.begin() ; it < cantus.end(); it++, index++)
+  	{
+        *it = tolower(*it);
+        if ( !(*it >= 'a' && *it <= 'z') ) {
+        	cantus = "";
+        	cantusValue = 0;
+        	element = Spell::NO_SUBTYPE;
+        	engine.gui->message(TCODColor::lightRed,"You could not possibly pronounce that!");
+        	return;
+        }
+        int charValue = ((int)*it-'a'+1);
+        cantusValue += charValue;
+        if ( charValue == max ) {
+        	subtype += pow(2,index);
+        } else if ( charValue > max ) {
+        	subtype = pow(2,index);
+        	max = charValue;
+        }
+  	}
+  	element = (Spell::ElementalSubtype)subtype;
 }
 
 bool Caster::hasCantus(){
 	return !cantus.empty();
+}
+
+TCODColor Caster::cantusColor(){
+	switch (element){
+		default: return TCODColor::darkGrey;
+		case Spell::FIRE: return TCODColor::red;
+		case Spell::AIR: return TCODColor::yellow;
+		case Spell::LIGHTNING: return TCODColor::lighterBlue;
+		case Spell::WATER: return TCODColor::blue;
+		case Spell::STEAM: return TCODColor::lightGrey;
+		case Spell::ICE: return TCODColor::lightCyan;
+		case Spell::RADIATION: return TCODColor::lightPurple;
+		case Spell::EARTH: return TCODColor::darkYellow;
+		case Spell::LAVA: return TCODColor::darkRed;
+		case Spell::DUST: return TCODColor::desaturatedYellow;
+		case Spell::GLASS: return TCODColor::lightSea;
+		case Spell::MUD: return TCODColor::darkerOrange;
+		case Spell::METAL: return TCODColor::cyan;
+		case Spell::POISON: return TCODColor::lightGreen;
+		case Spell::FORCE: return TCODColor::white;
+	}	
+}
+
+void Caster::learnSpell(Actor *owner){
+	Spell *spell = NULL;
+	spell = spell->newSpell(owner);
+	engine.gui->message(TCODColor::white,"%f %d %d %d %d %f %s",spell->target,spell->intensity,spell->targeting,spell->effect,spell->expected,spell->cost,spell->getName());
+
+	spellBook.push(spell);
+}
+
+bool Caster::cast(Actor *owner, Spell *spell){
+	if (spell->cost > owner->caster->mana){
+		engine.gui->message(TCODColor::red,"Insufficient mana!");
+		return false;
+	}
+
+	float percentageOfTarget = (owner->caster->cantusValue / spell->target) * 100.0f;
+
+	if (percentageOfTarget > 80.0f && percentageOfTarget < 120.0f){ //is the current cantus compatible with the spell?
+
+		if ( spell->cast(owner) ) {	//does the caster choose a target and all that, or is the spell canceled?
+			owner->caster->mana -= spell->cost;	//subtract the mana cost of the spell from the caster's mana
+			return true;
+		} else {
+			return false;
+		}
+	} else if (cantusValue == 0) {
+		engine.gui->message(TCODColor::red,"With no cantus to recite, you quickly lose focus.");
+		return false;
+	} else {
+		engine.gui->message(TCODColor::red,"The spell fizzles. Perhaps reciting a different cantus could help.");
+		return false;
+	}
+}
+
+Spell *Caster::chooseFromSpellBook(){
+	static const int PANEL_WIDTH = 60;
+	static const int PANEL_HEIGHT = 28;
+	static TCODConsole con(PANEL_WIDTH,PANEL_HEIGHT);
+	
+	//display the inventory frame
+	con.setDefaultForeground(TCODColor(0,255,50));
+	con.printFrame(0,0,PANEL_WIDTH,PANEL_HEIGHT,true,
+		TCOD_BKGND_DEFAULT,"Spellbook");
+	
+	//display the items with their keyboard shortcut
+	con.setDefaultForeground(TCODColor::white);
+	int shortcut = 'a';
+	int y=1;
+	for (Spell **it = spellBook.begin();
+		it != spellBook.end(); it++) {
+		
+		Spell *spell = *it;
+		con.print(2,y,"(%c) %s",shortcut,spell->getName());	
+		
+		y++;
+		shortcut++;
+	}
+	
+	//blit the inventory console on the root console
+	TCODConsole::blit(&con,0,0,PANEL_WIDTH,PANEL_HEIGHT,
+		TCODConsole::root,engine.screenWidth/2 - PANEL_WIDTH/2,
+		engine.screenHeight/2-PANEL_HEIGHT/2);
+	TCODConsole::flush();
+	
+	//wait for a key press
+	TCOD_key_t key;
+	TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS,&key,NULL,true);
+	if (key.vk == TCODK_CHAR) {
+		int spellIndex = key.c - 'a';
+		
+		if (spellIndex >= 0 && spellIndex < spellBook.size()){
+			return spellBook.get(spellIndex);
+		}
+	}
+	return NULL;
 }

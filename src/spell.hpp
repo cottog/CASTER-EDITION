@@ -1,4 +1,6 @@
 #include "libtcod.hpp"
+#include <string>
+
 class Spell{ //abstract class representing a generic spell; note the pure virtual function cast()
 public:
 	enum SpellIntensity { //the "intensity" of the spell is a means to scale the spell with caster level; higher-intensity spells cost more and have greater or longer-lasting effects
@@ -82,22 +84,22 @@ public:
 		LIFE_TAP //45 sacrifices some of the caster's life in exchange for mana
 	};
 	enum ElementalSubtype {  //these are the possible subtypes of a spell, determined by how much of each resource is spent on it
-		NO_SUBTYPE = 0,	//0000	NOTHING 				
-		FIRE,			//0001	FIRE 					Intelligence
-		AIR,			//0010	AIR 					Dexterity (ranged accuracy)
-		LIGHTNING,		//0011	FIRE+AIR 				Speed
-		WATER,			//0100	WATER 					Mana
-		STEAM,			//0101	WATER+FIRE 				
-		ICE,			//0110	WATER+AIR 				
-		RADIATION,		//0111	FIRE+AIR+WATER 			Mix stats around
-		EARTH,			//1000	EARTH 					Power (bonus damage)
-		LAVA,			//1001	FIRE+EARTH 				lower speed and small DoT
-		DUST,			//1010	AIR+EARTH 				Strength (melee accuracy)
-		GLASS,			//1011	FIRE+AIR+EARTH 			
-		MUD,			//1100	WATER+EARTH 			fovRadius
-		METAL,			//1101	FIRE+WATER+EARTH 		lower weapon damage	
-		POISON,			//1110	EARTH+AIR+WATER 		maxHP
-		FORCE			//1111	FIRE+AIR+WATER+EARTH 	
+		NO_SUBTYPE = 0,	//0000	NOTHING 												darkGrey
+		FIRE,			//0001	FIRE 					Intelligence 					red
+		AIR,			//0010	AIR 					Dexterity (ranged accuracy) 	yellow
+		LIGHTNING,		//0011	FIRE+AIR 				Speed 							lighterBlue
+		WATER,			//0100	WATER 					Mana 							blue
+		STEAM,			//0101	WATER+FIRE 												darkWhite
+		ICE,			//0110	WATER+AIR 												lighterCyan
+		RADIATION,		//0111	FIRE+AIR+WATER 			Mix stats around 				lightPurple
+		EARTH,			//1000	EARTH 					Power (bonus damage) 			darkYellow
+		LAVA,			//1001	FIRE+EARTH 				lower speed and small DoT 		darkRed
+		DUST,			//1010	AIR+EARTH 				Strength (melee accuracy)		lightBrown
+		GLASS,			//1011	FIRE+AIR+EARTH 											lightCyan
+		MUD,			//1100	WATER+EARTH 			fovRadius						darkBrown
+		METAL,			//1101	FIRE+WATER+EARTH 		lower weapon damage				cyan
+		POISON,			//1110	EARTH+AIR+WATER 		maxHP							lightGreen
+		FORCE			//1111	FIRE+AIR+WATER+EARTH 									white
 	};	//originally I planned for some elemental subtypes to have shared resistances, but I figure why not let each elemental subtype have its own resistance? I might implement a system such that gaining resistance in a base element propagates to a lesser extent to its derivative elements, as outlined above
 	
 	//TODO: create the LastCast object for casting spell's more quickly
@@ -128,10 +130,10 @@ public:
 	virtual void load(TCODZip &zip) = 0;
 	static Spell *create(TCODZip &zip);
 	void setName();	//set the name of the spell, depending on its attributes (not a traditional setter)
-	const char *getName() {return name;}	//getter for the spell name
+	const char *getName() {return name.c_str();}	//getter for the spell name
 
 protected:
-	const char *name;	//the name of the spell	
+	std::string name;	//the name of the spell	
 };
 
 class CreatureSpell : public Spell { //spell class that represents spells that target other Actor objects

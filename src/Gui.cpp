@@ -110,7 +110,9 @@ void Gui::render(){
 	sidebar->print(3,3,"Name: %s",engine.player->getName(true));
 
 	if (engine.player->caster && engine.player->caster->hasCantus()) {
+		sidebar->setDefaultForeground(engine.player->caster->cantusColor());
 		sidebar->print(1,17,"Current Cantus: %s",engine.player->caster->getCantus());
+		sidebar->print(1,19,"%d",engine.player->caster->cantusValue);
 	}
 	
 	//blit the GUI  consoles on the root console
@@ -252,7 +254,9 @@ Menu::MenuItemCode Menu::pick(DisplayMode mode) {
 			break;
 			case TCODK_ENTER: return items.get(selectedItem)->code;
 			case TCODK_ESCAPE: 
-				return RESUME;
+				if (mode == PAUSE) {
+					return RESUME;
+				}
 			break;
 			default: break;
 		}

@@ -211,9 +211,7 @@ void Engine::load(bool pause) {
 }
 
 void Engine::update(){
-	if (gameStatus == STARTUP) map->computeFov();
-	gameStatus = IDLE;
-	TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS,&lastKey,NULL);
+	TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS,&lastKey,NULL,true);
 	if (lastKey.vk == TCODK_ESCAPE) {
 		save();
 		load(true);
@@ -238,6 +236,8 @@ void Engine::update(){
 void Engine::render(){
 	TCODConsole::root->clear();
 	mapcon->clear();
+	if (gameStatus == STARTUP) map->computeFov();
+	gameStatus = IDLE;
 	//draw the map
 	map->render();
 	//draw the actors

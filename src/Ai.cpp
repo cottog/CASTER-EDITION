@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include <cmath>
+#include <iostream>
 
 Ai *Ai::create(TCODZip &zip) {
 	AiType type = (AiType)zip.getInt();
@@ -110,6 +111,7 @@ void PlayerAi::update(Actor *owner){
 		case TCODK_CHAR: handleActionKey(owner, engine.lastKey.c, (engine.lastKey.rctrl || engine.lastKey.lctrl), (engine.lastKey.ralt || engine.lastKey.lalt)); break;
 		default: break;
 	}
+//		std::cout << "got here"<< std::endl;
 	if ( dx != 0 || dy != 0){
 		engine.gameStatus = Engine::NEW_TURN;
 		if (moveOrAttack(owner,owner->x+dx,owner->y+dy)){
@@ -230,7 +232,11 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii, bool control, bool alt) 
 				if (owner->caster) {
 					Spell *spell = owner->caster->chooseFromSpellBook();
 					if (spell != NULL){
-						owner->caster->cast(owner, spell);
+						bool spellSuccess = owner->caster->cast(owner, spell);
+						if (spellSuccess){
+							engine.gameStatus = Engine::NEW_TURN;
+//							std::cout << "got to after spell cast" << std::endl;
+						}
 					}
 				} 
 			}

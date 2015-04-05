@@ -1,6 +1,7 @@
 #include "main.hpp"
 #include <cctype>
 #include <cmath>
+#include <iostream>
 
 Caster::Caster(float maxMana) : mana(maxMana), maxMana(maxMana),cantusValue(0),element(Spell::NO_SUBTYPE), cantus(""){
 }
@@ -129,13 +130,17 @@ bool Caster::cast(Actor *owner, Spell *spell){
 		engine.gui->message(TCODColor::red,"Insufficient mana!");
 		return false;
 	}
+//	std::cout << spell->cost << std::endl;
 
 	float percentageOfTarget = (owner->caster->cantusValue / spell->target) * 100.0f;
 
 	if (percentageOfTarget > 80.0f && percentageOfTarget < 120.0f){ //is the current cantus compatible with the spell?
 
 		if ( spell->cast(owner) ) {	//does the caster choose a target and all that, or is the spell canceled?
+//			std::cout << "got to before mana cost" << std::endl;
+//			std::cout << spell->cost << std::endl;
 			owner->caster->mana -= spell->cost;	//subtract the mana cost of the spell from the caster's mana
+//			std::cout << "got to after mana cost" << std::endl;
 			return true;
 		} else {
 			return false;

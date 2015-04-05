@@ -1,5 +1,6 @@
 #include "libtcod.hpp"
 #include "main.hpp"
+#include <iostream>
 
 Spell::Spell(float target, SpellIntensity intensity, TargetSystem targeting, SpellEffect effect, 
 		ExpectedTarget expected , float cost) :
@@ -528,7 +529,7 @@ void CreatureSpell::chooseEffect(){
 			expected = CREATURE;
 			preferred = NEUTRAL;
 			targeting = SELF;
-			cost = baseCost;
+			cost = 0;
 			break;
 		
 		default: effect = NO_EFFECT; break;
@@ -565,13 +566,13 @@ CreatureSpell::CreatureSpell( float target, SpellIntensity intensity, TargetSyst
 	Spell(target,intensity,targeting,effect,expected,cost), preferred(preferred),actual(actual) {}
 
 
-bool CreatureSpell::cast(Actor *caster){
+bool CreatureSpell::cast(Actor *caster) const{
 
 	TCODRandom *rng = TCODRandom::getInstance();
 	TCODList<Actor *> targets;
 
 	switch(targeting) {
-		default: targets.clearAndDelete(); return false; break;
+		default: targets.clear(); return false; break;
 		case SELF: {
 			targets.push(caster);
 			break;
@@ -579,7 +580,7 @@ bool CreatureSpell::cast(Actor *caster){
 		case ADJACENT_TILE: {
 			engine.getAllActorsInRadius(targets, caster->x, caster->y, 1.6,this->actual,caster->hostile);
 			if (targets.isEmpty()) {
-				targets.clearAndDelete();
+				targets.clear();
 				return false;
 			}
 			while (targets.size() > 1) {
@@ -608,7 +609,7 @@ bool CreatureSpell::cast(Actor *caster){
 					}
 				} while (TCODLine::step(&stepX,&stepY));
 			} else {
-				targets.clearAndDelete();
+				targets.clear();
 				return false;
 			}
 			break;
@@ -619,7 +620,7 @@ bool CreatureSpell::cast(Actor *caster){
 			if (engine.pickATile(&x,&y,4+2*((int)intensity))){	
 				Actor *actor2 = engine.getActor(x,y);
 				if (!actor2) {
-					targets.clearAndDelete();
+					targets.clear();
 					return false;
 				} else {
 					Spell::ElementalSubtype targetedElement = actor2->destructible->element; //we know the actor has a destructible since getActor checks for it
@@ -632,7 +633,7 @@ bool CreatureSpell::cast(Actor *caster){
 					}
 				}
 			} else {
-				targets.clearAndDelete();
+				targets.clear();
 				return false;	
 			}
 			break;
@@ -643,7 +644,7 @@ bool CreatureSpell::cast(Actor *caster){
 			if (engine.pickATile(&x,&y,4+2*((int)intensity))){	
 				Actor *actor2 = engine.getActor(x,y);
 				if (!actor2) {
-					targets.clearAndDelete();
+					targets.clear();
 					return false;
 				} else {
 					Spell::ElementalSubtype targetedElement = actor2->destructible->element; //we know the actor has a destructible since getActor checks for it
@@ -656,28 +657,32 @@ bool CreatureSpell::cast(Actor *caster){
 					}
 				}
 			} else {
-				targets.clearAndDelete();
+				targets.clear();
 				return false;	
 			}
 			break;	
 		}
 		case RANDOM_IN_LOS: {
+//			std::cout << "got here" << std::endl;
 			engine.getAllActorsInRadius(targets, caster->x, caster->y, engine.fovRadius,this->actual,caster->hostile);
+//			std::cout << "got here" << std::endl;
 			if (targets.isEmpty()) {
-				targets.clearAndDelete();
+				targets.clear();
 				return false;
 			}
+//			std::cout << "got here" << std::endl;
 			while (targets.size() > 1) {
 				int elNum = rng->getInt(0,targets.size()-1);
 				Actor *toRev = targets.get(elNum);
 				targets.remove(toRev);
 			}
+//			std::cout << "got here " << targets.size() << std::endl;
 			break;
 		}
 		case RANDOM_IN_LEVEL: {
 			engine.getAllActorsInRadius(targets, caster->x, caster->y, 0.0,this->actual,caster->hostile);
 			if (targets.isEmpty()) {
-				targets.clearAndDelete();
+				targets.clear();
 				return false;
 			}
 			while (targets.size() > 1) {
@@ -690,7 +695,7 @@ bool CreatureSpell::cast(Actor *caster){
 		case ALL_ADJACENT_TILES: {
 			engine.getAllActorsInRadius(targets, caster->x, caster->y, 1.6,this->actual, caster->hostile);
 			if (targets.isEmpty()) {
-				targets.clearAndDelete();
+				targets.clear();
 				return false;
 			}
 
@@ -711,8 +716,8 @@ bool CreatureSpell::cast(Actor *caster){
 			}
 
 			if (targets.isEmpty()) {
-				possibleJumps.clearAndDelete();
-				targets.clearAndDelete();
+				possibleJumps.clear();
+				targets.clear();
 				return false;
 			}
 
@@ -720,7 +725,7 @@ bool CreatureSpell::cast(Actor *caster){
 				engine.getAllActorsInRadius(possibleJumps, targets.get(targets.size()-1)->x, targets.get(targets.size()-1)->y, 1+2*((int)intensity),this->actual, caster->hostile);
 
 				if (possibleJumps.isEmpty()) {
-					possibleJumps.clearAndDelete();
+					possibleJumps.clear();
 					break;
 				} else {
 					int jumpTarget = rng->getInt(0, possibleJumps.size() - 1);
@@ -729,13 +734,13 @@ bool CreatureSpell::cast(Actor *caster){
 				}
 
 			}
-			possibleJumps.clearAndDelete();
+			possibleJumps.clear();
 			break;
 		}
 		case ALL_CREATURES_IN_LEVEL: {
 			engine.getAllActorsInRadius(targets,caster->x, caster->y, 0.0, this->actual, caster->hostile);
 			if (targets.isEmpty()) {
-				targets.clearAndDelete();
+				targets.clear();
 				return false;
 			}
 			break;
@@ -756,7 +761,7 @@ bool CreatureSpell::cast(Actor *caster){
 					}
 				} while (TCODLine::step(&stepX,&stepY));
 			} else {
-				targets.clearAndDelete();
+				targets.clear();
 				return false;
 			}
 			break;
@@ -769,12 +774,12 @@ bool CreatureSpell::cast(Actor *caster){
 				engine.getAllActorsInRadius(targets,caster->x, caster->y, 2+2*((int)intensity), this->actual, caster->hostile);
 
 				if (targets.isEmpty()){
-					targets.clearAndDelete();
+					targets.clear();
 					return false;
 				}
 
 			} else {
-				targets.clearAndDelete();
+				targets.clear();
 				return false;
 			}
 			break;
@@ -785,7 +790,7 @@ bool CreatureSpell::cast(Actor *caster){
 			if (engine.pickATile(&x,&y,4+2*((int)intensity))){	
 				Actor *actor = engine.getActor(x,y);
 				if (!actor) {
-					targets.clearAndDelete();
+					targets.clear();
 					return false;
 				} else {
 					if ( ((this->actual == Spell::NEUTRAL) || (this->actual == Spell::ENEMY && actor->hostile != caster->hostile) || (this->actual == Spell::FRIENDLY && actor->hostile == caster->hostile)) ){
@@ -793,7 +798,7 @@ bool CreatureSpell::cast(Actor *caster){
 					}
 				}
 			} else {
-				targets.clearAndDelete();
+				targets.clear();
 				return false;	
 			}
 			break;
@@ -815,7 +820,7 @@ bool CreatureSpell::cast(Actor *caster){
 				}
 			}
 			if (targets.isEmpty()) {
-				targets.clearAndDelete();
+				targets.clear();
 				return false;
 			}
 			break;
@@ -834,7 +839,7 @@ bool CreatureSpell::cast(Actor *caster){
 	//check if targets is empty, and print a message so you know its empty here
 	if (targets.isEmpty()) {
 		engine.gui->message(TCODColor::lightPurple,"targets is empty");
-		targets.clearAndDelete();
+		targets.clear();
 		return false;
 	}
 
@@ -855,7 +860,7 @@ bool CreatureSpell::cast(Actor *caster){
 		}
 
 		switch(effect) {
-			default: targets.clearAndDelete(); return false; break;
+			default: targets.clear(); return false; break;
 			case STRAIGHT_HEAL: {
 
 				int heal = rng->getInt( (5+10*((int)intensity))*0.8, (5+10*((int)intensity))*1.25); //choose a random amount of HP to heal
@@ -870,7 +875,7 @@ bool CreatureSpell::cast(Actor *caster){
 			}
 			case STAT_BOOST: {
 				//determine what elements correspond to what stat and then add this functionality
-
+//				std::cout << "got to stat boost part" << std::endl;
 				break;
 			}
 			case CURE_DEBUFFS: {
@@ -970,7 +975,7 @@ bool CreatureSpell::cast(Actor *caster){
 				actor->x = x;
 				actor->y = y;
 
-				inRadius.clearAndDelete();
+				inRadius.clear();
 				break;
 			}
 			case WEAPON_ENHANCEMENT: {
@@ -1223,8 +1228,9 @@ bool CreatureSpell::cast(Actor *caster){
 			}
 		}
 	}	
-
-	targets.clearAndDelete();
+//	std::cout << "got before list is cleared" << std::endl;
+	targets.clear();
+//	std::cout << "got after list is cleared" << std::endl;
 	return true;
 }
 
@@ -1313,7 +1319,7 @@ TileSpell::TileSpell( float target, SpellIntensity intensity, TargetSystem targe
 		ExpectedTarget expected, float cost) :
 	Spell(target,intensity,targeting,effect,expected,cost) {}
 
-bool TileSpell::cast(Actor *caster){
+bool TileSpell::cast(Actor *caster) const{
 
 
 	return true;

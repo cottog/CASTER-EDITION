@@ -711,7 +711,6 @@ bool CreatureSpell::cast(Actor *caster) const{
 					break;
 				} else if ( ((this->actual == Spell::NEUTRAL) || (this->actual == Spell::ENEMY && actor->hostile != caster->hostile) || (this->actual == Spell::FRIENDLY && actor->hostile == caster->hostile)) ) {
 					targets.push(actor);
-					break;
 				}
 			}
 
@@ -847,6 +846,7 @@ bool CreatureSpell::cast(Actor *caster) const{
 		iterator != targets.end(); iterator++) {
 		
 		Actor *actor = *iterator;
+		//engine.gui->message(TCODColor::white,"%s",actor->getName());
 		for (Aura **it = actor->auras.begin(); it!= actor->auras.end(); it++) {
 			Aura *aura = *it;
 			if(aura->stat == Aura::REFLECTION){

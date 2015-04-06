@@ -633,7 +633,7 @@ Actor *Engine::chooseFromList(TCODList<Actor *> &list,const char *title){
 	return NULL;
 }
 
-void Engine::getAllActorsInRadius(TCODList<Actor *> &targets, int x, int y, float radius, Spell::TargetType targetType, bool casterHostility) {
+void Engine::getAllActorsInRadius(TCODList<Actor *> &targets, int x, int y, float radius, Spell::TargetType targetType, bool casterHostility) const {
 	for (Actor **iterator = engine.actors.begin();iterator != engine.actors.end(); iterator++) {
 		Actor *actor = *iterator;
 		if (actor->destructible && !actor->destructible->isDead()){

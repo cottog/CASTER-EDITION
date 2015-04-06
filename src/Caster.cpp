@@ -156,43 +156,62 @@ bool Caster::cast(Actor *owner, Spell *spell){
 
 Spell *Caster::chooseFromSpellBook(){
 	static const int PANEL_WIDTH = 60;
-	static const int PANEL_HEIGHT = 28;
+	static const int PANEL_HEIGHT = 29;
 	static TCODConsole con(PANEL_WIDTH,PANEL_HEIGHT);
 	
-	//display the inventory frame
-	con.setDefaultForeground(TCODColor(0,255,50));
-	con.printFrame(0,0,PANEL_WIDTH,PANEL_HEIGHT,true,
+	int skipSpells = 0; //this will allow the left and right arrows to navigate to pages in the spell book
+
+	while (true) {
+		con.clear();	//clear screen so new spells can be displayed
+
+		//display the inventory frame
+		con.setDefaultForeground(TCODColor(0,255,50));
+		con.printFrame(0,0,PANEL_WIDTH,PANEL_HEIGHT,true,
 		TCOD_BKGND_DEFAULT,"Spellbook");
-	
-	//display the items with their keyboard shortcut
-	con.setDefaultForeground(TCODColor::white);
-	int shortcut = 'a';
-	int y=1;
-	for (Spell **it = spellBook.begin();
-		it != spellBook.end(); it++) {
+
+		//display the items with their keyboard shortcut
+		con.setDefaultForeground(TCODColor::white);
+		int shortcut = 'a';
+		int y=1;
+
+		for (int index = 0+skipSpells; (index <= 25+skipSpells && index < spellBook.size()) ; index++) {
+			
+			if ( index <= spellBook.size() - 1  ){
+				Spell *spell = spellBook.get(index);
+				con.print(2,y,"(%c) %s",shortcut,spell->getName());	
+				y++;
+				shortcut++;
+			}
+			
+		}
+		con.setDefaultForeground(TCODColor(0,255,50));
+		con.print((PANEL_WIDTH-6)/2,27,"Page %d",(int)((skipSpells/26)+1));
+
+		//blit the inventory console on the root console
+		TCODConsole::blit(&con,0,0,PANEL_WIDTH,PANEL_HEIGHT,
+			TCODConsole::root,engine.screenWidth/2 - PANEL_WIDTH/2,
+			engine.screenHeight/2-PANEL_HEIGHT/2);
+		TCODConsole::flush();
 		
-		Spell *spell = *it;
-		con.print(2,y,"(%c) %s",shortcut,spell->getName());	
-		
-		y++;
-		shortcut++;
-	}
-	
-	//blit the inventory console on the root console
-	TCODConsole::blit(&con,0,0,PANEL_WIDTH,PANEL_HEIGHT,
-		TCODConsole::root,engine.screenWidth/2 - PANEL_WIDTH/2,
-		engine.screenHeight/2-PANEL_HEIGHT/2);
-	TCODConsole::flush();
-	
-	//wait for a key press
-	TCOD_key_t key;
-	TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS,&key,NULL,true);
-	if (key.vk == TCODK_CHAR) {
-		int spellIndex = key.c - 'a';
-		
-		if (spellIndex >= 0 && spellIndex < spellBook.size()){
-			return spellBook.get(spellIndex);
+		//wait for a key press
+		TCOD_key_t key;
+		TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS,&key,NULL,true);
+		if (key.vk == TCODK_CHAR) {
+			int spellIndex = key.c - 'a';
+			
+			if (spellIndex >= 0 && spellIndex < spellBook.size()){
+				return spellBook.get(spellIndex+skipSpells);
+			}
+		} else if (key.vk == TCODK_LEFT || key.vk == TCODK_KP4 ){
+			if (skipSpells > 0){
+				skipSpells -= 26;
+			}
+		} else if (key.vk == TCODK_RIGHT || key.vk == TCODK_KP6){
+			if (skipSpells < spellBook.size() - 26) {
+				skipSpells += 26;
+			}
+		} else if (key.vk == TCODK_ESCAPE){
+			return NULL;
 		}
 	}
-	return NULL;
 }

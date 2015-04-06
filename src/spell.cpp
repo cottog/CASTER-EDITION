@@ -559,6 +559,7 @@ void CreatureSpell::chooseEffect(){
 			actual = preferred;
 		}
 	}
+	cost = (int)cost;
 }
 
 CreatureSpell::CreatureSpell( float target, SpellIntensity intensity, TargetSystem targeting, SpellEffect effect, 
@@ -1313,6 +1314,7 @@ void TileSpell::chooseEffect(){
 			break;
 		default: effect = NO_EFFECT; break;
 	}
+	cost = (int)cost;
 }
 
 TileSpell::TileSpell( float target, SpellIntensity intensity, TargetSystem targeting, SpellEffect effect, 

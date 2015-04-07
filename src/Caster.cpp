@@ -210,7 +210,7 @@ Spell *Caster::chooseFromSpellBook(){
 			if (skipSpells < spellBook.size() - 26) {
 				skipSpells += 26;
 			}
-		} else if (key.vk == TCODK_ESCAPE){
+		} else if (key.vk == TCODK_ESCAPE || key.vk == TCODK_DOWN || key.vk == TCODK_KP2){
 			return NULL;
 		}
 	}

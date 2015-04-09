@@ -29,7 +29,7 @@ protected:
 
 class MonsterAi : public Ai {
 public:
-	MonsterAi(float waitTime = 0, float attackTime = 1, float = 1);
+	MonsterAi(float waitTime = 0, float attackTime = 1, float walkTime = 1);
 	void update(Actor *owner);
 	void load(TCODZip &zip);
 	void save(TCODZip &zip);
@@ -41,7 +41,7 @@ protected:
 
 class ConfusedMonsterAi : public Ai {
 public:
-	ConfusedMonsterAi(int nbTurns, Ai *oldAi,float waitTime = 0, float attackTime = 1, float = 1);
+	ConfusedMonsterAi(int nbTurns, Ai *oldAi,float waitTime = 0, float attackTime = 1, float walkTime = 1);
 	void update(Actor *owner);
 	void load(TCODZip &zip);
 	void save(TCODZip &zip);

@@ -1,6 +1,5 @@
 #include "libtcod.hpp"
 #include "main.hpp"
-#include <iostream>
 
 Spell::Spell(float target, SpellIntensity intensity, TargetSystem targeting, SpellEffect effect, 
 		ExpectedTarget expected , float cost) :

@@ -1,6 +1,5 @@
 #include "main.hpp"
 #include <cmath>
-#include <iostream>
 
 Ai *Ai::create(TCODZip &zip) {
 	AiType type = (AiType)zip.getInt();
@@ -80,52 +79,55 @@ void PlayerAi::update(Actor *owner){
 		}
 	}
 
-	
-	int dx = 0, dy = 0;
-	switch (engine.lastKey.vk) {
-		case TCODK_KP5: 
-			engine.gameStatus = Engine::NEW_TURN; 
-			break;
-		case TCODK_UP:
-		case TCODK_KP8:
-			dy = -1; 
-			break;
-		case TCODK_KP7:
-			dy = -1;
-			dx = -1;
-			break;
-		case TCODK_KP9:
-			dy = -1;
-			dx = 1;
-			break;
-		case TCODK_KP1:
-			dy = 1;
-			dx = -1;
-			break;
-		case TCODK_KP3:
-			dy = 1;
-			dx = 1;
-			break;
-		case TCODK_DOWN: 
-		case TCODK_KP2:
-			dy = 1; 
-			break;
-		case TCODK_LEFT: 
-		case TCODK_KP4:	
-			dx =-1; 
-			break;
-		case TCODK_RIGHT: 
-		case TCODK_KP6: 
-			dx = 1; 
-			break;
-		case TCODK_CHAR: handleActionKey(owner, engine.lastKey.c, (engine.lastKey.rctrl || engine.lastKey.lctrl), (engine.lastKey.ralt || engine.lastKey.lalt)); break;
-		default: break;
-	}
-//		std::cout << "got here"<< std::endl;
-	if ( dx != 0 || dy != 0){
-		engine.gameStatus = Engine::NEW_TURN;
-		if (moveOrAttack(owner,owner->x+dx,owner->y+dy)){
-			engine.map->computeFov();
+	while (engine.gameStatus == Engine::IDLE){
+		engine.render();
+		int dx = 0, dy = 0;
+		switch (engine.lastKey.vk) {
+			case TCODK_KP5: 
+				waitTime += walkTime;
+				engine.gameStatus = Engine::NEW_TURN; 
+				break;
+			case TCODK_UP:
+			case TCODK_KP8:
+				dy = -1; 
+				break;
+			case TCODK_KP7:
+				dy = -1;
+				dx = -1;
+				break;
+			case TCODK_KP9:
+				dy = -1;
+				dx = 1;
+				break;
+			case TCODK_KP1:
+				dy = 1;
+				dx = -1;
+				break;
+			case TCODK_KP3:
+				dy = 1;
+				dx = 1;
+				break;
+			case TCODK_DOWN: 
+			case TCODK_KP2:
+				dy = 1; 
+				break;
+			case TCODK_LEFT: 
+			case TCODK_KP4:	
+				dx =-1; 
+				break;
+			case TCODK_RIGHT: 
+			case TCODK_KP6: 
+				dx = 1; 
+				break;
+			case TCODK_CHAR: handleActionKey(owner, engine.lastKey.c, (engine.lastKey.rctrl || engine.lastKey.lctrl), (engine.lastKey.ralt || engine.lastKey.lalt)); break;
+			default: break;
+		}
+	//		std::cout << "got here"<< std::endl;
+		if ( dx != 0 || dy != 0){
+			engine.gameStatus = Engine::NEW_TURN;
+			if (moveOrAttack(owner,owner->x+dx,owner->y+dy)){
+				engine.map->computeFov();
+			}
 		}
 	}
 }
@@ -268,7 +270,7 @@ Actor *PlayerAi::choseFromInventory(Actor *owner){
 	return engine.chooseFromList(owner->container->inventory,"INVENTORY");
 }
 
-MonsterAi::MonsterAi(float waitTime, float attackTime, float walkTime) : Ai(waitTime,attackTime,walkTime){
+MonsterAi::MonsterAi(float waitTime, float attackTime, float walkTime) : Ai(waitTime,attackTime,walkTime),moveCount(0){
 }
 
 void MonsterAi::save(TCODZip &zip) {
@@ -300,8 +302,18 @@ void MonsterAi::update(Actor *owner) {
 	} else {
 		moveCount--;
 	}
-	if (moveCount > 0) {
+
+	if (moveCount > 0){
 		moveOrAttack(owner,engine.player->x,engine.player->y);
+	} else {
+		int x = owner->x;
+		int y = owner->y;
+		bool tileOpen = engine.findNearbyOpenTile(&x,&y);
+		if (tileOpen){
+			moveOrAttack(owner,x,y);
+		}
+		//even if it can't move, increase its waitTime, as it is just waiting
+		waitTime += walkTime;	
 	}
 }
 
@@ -331,9 +343,17 @@ void MonsterAi::moveOrAttack(Actor *owner, int targetx, int targety){
 			owner->y += stepdy;
 			waitTime += walkTime;
 		}
-	} else if (owner->attacker) {
-		owner->attacker->attack(owner,engine.player);
-		waitTime+=attackTime;
+	} else  {
+		if ( !(engine.player->x == targetx && engine.player->y == targety) ){
+			owner->x = targetx;
+			owner->y = targety;
+			//waitTime += walkTime;
+		} else {
+			if (owner->attacker) {
+				owner->attacker->attack(owner,engine.player);
+				waitTime+=attackTime;
+			}
+		}
 	}
 	engine.map->tiles[owner->x+owner->y*engine.mapWidth].blocked = owner->blocks;
 }

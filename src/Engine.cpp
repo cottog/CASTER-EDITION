@@ -76,6 +76,7 @@ void Engine::init() {
 	map->init(true);
 	gui->message(TCODColor::red,"Welcome, Sorcerer! This is CASTER EDITION!");
 	gameStatus = STARTUP;
+	scheduler.addFromList(actors);
 }
 
 void Engine::term() {
@@ -219,6 +220,7 @@ void Engine::update(){
 	if (lastKey.vk == TCODK_ENTER && lastKey.ralt) {
 		fullscreen();
 	}
+	/*
 	player->update();
 	if (gameStatus == NEW_TURN){
 		player->updateAuras();
@@ -231,6 +233,9 @@ void Engine::update(){
 			}
 		}
 	}
+	*/   
+	//above is what used to make things update, before the scheduler was added
+	scheduler.run();
 }
 
 void Engine::render(){

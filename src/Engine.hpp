@@ -20,6 +20,7 @@ public:
 	int mapHeight;
 	int level;
 	Gui *gui;
+	Scheduler scheduler;
 	TCOD_key_t lastKey;
 	
 	Engine(int screenWidth, int screenHeight);

@@ -5,11 +5,7 @@ MinActorHeap::MinActorHeap(){
 }
 
 MinActorHeap::~MinActorHeap(){
-	int length = _vector.size();
-
-	for (int i = length-1; i>= 0; --i){
-		delete _vector[i];
-	}
+	_vector.clear(); //we only clear the vector because we know that the actor pointers will be deleted by Engine::term()
 }
 
 void MinActorHeap::Heapify() {
@@ -63,12 +59,20 @@ void MinActorHeap::BubbleUp(int index){
 }
 
 void MinActorHeap::push(Actor *newActor){
-	int length = _vector.size();
-	_vector[length] = newActor;
-	BubbleUp(length);
+	if (newActor->ai){
+		_vector.push_back(newActor);
+
+		int length = _vector.size();
+		BubbleUp(length-1);
+	} else {
+		return;
+	}
 }
 
 Actor *MinActorHeap::peek(int i){
+	if (_vector.size() == 0){
+		return NULL;
+	}
 	return _vector[i];
 }
 

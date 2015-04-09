@@ -13,6 +13,4 @@ class Actor;
 #include "Actor.hpp"
 #include "Map.hpp"
 #include "ShuffleBag.hpp"
-#include "MinActorHeap.hpp"
-#include "Scheduler.hpp"
 #include "Engine.hpp"

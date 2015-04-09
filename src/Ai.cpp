@@ -14,24 +14,14 @@ Ai *Ai::create(TCODZip &zip) {
 	return ai;
 }
 
-Ai::Ai(float waitTime, float attackTime, float walkTime) : 
-	waitTime(waitTime),attackTime(attackTime),walkTime(walkTime){
-}
-
-PlayerAi::PlayerAi(float waitTime, float attackTime, float walkTime) : Ai(waitTime,attackTime,walkTime){
+PlayerAi::PlayerAi(){
 }
 
 void PlayerAi::save(TCODZip &zip) {
 	zip.putInt(PLAYER);
-	zip.putFloat(waitTime);
-	zip.putFloat(attackTime);
-	zip.putFloat(walkTime);
 }
 
 void PlayerAi::load(TCODZip &zip) {
-	waitTime = zip.getFloat();
-	attackTime = zip.getFloat();
-	walkTime = zip.getFloat();
 }
 
 
@@ -140,7 +130,6 @@ bool PlayerAi::moveOrAttack(Actor *owner, int targetx, int targety){
 		if (actor->destructible && !actor->destructible->isDead()
 			&& actor->x == targetx && actor->y == targety) {
 			owner->attacker->attack(owner,actor);
-			waitTime += attackTime;
 			return false;
 		}
 	}
@@ -165,7 +154,6 @@ bool PlayerAi::moveOrAttack(Actor *owner, int targetx, int targety){
 	owner->x = targetx;
 	owner->y = targety;
 	engine.map->tiles[owner->x+owner->y*engine.mapWidth].blocked = owner->blocks;
-	waitTime += walkTime;
 	return true;
 }
 
@@ -201,7 +189,6 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii, bool control, bool alt) 
 				engine.gui->message(TCODColor::lightGreen,"You use the %s",actor->getName());
 				actor->pickable->use(actor,owner);
 				engine.gameStatus = Engine::NEW_TURN;
-				waitTime += attackTime;
 			}
 		}
 		break;
@@ -247,7 +234,6 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii, bool control, bool alt) 
 					if (spell != NULL){
 						bool spellSuccess = owner->caster->cast(owner, spell);
 						if (spellSuccess){
-							waitTime += attackTime;
 							engine.gameStatus = Engine::NEW_TURN;
 //							std::cout << "got to after spell cast" << std::endl;
 						}
@@ -268,22 +254,14 @@ Actor *PlayerAi::choseFromInventory(Actor *owner){
 	return engine.chooseFromList(owner->container->inventory,"INVENTORY");
 }
 
-MonsterAi::MonsterAi(float waitTime, float attackTime, float walkTime) : Ai(waitTime,attackTime,walkTime){
-}
 
 void MonsterAi::save(TCODZip &zip) {
 	zip.putInt(MONSTER);
 	zip.putInt(moveCount);
-	zip.putFloat(waitTime);
-	zip.putFloat(attackTime);
-	zip.putFloat(walkTime);
 }
 
 void MonsterAi::load(TCODZip &zip) {
 	moveCount = zip.getInt();
-	waitTime = zip.getFloat();
-	attackTime = zip.getFloat();
-	walkTime = zip.getFloat();
 }
 
 //how many turn the monster chases the player
@@ -319,43 +297,32 @@ void MonsterAi::moveOrAttack(Actor *owner, int targetx, int targety){
 		if (engine.map->canWalk(owner->x+dx,owner->y+dy)){
 			owner->x += dx;
 			owner->y += dy;
-			waitTime += walkTime;
 		} else if (engine.map->canWalk(owner->x+stepdx,owner->y+stepdy)) {
 			owner->x += stepdx;
 			owner->y += stepdy;
-			waitTime += walkTime;
 		} else if (engine.map->canWalk(owner->x+stepdx,owner->y)) {
 			owner->x += stepdx;
-			waitTime += walkTime;
 		} else if (engine.map->canWalk(owner->x,owner->y+stepdy)) {
 			owner->y += stepdy;
-			waitTime += walkTime;
 		}
 	} else if (owner->attacker) {
 		owner->attacker->attack(owner,engine.player);
-		waitTime+=attackTime;
 	}
 	engine.map->tiles[owner->x+owner->y*engine.mapWidth].blocked = owner->blocks;
 }
 
-ConfusedMonsterAi::ConfusedMonsterAi(int nbTurns, Ai *oldAi,float waitTime, float attackTime, float walkTime)
-	: Ai(waitTime, attackTime,walkTime),nbTurns(nbTurns),oldAi(oldAi) {
+ConfusedMonsterAi::ConfusedMonsterAi(int nbTurns, Ai *oldAi)
+	: nbTurns(nbTurns),oldAi(oldAi) {
 }
 
 void ConfusedMonsterAi::save(TCODZip &zip) {
 	zip.putInt(CONFUSED_MONSTER);
 	zip.putInt(nbTurns);
-	zip.putFloat(waitTime);
-	zip.putFloat(attackTime);
-	zip.putFloat(walkTime);
 	oldAi->save(zip);
 }
 
 void ConfusedMonsterAi::load(TCODZip &zip) {
 	nbTurns = zip.getInt();
-	waitTime = zip.getFloat();
-	attackTime = zip.getFloat();
-	walkTime = zip.getFloat();
 	oldAi = Ai::create(zip);
 }
 
@@ -369,12 +336,10 @@ void ConfusedMonsterAi::update(Actor *owner) {
 		if (engine.map->canWalk(desx,desy)) {
 			owner->x = desx;
 			owner->y = desy;
-			waitTime += walkTime;
 		} else {
 			Actor *actor = engine.getActor(desx,desy);
 			if (actor) {
 				owner->attacker->attack(owner,actor);
-				waitTime += attackTime;
 			}
 		}
 	}

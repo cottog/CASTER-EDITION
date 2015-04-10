@@ -48,7 +48,13 @@ Concerning the libTCOD library:
 Please note: there may be some instances of debug messages being output to the screen, such as "heavy hit!" when you hit someone with a two-handed weapon. This will continue to be the case while the game is in development. I apolgize for the inconvenience, but its a necessary evil in my opinion.
 
 IMMEDIATE TODO (WILL UPDATE AS TASKS GET COMPLETED)(MANY OTHER LONGER-TERM TODOs IN SRC FILES):
-	
+	I AM CURRENTLY ADDING A SCHEDULER SO THAT ACTORS CAN HAVE DIFFERING SPEEDS AND POTENTIALLY TAKE MORE TURNS THAN EACH OTHER
+		-**DONE** Binary heap created to store Actors based on their relative speeds
+		-**DONE**Scheduler that allows Actors to act a certain number of turns per round based on their speed
+		-Modify Actors so that they may have different speeds
+			-Probably create a new type of Actor that has multiple turns compared to player, orcs, and trolls to test it
+
+
 	FINISH SPELLCASTING SYSTEM (THESE FILES ARE NOT IN THE SOURCE YET, AS THE GAME WILL NOT COMPILE WITH THEM AS THEY STAND NOW)
 		-**DONE**Finish procedural spell generation
 			-**DONE**Add cost modifiers to different spell effects and target selectors
@@ -57,7 +63,7 @@ IMMEDIATE TODO (WILL UPDATE AS TASKS GET COMPLETED)(MANY OTHER LONGER-TERM TODOs
 			-**DONE**See if it would be better to combine SpellEffect, expectedtarget,  and preferred targetType into a struct, as they are very much aligned
 
 		-Add the actual spell.cast() function
-			-need a means to determine the elemental subtype of a spell
+			-**DONE**need a means to determine the elemental subtype of a spell
 			-(IN PROGRESS)need a means to select the appropriate targets for a spell
 			-(IN PROGRESS)need a means to resolve the effects of casting a spell
 			-Modify the Engine::pickATile function so that enemy AI can use it to target the player (or other Actors if they so choose)

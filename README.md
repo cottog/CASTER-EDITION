@@ -11,10 +11,8 @@ The game aims to be unique by attempting to emulate one aspect of spellcasting t
 
 I will warn the reader now, that the way I intend to make spellcasting in this game unique compared to other games may make the game frustrating to play. I believe this potential frustration is why most games don't attempt to make spellcasting experimental in nature, but its something I want to do for fun. 
 
-Once the spellcasting system is complete, the game engine would be mostly finished as well, and the groundwork that is layed out for the procedural spell generation system might benefit someone else who wants a unique magic system in their game.
+Once the spellcasting system is complete, the game engine would be mostly finished as well (as many things need be implemented for spellcasting to be fully functional), and the groundwork that is layed out for the procedural spell generation system might benefit someone else who wants a unique magic system in their game.
 
-
-**The linecount in my commits is inflated by somewhere around 12,300 lines as a result of including the files involved with the libraries used by this game.**
 
 #How do I play
 If you'd like to play right now, simply clone the repo or download as zip, and launch the executable. Of course, you can rebuild from source if you have g++. main.cpp has the command you should use to rebuild the file

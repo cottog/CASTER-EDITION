@@ -10,6 +10,7 @@ class Actor;
 #include "Ai.hpp"
 #include "Pickable.hpp"
 #include "Container.hpp"
+#include "Speedy.hpp"
 #include "Actor.hpp"
 #include "Map.hpp"
 #include "ShuffleBag.hpp"

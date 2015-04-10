@@ -1,5 +1,6 @@
 #include <math.h>
 #include "main.hpp"
+#include <iostream>
 
 Engine::Engine(int screenWidth, int screenHeight) : gameStatus(STARTUP),
 	player(NULL),stairs(NULL),map(NULL),fovRadius(5),
@@ -67,6 +68,7 @@ void Engine::init() {
 	player->ai = new PlayerAi();
 	player->container = new Container(26);
 	player->caster = new Caster(10);
+	player->speedy = new Speedy(1.5);
 	actors.push(player);
 	stairs = new Actor(0,0,'>',"stairs",TCODColor::white);
 	stairs->ID = 000001;
@@ -74,6 +76,7 @@ void Engine::init() {
 	actors.push(stairs);
 	map = new Map(mapWidth,mapHeight);
 	map->init(true);
+	scheduler.addFromList(actors);
 	gui->message(TCODColor::red,"Welcome, Sorcerer! This is CASTER EDITION!");
 	gameStatus = STARTUP;
 }
@@ -204,6 +207,7 @@ void Engine::load(bool pause) {
 			}
 			//finally the message log
 			gui->load(zip);
+			scheduler.addFromList(actors);
 			gameStatus = STARTUP;
 		}
 	}
@@ -211,6 +215,7 @@ void Engine::load(bool pause) {
 }
 
 void Engine::update(){
+	/*
 	TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS,&lastKey,NULL,true);
 	if (lastKey.vk == TCODK_ESCAPE) {
 		save();
@@ -219,6 +224,7 @@ void Engine::update(){
 	if (lastKey.vk == TCODK_ENTER && lastKey.ralt) {
 		fullscreen();
 	}
+
 	player->update();
 	if (gameStatus == NEW_TURN){
 		player->updateAuras();
@@ -231,6 +237,11 @@ void Engine::update(){
 			}
 		}
 	}
+	*/	//this is the old scheduling stuff here. This should be replaced with the new scheduler stuff
+
+	scheduler.run();
+	std::cout << "here" << std::endl;
+
 }
 
 void Engine::render(){

@@ -14,16 +14,34 @@ void Scheduler::run(){
 
 	TCODList<Actor *> updatedActors;
 
+
 	Actor *actor = heap.peek();
+	int counter = 0;
 	while (actor && actor->speedy->speed >= 1) {
+		counter++;
 		heap.pop();
 		if (actor->destructible && !actor->destructible->isDead()) {
-			actor->update();
+			if (actor == engine.player){
+				engine.render();
+    			TCODConsole::flush();
+				while (engine.gameStatus == Engine::IDLE){
+					TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS,&engine.lastKey,NULL,true);
+					if (engine.lastKey.vk == TCODK_ESCAPE) {
+						engine.save();
+						engine.load(true);
+					}
+					if (engine.lastKey.vk == TCODK_ENTER && engine.lastKey.ralt) {
+						engine.fullscreen();
+					}
+					actor->update();
+				}
+			} else {
+				actor->update();
+			}
 			actor->updateAuras();
-			actor = heap.peek();
 			actor->speedy->speed -= 1;
-			if (actor->speedy->speed < 1) {
-				actor->speedy->speed = actor->speedy->maxSpeed;
+			if (actor->speedy->speed < 1.0f) {
+				actor->speedy->speed += actor->speedy->maxSpeed; //an actor with speed of 1.5 takes two turns one every other round (3 turns/2 rounds)
 				updatedActors.push(actor);
 			} else {
 				heap.push(actor);

@@ -21,6 +21,7 @@ public:
 	int level;
 	Gui *gui;
 	TCOD_key_t lastKey;
+	Scheduler scheduler;
 	
 	Engine(int screenWidth, int screenHeight);
 	~Engine();

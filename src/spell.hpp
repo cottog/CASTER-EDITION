@@ -1,7 +1,7 @@
 #include "libtcod.hpp"
 #include <string>
 
-class Spell{ //abstract class representing a generic spell; note the pure virtual function cast()
+class Spell : public Persistent{ //abstract class representing a generic spell; note the pure virtual function cast()
 public:
 	enum SpellIntensity { //the "intensity" of the spell is a means to scale the spell with caster level; higher-intensity spells cost more and have greater or longer-lasting effects
 		NO_INTENSITY = 0,MINOR,MAJOR,NORMAL,EPIC

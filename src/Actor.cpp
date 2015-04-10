@@ -4,7 +4,7 @@
 Actor::Actor(int x, int y, int ch, const char *name, const TCODColor &col, bool hostile, int xpLevel):
 	ID(0),x(x),y(y),ch(ch),trueCh(ch),col(col),trueCol(col),hostile(hostile),
 	blocks(true),xpLevel(xpLevel),attacker(NULL),destructible(NULL),ai(NULL),
-	pickable(NULL),container(NULL),caster(NULL){
+	pickable(NULL),container(NULL),caster(NULL),speedy(NULL){
 	this->name = strdup(name);
 }
 
@@ -53,6 +53,7 @@ void Actor::save(TCODZip &zip) {
 	zip.putInt(pickable != NULL);
 	zip.putInt(container != NULL);
 	zip.putInt(caster != NULL);
+	zip.putInt(speedy != NULL);
 	
 	if (attacker) attacker->save(zip);
 	if (destructible) destructible->save(zip);
@@ -60,6 +61,7 @@ void Actor::save(TCODZip &zip) {
 	if (pickable) pickable->save(zip);
 	if (container) container->save(zip);
 	if (caster) caster->save(zip);
+	if (speedy) speedy->save(zip);
 }
 
 void Actor::load(TCODZip &zip) {
@@ -88,6 +90,7 @@ void Actor::load(TCODZip &zip) {
 	bool hasPickable = zip.getInt();
 	bool hasContainer = zip.getInt();
 	bool hasCaster = zip.getInt();
+	bool hasSpeedy = zip.getInt();
 	
 	if (hasAttacker) {
 		attacker = new Attacker(0.0f);
@@ -114,6 +117,11 @@ void Actor::load(TCODZip &zip) {
 		caster = new Caster(0.0f);
 		caster->load(zip);
 	}
+	if (hasSpeedy) {
+		speedy = new Speedy(0);
+		speedy->load(zip);
+	}
+
 }
 
 void Actor::render() const {

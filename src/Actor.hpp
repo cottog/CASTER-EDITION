@@ -15,6 +15,7 @@ public:
 	Pickable *pickable; //can this actor be picked up and used?
 	Container *container; //can this actor contain other actors?
 	Caster *caster; //can this actor cast spells?
+	Speedy *speedy;
 	TCODList<Aura *> auras;
 
 	

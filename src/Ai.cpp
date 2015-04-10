@@ -69,7 +69,6 @@ void PlayerAi::update(Actor *owner){
 			default: break;
 		}
 	}
-
 	
 	int dx = 0, dy = 0;
 	switch (engine.lastKey.vk) {

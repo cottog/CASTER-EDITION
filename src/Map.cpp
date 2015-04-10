@@ -170,6 +170,7 @@ void Map::addMonster(int x, int y){
 		orc->destructible = new MonsterDestructible(10,0,"dead orc",10);
 		orc->attacker = new Attacker(3);
 		orc->ai = new MonsterAi();
+		orc->speedy = new Speedy(1);
 		engine.actors.push(orc);
 	} else {
 		//create a troll
@@ -179,6 +180,7 @@ void Map::addMonster(int x, int y){
 		troll->destructible = new MonsterDestructible(16,1,"troll carcass",15);
 		troll->attacker = new Attacker(4);
 		troll->ai = new MonsterAi();
+		troll->speedy = new Speedy(1);
 		engine.actors.push(troll);
 	}
 }

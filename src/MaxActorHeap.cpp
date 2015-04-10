@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include <vector>
+#include <iostream>
 
 MaxActorHeap::MaxActorHeap(){
 }

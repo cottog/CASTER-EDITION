@@ -17,18 +17,20 @@ void Scheduler::run(){
 	Actor *actor = heap.peek();
 	while (actor && actor->speedy->speed >= 1) {
 		heap.pop();
-		actor->update();
-		actor->updateAuras();
-		actor = heap.peek();
-		actor->speedy->speed -= 1;
-		if (actor->speedy->speed < 1) {
-			actor->speedy->speed = actor->speedy->maxSpeed;
-			updatedActors.push(actor);
-		} else {
-			heap.push(actor);
+		if (actor->destructible && !actor->destructible->isDead()) {
+			actor->update();
+			actor->updateAuras();
+			actor = heap.peek();
+			actor->speedy->speed -= 1;
+			if (actor->speedy->speed < 1) {
+				actor->speedy->speed = actor->speedy->maxSpeed;
+				updatedActors.push(actor);
+			} else {
+				heap.push(actor);
+			}
 		}
+		actor = heap.peek();
 	}
-	std::cout << "here" << std::endl;
 	addFromList(updatedActors);
 	updatedActors.clear();
 

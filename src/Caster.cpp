@@ -1,7 +1,6 @@
 #include "main.hpp"
 #include <cctype>
 #include <cmath>
-#include <iostream>
 
 Caster::Caster(float maxMana) : mana(maxMana), maxMana(maxMana),cantusValue(0),element(Spell::NO_SUBTYPE), cantus(""){
 }

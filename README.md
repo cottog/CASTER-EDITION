@@ -16,3 +16,9 @@ Once the spellcasting system is complete, the game engine would be mostly finish
 
 #How do I play
 If you'd like to play right now, simply clone the repo or download as zip, and launch the executable. Of course, you can rebuild from source if you have g++. main.cpp has the command you should use to rebuild the file
+
+To actually experience CASTER-EDITION's core mechanic, the spells, you can simply use the key combo that will instantly teach you a new spell -- shift+c. This will spit out some numbers, the first of which is really important. This is the 'goal number' of that spell. Every spellcaster in CASTER-EDITION needs a 'Cantus,' which is a 4-letter word that they chant while casting spells. Press Ctrl-C to enter your cantus. Your cantus is displayed on the sidebar, along with the 'value' of the Cantus, which is simply a sum of the 4 integers between 1 and 26 represented by the letters in your cantus. If the value of your Cantus is sufficient close to the goal number of the spell you are trying to cast, the spell will be a success. If you experience any spell instability, please let me know.
+
+Your spell takes on one of 15 different elemental subtypes, which are all the possible combinations of the 4 classical elements. The relative magnitude of each letter in your cantus (a being the lowest and z being the highest) determines what elemental subtype the spell will take one. 
+
+When the game is out of beta, the spells' goal numbers will be unknown to the player, as Caster Edition is meant to be a game of experimentation and learning. I am trying to capture the difficulty I believe would come with learning to master a spell, which is something glossed out of most RPGs, both video games and tabletop games. 

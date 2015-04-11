@@ -1,7 +1,6 @@
 #include <math.h>
 #include "main.hpp"
-#include <iostream>
-
+ 
 Engine::Engine(int screenWidth, int screenHeight) : gameStatus(STARTUP),
 	player(NULL),stairs(NULL),map(NULL),fovRadius(5),
 	screenWidth(screenWidth),screenHeight(screenHeight),
@@ -240,7 +239,6 @@ void Engine::update(){
 	*/	//this is the old scheduling stuff here. This should be replaced with the new scheduler stuff
 
 	scheduler.run();
-	std::cout << "here" << std::endl;
 
 }
 

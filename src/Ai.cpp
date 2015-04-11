@@ -1,6 +1,5 @@
 #include "main.hpp"
 #include <cmath>
-#include <iostream>
 
 Ai *Ai::create(TCODZip &zip) {
 	AiType type = (AiType)zip.getInt();

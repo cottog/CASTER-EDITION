@@ -276,7 +276,7 @@ void Map::addItem(int x, int y) {
 		Actor *healthPotion = new Actor(x,y,'!',"health potion",TCODColor::violet);
 		healthPotion->ID = 000004;
 		healthPotion->blocks = false;
-		healthPotion->pickable = new Healer(4);
+		healthPotion->pickable = new Healer(12);
 		engine.actors.push(healthPotion);
 		engine.sendToBack(healthPotion);
 	} else if (dice <70+10) {

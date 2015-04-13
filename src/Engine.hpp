@@ -26,7 +26,7 @@ public:
 	Engine(int screenWidth, int screenHeight);
 	~Engine();
 	void update();
-	void render();
+	void render(bool changeGameStatus = true);
 	void sendToBack(Actor *actor);
 	Actor *getClosestMonster(int x, int y, float range) const;
 	bool pickATile(int *x, int *y, float maxRange = 0.0f, float AOE = 0.0f);

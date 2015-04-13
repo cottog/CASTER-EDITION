@@ -33,6 +33,8 @@ void Scheduler::run(){
 						engine.fullscreen();
 					}
 					actor->update();
+					engine.render(false);
+    				TCODConsole::flush();
 				}
 			} else {
 				actor->update();

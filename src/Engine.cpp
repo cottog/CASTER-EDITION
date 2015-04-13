@@ -30,26 +30,30 @@ void Engine::init() {
 			TCODConsole::root->flush();
 			key = TCODConsole::checkForKeypress(TCOD_KEY_PRESSED);
 			
-		} while(text.update(key));
+		} while(text.update(key) &&  ( !TCODConsole::isWindowClosed() ) );
 		
-		char buf[128] = "";
-		strcat(buf,"saves/");
-		strcat(buf,text.getText());
-		strcat(buf,".sav");
-		if (!TCODSystem::fileExists(buf)) {
-			goodName = true;
+		if ( !TCODConsole::isWindowClosed() ) {
+			char buf[128] = "";
+			strcat(buf,"saves/");
+			strcat(buf,text.getText());
+			strcat(buf,".sav");
+			if (!TCODSystem::fileExists(buf)) {
+				goodName = true;
+			} else {
+				text.reset();
+				TCODConsole::root->setDefaultForeground(TCODColor::red);
+				TCODConsole::root->print(30,27,"Please choose a name that hasn't already been used.");
+				TCODConsole::root->print(30,28,"Or delete the file containing this name");
+			}
+			if (strncmp(text.getText(),"",1) == 0) {
+				goodName = false;
+				text.reset();
+				TCODConsole::root->setDefaultForeground(TCODColor::red);
+				TCODConsole::root->print(30,26,"Invalid name.");
+			}
 		} else {
-			text.reset();
-			TCODConsole::root->setDefaultForeground(TCODColor::red);
-			TCODConsole::root->print(30,27,"Please choose a name that hasn't already been used.");
-			TCODConsole::root->print(30,28,"Or delete the file containing this name");
-		}
-		if (strncmp(text.getText(),"",1) == 0) {
-			goodName = false;
-			text.reset();
-			TCODConsole::root->setDefaultForeground(TCODColor::red);
-			TCODConsole::root->print(30,26,"Invalid name.");
-		}
+			return;
+		}	
     }
 	
 	player = new Actor(40,25,'@',text.getText(),TCODColor::white, false);
@@ -237,16 +241,14 @@ void Engine::update(){
 		}
 	}
 	*/	//this is the old scheduling stuff here. This should be replaced with the new scheduler stuff
-
 	scheduler.run();
-
 }
 
-void Engine::render(){
+void Engine::render(bool changeGameStatus){
 	TCODConsole::root->clear();
 	mapcon->clear();
 	if (gameStatus == STARTUP) map->computeFov();
-	gameStatus = IDLE;
+	if (changeGameStatus) gameStatus = IDLE;
 	//draw the map
 	map->render();
 	//draw the actors
@@ -529,6 +531,7 @@ void Engine::nextLevel() {
 	gui->message(TCODColor::red,"After a rare moment of peace, you descend\ndeeper into the heart of the dungeon...");
 
 	delete map;
+	scheduler.clear();
 	//delete all actors but player and stairs
 	for (Actor **it = actors.begin(); it != actors.end(); it++) {
 		if (*it != player && *it != stairs) {

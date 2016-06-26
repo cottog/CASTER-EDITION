@@ -119,7 +119,7 @@ TCODColor Caster::cantusColor(){
 void Caster::learnSpell(Actor *owner){
 	Spell *spell = NULL;
 	spell = spell->newSpell(owner);
-	engine.gui->message(TCODColor::white,"%f %d %d %d %d %f %s",spell->target,spell->intensity,spell->targeting,spell->effect,spell->expected,spell->cost,spell->getName());
+	engine.gui->message(TCODColor::white,"%f %d %d %d %f %s",spell->target,spell->intensity,spell->effect,spell->targetingSystem->GetExpectedTarget(),spell->cost,spell->getName());
 
 	spellBook.push(spell);
 }

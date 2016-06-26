@@ -6,30 +6,7 @@ public:
 	enum SpellIntensity { //the "intensity" of the spell is a means to scale the spell with caster level; higher-intensity spells cost more and have greater or longer-lasting effects
 		NO_INTENSITY = 0,MINOR,MAJOR,NORMAL,EPIC
 	};
-	enum ExpectedTarget {    //whether this particular spell is targeting items, creatures, or people
-		NO_EXPECT, ITEM, CREATURE, TILE   //item is as yet unused
-	};
-	enum TargetType {   //who the spell would prefer to target
-		NO_TYPE,NEUTRAL, ENEMY, FRIENDLY
-	};
-	enum TargetSystem {   //this determines how the spell will select a target
-		NO_TARGET,
-		SELF, //target the caster
-		ADJACENT_TILE, //one random tile next to the caster
-		BOLT_SPELL, //travels in a line from caster to enemy and hits the first one in the line
-		VISUAL_HOLOCAUST, //choose an enemy, all enemies of that type (in sight) take damage; so, if you pick an orc, all orcs in sight take damage
-		LEVEL_WIDE_HOLOCAUST, //exactly as the above, but level-wide instead of restricted to sight
-		RANDOM_IN_LOS,  //single random target in LOS
-		RANDOM_IN_LEVEL, //single random target in level
-		ALL_ADJACENT_TILES, //chooses creatures from the 8 tiles immediately adjacent to the caster
-		ALL_CREATURES_CHAINING,  //like chain lightning
-		ALL_CREATURES_IN_LEVEL, //chooses all creatures in the level
-		ALL_CREATURES_IN_LINE, //penetrating spell; penetrates targets, ignores creatures that aren't targets.
-		ALL_CREATURES_IN_RADIUS, //ball spell
-		SINGLE_CREATURE_IN_SIGHT, //single chosen target in sight. not random like the above one
-		X_CREATURES_IN_SIGHT, //chooses X random creatures in LoS of the caster
-		ALL_CREATURES_IN_LOS //chooses all creatures in line of sight
-	};
+
 	enum SpellEffect {  //this is the effect of the spell (pretty straight-forward)
 		NO_EFFECT,
 		STRAIGHT_HEAL, //1 heal damage from the caster (restore HP)
@@ -111,13 +88,11 @@ public:
 //	int ID; //spellID, unique reference INT to identify a spell based on its attributes, not its name
 	float target;	//the target of a spell is the target value that the spellcaster's Cantus should sum out to. for a better treatment on spellcasting, check the readme
 	SpellIntensity intensity;	//the intensity or strength of a spell. Allows spells to scale with the caster's level. Minor, Normal, Major, or Epic
-	TargetSystem targeting; //the range and extent of creatures that this individual spell will target
+	TargetingSystemBase *targetingSystem;	
 	SpellEffect effect; //the effect of a spell (healing, damage, teleporting, etc). This can (and eventually will) form a useless combination with effect and targetsysem
-	ExpectedTarget expected; //the type of 'thing' the spell will target (items, creatures, floor tiles)
 	float cost; //a value used to determine the total cost for casting a spell; this is raised or lowered based on the attributes of the spell (targetSystem, spellEffect)
-	
-	Spell(float target = 0, SpellIntensity intensity = NO_INTENSITY, TargetSystem targeting = NO_TARGET, SpellEffect effect = NO_EFFECT, 
-		ExpectedTarget expected = NO_EXPECT, float cost = 0);
+
+	Spell(float target = 0, SpellIntensity intensity = NO_INTENSITY, TargetingSystemBase* targetingSystem = NULL, SpellEffect effect = NO_EFFECT, float cost = 0);
 	
 	//TODO: think of what would be best way to handle wands (procedural, not procedural, some of either)
 	Spell *newSpell(Actor *caster);	//returns a spell with all aspects randomly generated
@@ -138,12 +113,9 @@ protected:
 
 class CreatureSpell : public Spell { //spell class that represents spells that target other Actor objects
 public:
-	TargetType preferred; //the type of enemy (neutral, enemy, or ally) the spell would optimally target; of course, the spell could potentially do the exact opposite
-	TargetType actual; //the type of enemy (neutral, enemy, or ally) that the spell actually targets, as opposed to the preferred type
-
+	CreatureTargetingSystem *targeting;
 	void chooseEffect();
-	CreatureSpell( float target = 0, SpellIntensity intensity = NO_INTENSITY, TargetSystem targeting = NO_TARGET, SpellEffect effect = NO_EFFECT, 
-		ExpectedTarget expected = CREATURE,  float cost = 0, TargetType preferred = NO_TYPE, TargetType actual = NO_TYPE);
+	CreatureSpell( float target = 0, SpellIntensity intensity = NO_INTENSITY, TargetingSystemBase* targetingSystem = NULL, SpellEffect effect = NO_EFFECT,  float cost = 0);
 	//use the above constructor to create an empty CreatureSpell object, then use chooseIntensity, then chooseTargetSystem, and then chooseEffect to create a non-empty spell
 	bool cast(Actor *caster) const;
 	void save(TCODZip &zip);
@@ -152,9 +124,9 @@ public:
 
 class TileSpell : public Spell { //spell class that represents spells that target map tiles
 public:
+	TileTargetingSystem *targeting;
 	void chooseEffect();
-	TileSpell( float target = 0, SpellIntensity intensity = NO_INTENSITY, TargetSystem targeting = NO_TARGET, SpellEffect effect = NO_EFFECT, 
-		ExpectedTarget expected = TILE, float cost = 0 );
+	TileSpell( float target = 0, SpellIntensity intensity = NO_INTENSITY, TargetingSystemBase* targetingSystem = NULL, SpellEffect effect = NO_EFFECT, float cost = 0 );
 	//use the above constructor to create an empty TileSpell object, then use chooseIntensity, then chooseTargetSystem, and then chooseEffect to create a non-empty spell
 	bool cast(Actor *caster) const;
 	void save(TCODZip &zip);

@@ -1,9 +1,8 @@
 #include "libtcod.hpp"
 #include "main.hpp"
 
-Spell::Spell(float target, SpellIntensity intensity, TargetSystem targeting, SpellEffect effect, 
-		ExpectedTarget expected , float cost) :
-	target(target), intensity(intensity),targeting(targeting),effect(effect),expected(expected),cost(cost) {
+Spell::Spell(float target, SpellIntensity intensity, TargetingSystemBase* targetingSystem, SpellEffect effect, float cost) :
+	target(target), intensity(intensity),targetingSystem(targetingSystem),effect(effect),cost(cost) {
 		name = "";
 	}
 
@@ -32,7 +31,7 @@ Spell *Spell::newSpell(Actor *caster){
 	spell->chooseEffect();
 	spell->setName();
 	engine.gui->message(TCODColor::lightGrey,"%s",spell->getName());
-	engine.gui->message(TCODColor::white,"%f %d %d %d %d %f %s",spell->target,spell->intensity,spell->targeting,spell->effect,spell->expected,spell->cost,spell->getName());
+	engine.gui->message(TCODColor::white,"%f %d %d %d %f %s",spell->target,spell->intensity,spell->targetingSystem->GetExpectedTarget(),spell->effect,spell->cost,spell->getName());
 	return spell;
 }
 
@@ -81,7 +80,7 @@ void Spell::setName(){
 		default: break;
 	}
 	nameSwitch = rng->getInt(1,2);
-	switch (targeting){
+	/*switch (targeting){
 		case SELF: strcat(buf,nameSwitch? " Personal":" Secret"); break;
 		case ADJACENT_TILE: strcat(buf,nameSwitch? " Short-Range":" Limited"); break;
 		case BOLT_SPELL: strcat(buf,nameSwitch? " Bolt of":" Flash of"); break;
@@ -98,7 +97,7 @@ void Spell::setName(){
 		case X_CREATURES_IN_SIGHT: strcat(buf,nameSwitch? " Thoughts of":" Image of"); break;
 		case ALL_CREATURES_IN_LOS: strcat(buf,nameSwitch? " Gaze of":" Visage of"); break;
 		default: break;
-	}
+	}*/
 
 	switch(effect){
 		case STRAIGHT_HEAL: strcat(buf, " Healing"); break;
@@ -153,7 +152,7 @@ void Spell::setName(){
 }
 
 void Spell::chooseTargetSystem(){
-	TCODRandom *rng = TCODRandom::getInstance();
+	/*TCODRandom *rng = TCODRandom::getInstance();
 	int targetswitch = rng->getInt(1,15);
 	switch (targetswitch) {
 		case 1:
@@ -218,6 +217,7 @@ void Spell::chooseTargetSystem(){
 			break;
 		default: targeting = NO_TARGET; break;
 	}
+	*/
 }
 
 void Spell::chooseIntensity(int level){
@@ -259,25 +259,25 @@ void Spell::chooseIntensity(int level){
 }
 
 void CreatureSpell::save(TCODZip &zip){
-	zip.putInt(expected);
+	//zip.putInt(expected);
 	zip.putFloat(target);
 	zip.putInt(intensity);
-	zip.putInt(targeting);
+	//zip.putInt(targeting);
 	zip.putInt(effect);
 	zip.putFloat(cost);
-	zip.putInt(preferred);
-	zip.putInt(actual);
+	//zip.putInt(preferred);
+	//zip.putInt(actual);
 	zip.putString(name.c_str());
 }
 
 void CreatureSpell::load(TCODZip &zip){
 	target = zip.getFloat();
 	intensity = (SpellIntensity)zip.getInt();
-	targeting = (TargetSystem)zip.getInt();
+	//targeting = (TargetSystem)zip.getInt();
 	effect = (SpellEffect)zip.getInt();
 	cost = zip.getFloat();
-	preferred = (TargetType)zip.getInt();
-	actual = (TargetType)zip.getInt();
+	//preferred = (TargetType)zip.getInt();
+	//actual = (TargetType)zip.getInt();
 	name = zip.getString();
 }
 
@@ -285,7 +285,7 @@ void CreatureSpell::chooseEffect(){
 	int baseCost = cost;
 	TCODRandom *rng = TCODRandom::getInstance();
 	int effectSwitch = 0;
-	if (targeting == SELF) {
+	/*if (targeting == SELF) {
 		int fart = rng->getInt(1,500);  //make it very unlikely for a bad spell to become a self-targeting spell
 		if (fart <= 499) {
 			effectSwitch = rng->getInt(1,18);
@@ -558,12 +558,12 @@ void CreatureSpell::chooseEffect(){
 			actual = preferred;
 		}
 	}
+	*/
 	cost = (int)cost;
 }
 
-CreatureSpell::CreatureSpell( float target, SpellIntensity intensity, TargetSystem targeting, SpellEffect effect, 
-		ExpectedTarget expected, float cost, TargetType preferred, TargetType actual) :
-	Spell(target,intensity,targeting,effect,expected,cost), preferred(preferred),actual(actual) {}
+CreatureSpell::CreatureSpell( float target, SpellIntensity intensity, TargetingSystemBase* targetingSystem, SpellEffect effect,  float cost) :
+	Spell(target,intensity,targetingSystem,effect,cost) {}
 
 
 bool CreatureSpell::cast(Actor *caster) const{
@@ -571,6 +571,7 @@ bool CreatureSpell::cast(Actor *caster) const{
 	TCODRandom *rng = TCODRandom::getInstance();
 	TCODList<Actor *> targets;
 
+	/*
 	switch(targeting) {
 		default: targets.clear(); return false; break;
 		case SELF: {
@@ -833,7 +834,8 @@ bool CreatureSpell::cast(Actor *caster) const{
 
 			break;
 		}
-	}
+	}*/
+	
 	//now all possible TargetSystems have been accounted for, and the TargetType should be accounted for as well
 	//check if targets is empty, and print a message so you know its empty here
 	if (targets.isEmpty()) {
@@ -1228,17 +1230,15 @@ bool CreatureSpell::cast(Actor *caster) const{
 			}
 		}
 	}	
-//	std::cout << "got before list is cleared" << std::endl;
 	targets.clear();
-//	std::cout << "got after list is cleared" << std::endl;
 	return true;
 }
 
 void TileSpell::save(TCODZip &zip){
-	zip.putInt(expected);
+	//zip.putInt(expected);
 	zip.putFloat(target);
 	zip.putInt(intensity);
-	zip.putInt(targeting);
+	//zip.putInt(targeting);
 	zip.putInt(effect);
 	zip.putFloat(cost);
 	zip.putString(name.c_str());
@@ -1247,7 +1247,7 @@ void TileSpell::save(TCODZip &zip){
 void TileSpell::load(TCODZip &zip){
 	target = zip.getFloat();
 	intensity = (SpellIntensity)zip.getInt();
-	targeting = (TargetSystem)zip.getInt();
+	//targeting = (TargetSystem)zip.getInt();
 	effect = (SpellEffect)zip.getInt();
 	cost = zip.getFloat();
 	name = zip.getString();
@@ -1255,11 +1255,11 @@ void TileSpell::load(TCODZip &zip){
 
 void TileSpell::chooseEffect(){
 	int baseCost = cost;
-	TCODRandom *rng = TCODRandom::getInstance();
+	//TCODRandom *rng = TCODRandom::getInstance();
 	int effectSwitch = 0;
-	if (targeting == SELF) {
-		int fart = rng->getInt(1,500);  //make it very unlikely for a bad spell to become a self-targeting spell
-		if (fart <= 499) {
+	/*if (targeting == SELF) {
+		int switch = rng->getInt(1,500);  //make it very unlikely for a bad spell to become a self-targeting spell
+		if (switch <= 499) {
 			effectSwitch = rng->getInt(1,3);
 		} else {
 			effectSwitch = rng->getInt(1,7);
@@ -1267,47 +1267,47 @@ void TileSpell::chooseEffect(){
 	} else {
 		effectSwitch = rng->getInt(1,7);
 	}
-	
+	*/
 	switch (effectSwitch) {
 		case 1: 
 			effect = LIGHT;
-			expected = TILE;
+			//expected = TILE;
 			cost *= 1;
 			break;
 		case 2: 
 			effect = ILLUSION;  //NOTE: illusion with an effect range of all_in_level might be bad, but then again it might not. Essentially, I plan to have it fill the targeted tiles with an illusory player
-			expected = TILE;	//the player's illusory form could possess an elemental subtype. Creatures of opposing subtypes could be naturally hateful towards each other
+			//expected = TILE;	//the player's illusory form could possess an elemental subtype. Creatures of opposing subtypes could be naturally hateful towards each other
 			cost *= 1.2;
 			break;
 		case 3: 
 			effect = ANTIMAGIC_ZONE;
-			expected = TILE;
+			//expected = TILE;
 			cost *= 1.3;
 			break;
 		
 		//THESE SPELLS ARE BAD FOR SELF-TARGETING SPELLS 
 		case 4:
 			effect = DARKNESS;  //no idea how an elemental darkness would work, but I'll figure it out
-			expected = TILE;
+			//expected = TILE;
 			cost *= 1;
 			break;
 		case 5:
 			effect = ALTER_TERRAIN;
-			expected = TILE;
+			//expected = TILE;
 			cost *= 1.2;
 			break;
 		//THESE SPELL EFFECTS NEED SPECIFIC TARGETING TYPES
 		case 6:
 			effect = TELEPORTAL;
-			expected = TILE;
-			targeting = SINGLE_CREATURE_IN_SIGHT;
+			//expected = TILE;
+			//targeting = SINGLE_CREATURE_IN_SIGHT;
 			cost = baseCost;
 			cost *= 1;
 			break;
 		case 7:
 			effect = SUMMON;
-			expected = TILE;
-			targeting = ADJACENT_TILE;
+			//expected = TILE;
+			//targeting = ADJACENT_TILE;
 			cost = baseCost;
 			cost *= 1.6;
 			break;
@@ -1316,9 +1316,8 @@ void TileSpell::chooseEffect(){
 	cost = (int)cost;
 }
 
-TileSpell::TileSpell( float target, SpellIntensity intensity, TargetSystem targeting, SpellEffect effect, 
-		ExpectedTarget expected, float cost) :
-	Spell(target,intensity,targeting,effect,expected,cost) {}
+TileSpell::TileSpell( float target, SpellIntensity intensity, TargetingSystemBase* targetingSystem, SpellEffect effect, float cost) :
+	Spell(target,intensity,targetingSystem,effect,cost) {}
 
 bool TileSpell::cast(Actor *caster) const{
 

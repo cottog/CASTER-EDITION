@@ -290,7 +290,7 @@ void DamagingAura::apply(Actor *target){
 	if (!smart){
 		engine.getAllActorsInRadius(inRadius,target->x, target->y, radius);
 	} else {
-		engine.getAllActorsInRadius(inRadius,target->x, target->y, radius, Spell::ENEMY, target->hostile);
+		engine.getAllActorsInRadius(inRadius,target->x, target->y, radius, TargetingSystemBase::ENEMY, target->hostile);
 	}
 
 	if (!inRadius.isEmpty()){

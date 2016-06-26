@@ -3,6 +3,7 @@ class Actor;
 #include "Persistent.hpp"
 #include "Aura.hpp"
 #include "Gui.hpp"
+#include "TargetingSystem.hpp"
 #include "Spell.hpp"
 #include "Caster.hpp"
 #include "Destructible.hpp"

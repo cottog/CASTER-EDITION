@@ -1,6 +1,6 @@
 #include "main.hpp"
 
-Destructible::Destructible(float maxHp, float dodge, const char *corpseName, int xp, float DR, float maxShield, Spell::ElementalSubtype element) : 
+Destructible::Destructible(float maxHp, float dodge, const char *corpseName, int xp, float DR, float maxShield, SpellCastingConstants::ElementalSubtype element) : 
 	maxHp(maxHp),hp(maxHp),maxShield(maxShield),shield(maxShield),baseDodge(dodge),totalDodge(dodge),
 	baseDR(DR),totalDR(DR),xp(xp),element(element){
 	this->corpseName = strdup(corpseName);
@@ -35,7 +35,7 @@ void Destructible::load(TCODZip &zip) {
 	totalDR = zip.getFloat();
 	corpseName = strdup(zip.getString());
 	xp = zip.getInt();
-	element = (Spell::ElementalSubtype)zip.getInt();
+	element = (SpellCastingConstants::ElementalSubtype)zip.getInt();
 }
 
 Destructible *Destructible::create(TCODZip &zip) {

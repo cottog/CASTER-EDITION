@@ -2,7 +2,7 @@
 #include <cctype>
 #include <cmath>
 
-Caster::Caster(float maxMana) : mana(maxMana), maxMana(maxMana),cantusValue(0),element(Spell::NO_SUBTYPE), cantus(""){
+Caster::Caster(float maxMana) : mana(maxMana), maxMana(maxMana),cantusValue(0),element(SpellCastingConstants::NO_SUBTYPE), cantus(""){
 }
 
 Caster::~Caster(){
@@ -26,7 +26,7 @@ void Caster::load(TCODZip &zip){
 	mana = zip.getFloat();
 	maxMana = zip.getFloat();
 	cantusValue = zip.getInt();
-	element = (Spell::ElementalSubtype)zip.getInt();
+	element = (SpellCastingConstants::ElementalSubtype)zip.getInt();
 	cantus = zip.getString();
 	int nbSpells = zip.getInt();
 
@@ -75,7 +75,7 @@ void Caster::enterCantus(){
         if ( !(*it >= 'a' && *it <= 'z') ) {
         	cantus = "";
         	cantusValue = 0;
-        	element = Spell::NO_SUBTYPE;
+        	element = SpellCastingConstants::NO_SUBTYPE;
         	engine.gui->message(TCODColor::lightRed,"You could not possibly pronounce that!");
         	return;
         }
@@ -88,7 +88,7 @@ void Caster::enterCantus(){
         	max = charValue;
         }
   	}
-  	element = (Spell::ElementalSubtype)subtype;
+  	element = (SpellCastingConstants::ElementalSubtype)subtype;
 }
 
 bool Caster::hasCantus(){
@@ -98,28 +98,28 @@ bool Caster::hasCantus(){
 TCODColor Caster::cantusColor(){
 	switch (element){
 		default: return TCODColor::darkGrey;
-		case Spell::FIRE: return TCODColor::red;
-		case Spell::AIR: return TCODColor::yellow;
-		case Spell::LIGHTNING: return TCODColor::lighterBlue;
-		case Spell::WATER: return TCODColor::blue;
-		case Spell::STEAM: return TCODColor::lightGrey;
-		case Spell::ICE: return TCODColor::lightCyan;
-		case Spell::RADIATION: return TCODColor::lightPurple;
-		case Spell::EARTH: return TCODColor::darkYellow;
-		case Spell::LAVA: return TCODColor::darkRed;
-		case Spell::DUST: return TCODColor::desaturatedYellow;
-		case Spell::GLASS: return TCODColor::lightSea;
-		case Spell::MUD: return TCODColor::darkerOrange;
-		case Spell::METAL: return TCODColor::cyan;
-		case Spell::POISON: return TCODColor::lightGreen;
-		case Spell::FORCE: return TCODColor::white;
+		case SpellCastingConstants::FIRE: return TCODColor::red;
+		case SpellCastingConstants::AIR: return TCODColor::yellow;
+		case SpellCastingConstants::LIGHTNING: return TCODColor::lighterBlue;
+		case SpellCastingConstants::WATER: return TCODColor::blue;
+		case SpellCastingConstants::STEAM: return TCODColor::lightGrey;
+		case SpellCastingConstants::ICE: return TCODColor::lightCyan;
+		case SpellCastingConstants::RADIATION: return TCODColor::lightPurple;
+		case SpellCastingConstants::EARTH: return TCODColor::darkYellow;
+		case SpellCastingConstants::LAVA: return TCODColor::darkRed;
+		case SpellCastingConstants::DUST: return TCODColor::desaturatedYellow;
+		case SpellCastingConstants::GLASS: return TCODColor::lightSea;
+		case SpellCastingConstants::MUD: return TCODColor::darkerOrange;
+		case SpellCastingConstants::METAL: return TCODColor::cyan;
+		case SpellCastingConstants::POISON: return TCODColor::lightGreen;
+		case SpellCastingConstants::FORCE: return TCODColor::white;
 	}	
 }
 
 void Caster::learnSpell(Actor *owner){
 	Spell *spell = NULL;
 	spell = spell->newSpell(owner);
-	engine.gui->message(TCODColor::white,"%f %d %d %d %d %f %s",spell->target,spell->intensity,spell->targeting,spell->effect,spell->expected,spell->cost,spell->getName());
+	engine.gui->message(TCODColor::white,"%f %d %f %s",spell->target,spell->targeting,spell->cost,spell->getName());
 
 	spellBook.push(spell);
 }

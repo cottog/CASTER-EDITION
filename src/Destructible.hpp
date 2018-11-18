@@ -10,9 +10,9 @@ public:
 	float totalDR;
 	char *corpseName; //the actor's name once dead/destroyed
 	int xp;
-	Spell::ElementalSubtype element;
+	SpellCastingConstants::ElementalSubtype element;
 
-	Destructible(float maxHp, float dodge, const char *corpseName, int xp=0, float DR=0, float maxShield = 0, Spell::ElementalSubtype element = Spell::FORCE);
+	Destructible(float maxHp, float dodge, const char *corpseName, int xp=0, float DR=0, float maxShield = 0, SpellCastingConstants::ElementalSubtype element = SpellCastingConstants::FORCE);
 	~Destructible();
 	inline bool isDead() {return hp <= 0; }
 	float takeDamage(Actor *owner, Actor *attacker, float damage);

@@ -645,12 +645,12 @@ Actor *Engine::chooseFromList(TCODList<Actor *> &list,const char *title){
 	return NULL;
 }
 
-void Engine::getAllActorsInRadius(TCODList<Actor *> &targets, int x, int y, float radius, Spell::TargetType targetType, bool casterHostility) const {
+void Engine::getAllActorsInRadius(TCODList<Actor *> &targets, int x, int y, float radius, SpellCastingConstants::TargetType targetType, bool casterHostility) const {
 	for (Actor **iterator = engine.actors.begin();iterator != engine.actors.end(); iterator++) {
 		Actor *actor = *iterator;
 		if (actor->destructible && !actor->destructible->isDead()){
 			float distance = actor->getDistance(x,y);
-			if ((distance < radius || radius == 0.0) && ((targetType == Spell::NO_TYPE || targetType == Spell::NEUTRAL) || (targetType == Spell::ENEMY && actor->hostile != casterHostility) || (targetType == Spell::FRIENDLY && actor->hostile == casterHostility)) ) {	//just to make sure diagonals are captured
+			if ((distance < radius || radius == 0.0) && ((targetType == SpellCastingConstants::NO_TYPE || targetType == SpellCastingConstants::NEUTRAL) || (targetType == SpellCastingConstants::ENEMY && actor->hostile != casterHostility) || (targetType == SpellCastingConstants::FRIENDLY && actor->hostile == casterHostility)) ) {
 				targets.push(actor);
 			}
 		}

@@ -5,7 +5,7 @@ public:
 	float mana;
 	float maxMana;
 	int cantusValue;
-	Spell::ElementalSubtype element;
+	SpellCastingConstants::ElementalSubtype element;
 	TCODList<Spell *> spellBook;
 
 	Caster(float maxMana);
